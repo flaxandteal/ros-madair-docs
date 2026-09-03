@@ -1,0 +1,47 @@
+---
+title: Live Query
+description: Run a Concept + Bbox + Range query over tile-row Parquet with duckdb-wasm, in your browser.
+---
+
+import DuckExample from '@/app/duck-example.tsx';
+import { DEFAULT_SQL } from '@/content/docs/examples/query-tiles.default';
+
+This is the DuckDB + Parquet substrate, running in the page. Nothing here talks to
+a server: the browser loads [duckdb-wasm](https://github.com/duckdb/duckdb-wasm)
+(self-hosted, no CDN), **HTTP Range-reads** a `tiles_*.parquet` file the way a CDN
+consumer would, and runs the query below against it.
+
+The Parquet is exactly what `ros-madair-emit`'s `parquet` module writes: one **row
+per tile**, promoted typed columns (`concept_id`, `geo_*`, `q_ordered`) whose
+per-row-group min/max stats *are* the zone-map, and a `data` column holding the
+tile detail for hydration. Sample corpus: 6,000 fictional heritage places on
+Chennai geography, in 3 row groups.
+
+<DuckExample module='/examples/query-tiles.tsx' defaultSql={DEFAULT_SQL} />
+
+**Edit the SQL and re-run it** — it executes against the real Parquet, in your
+browser. Try widening the bbox, changing `'Settlement'` to `'Monument'`, or
+dropping the date bound.
+
+## What the query maps to
+
+The seed query is the same shape `ros-madair-query` compiles a typed `Query` into —
+each clause is one of the RM predicates:
+
+| RM predicate | In the SQL |
+|---|---|
+| `Concept(DescendantOrSelfOf, 'Settlement')` | join the concept catalog on its DFS interval — `cat.dfs_enter BETWEEN anc.dfs_enter AND anc.dfs_leave`. One contiguous range because the catalog is DFS-ordered. |
+| `Bbox(...)` | `geo_min_lng`/`geo_max_lng` bounds — the promoted geo columns, pruned by row-group zone-maps. |
+| `Range(established ≥ 1900)` | `q_ordered` (days-from-epoch), the promoted ordered column. |
+
+The `data` column is then parsed back into fields — Arches tile-graph hydration in
+miniature. Concept resolution (value → canonical concept id, DFS intervals) and
+hydration are the parts the substrate keeps; the pruning is Parquet's job, not a
+hand-rolled coarse index.
+
+<Callout title="Why this is the whole point">
+  The old RM read engine reimplemented zone-map pruning + range fetch by hand.
+  Here the file's own footer stats do the pruning and duckdb-wasm's Range reads do
+  the surgical fetch — the same query, far less bespoke machinery. See
+  [How It Works](/docs/how-it-works/overview) for the full argument.
+</Callout>

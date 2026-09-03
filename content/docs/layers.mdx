@@ -1,0 +1,58 @@
+---
+title: Layers
+description: Two layers of the Aonach Mór dataset — a base and a sparse overlay — combined in a single search.
+---
+
+import DuckExample from '@/app/duck-example.tsx';
+import { DEFAULT_SQL } from '@/content/docs/examples/layered-search.default';
+
+Layered **base + overlay** is one of the things Rós Madair keeps that Parquet
+doesn't give for free. A published dataset is the **base**; a device (or a later
+correction, or a restricted supplement) adds an **overlay** — a second, sparse
+Parquet that carries only the tiles that differ. A search sees the composed state,
+not either layer alone.
+
+Here both layers come from the Aonach Mór Site model. The base is the emitted Site
+tiles. The overlay re-designates two Sites' `heritage_designation`:
+
+- **Ceantar Theas**: *Scheduled Monument* → *Conservation Area*
+- **Cé an Rí**: *Conservation Area* → *Scheduled Monument*
+
+The query below is one search for *Scheduled Monument* across **both** layers. The
+overlay tile wins for its resource + nodegroup; the base supplies the rest.
+
+<DuckExample module='/examples/layered-search.tsx' defaultSql={DEFAULT_SQL} />
+
+Base alone would return **Baile an Iarthair, Ceantar Theas, Mí Locha**. With the
+overlay composed in, **Cé an Rí appears** (the overlay re-designated it *to*
+Scheduled) and **Ceantar Theas drops** (re-designated *away*) — from a single
+query, with the `layer` column showing which layer supplied each surviving tile.
+
+## How the composition works
+
+```sql
+FROM (
+  SELECT …, 1 AS rank, 'base'    AS layer FROM read_parquet('base_sites.parquet')
+  UNION ALL
+  SELECT …, 2 AS rank, 'overlay' AS layer FROM read_parquet('overlay_sites.parquet')
+)
+QUALIFY row_number() OVER (
+  PARTITION BY resource_id, nodegroup_id ORDER BY rank DESC
+) = 1
+```
+
+Union the layers, then keep the **highest-ranked tile per `resource_id` +
+`nodegroup_id`** — overlay (rank 2) beats base (rank 1). That `QUALIFY` is the whole
+precedence rule; everything the overlay doesn't mention falls through to the base.
+Edit the SQL to change the designation (try *Conservation Area* —
+`513a85dd-477d-597d-a624-47274b860ba7` — and watch the two Sites swap sides), or
+delete the overlay's `UNION ALL` branch to see the base-only result.
+
+<Callout title="Why this isn't just a UNION">
+  The point is *precedence*, not concatenation. A plain union would return a Site
+  twice when both layers designate it; the `QUALIFY … row_number()` collapses each
+  resource + nodegroup to a single winning tile, so the overlay genuinely *overrides*
+  rather than *adds*. That is the base+overlay contract the native reader
+  (`ros-madair-duck`'s `hydrate_layers`) enforces during hydration — here it runs as
+  one search in the browser.
+</Callout>

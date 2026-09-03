@@ -1,0 +1,39 @@
+---
+title: Roundtrip
+description: alizarin → Rós Madair → alizarin — a concept hierarchy drives a query that hydrates back into typed resources.
+---
+
+import ConceptPicker from '@/app/concept-picker.tsx';
+
+The previous pages hand-wrote SQL. This one closes the loop: **alizarin builds the
+query, and alizarin receives the result.** Rós Madair is only the middle.
+
+1. **alizarin populates the picker.** On load, the page asks alizarin's RDM cache for
+   the *ServiceRole* controlled list and renders every concept **hierarchically** —
+   parents and their narrower terms, indented.
+2. **Picking a concept builds a query.** Selecting one expands it to *itself and all
+   its descendants* (again from alizarin's hierarchy) and emits a
+   `DescendantOrSelfOf` predicate — the exact RM `Concept` query, as SQL over the
+   promoted `concept_id` column.
+3. **Rós Madair executes it** against the tile-row Parquet (duckdb-wasm).
+4. **alizarin hydrates the matches** back into typed `Organisation` resources — the
+   `sector` you see is a concept resolved by the same RDM cache that populated the
+   picker.
+
+<ConceptPicker
+  collectionId="be9a5956-a585-5c34-971e-1ca8faef226a"
+  roleColumnFile="tiles_aacd4ba3-8395-5092-870d-727143cd489a.parquet"
+/>
+
+Pick **Hospital** and its three narrower roles (*Hospital liaison*, *Triage lead*)
+come along — the query widens from one concept id to three, and three Organisations
+come back. Pick a leaf and you get just that one. Nothing here is hand-tuned SQL: the
+hierarchy is alizarin's, the pruned fetch is Parquet's, the typed result is alizarin's
+again.
+
+<Callout title="One id space, both directions">
+  The picker offers concepts by label but the query filters by **id** — each concept's
+  value id, pulled from the same RDM entry. That's the id ↔ label duality from the
+  [reference](/docs/tile-store) discussion: you *select* by id, alizarin *renders* by
+  label, and the two never diverge because they come from one cache.
+</Callout>

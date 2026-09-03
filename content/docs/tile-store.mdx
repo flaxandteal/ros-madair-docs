@@ -1,0 +1,92 @@
+---
+title: Tile Store
+description: Wire Rós Madair in as an alizarin tile store and get back rich, typed resources from a Parquet query.
+---
+
+import DuckExample from '@/app/duck-example.tsx';
+import { DEFAULT_SQL } from '@/content/docs/examples/rich-resources.default';
+import { DEFAULT_SQL as REFERENCE_SQL } from '@/content/docs/examples/site-references.default';
+
+The [Live Query](/docs/live-query) page returns SQL rows. This one returns **rich
+[alizarin](https://github.com/flaxandteal/alizarin) resources** — the same typed
+models alizarin gives you over a live Arches API, but every tile is served from
+Parquet.
+
+This is the substrate's whole thesis in one demo: **keep alizarin's tile-graph
+hydration, replace the read engine.** alizarin talks to a tile store through its
+abstract `ArchesClient`. We subclass it so `getResourceTiles(id)` runs a duckdb-wasm
+query over the tile-row Parquet instead of fetching a JSON file — the resource
+models and concept collections stay static assets, the **tiles come from Parquet**.
+
+<DuckExample module='/examples/rich-resources.tsx' defaultSql={DEFAULT_SQL} />
+
+The query returns `resource_id`s; each is hydrated into a typed `HazardFootprint`.
+Reading `produced_by_model` or `scenario` **follows a resource-instance link** — and
+that link resolution is *another* resource load, served from Parquet in turn, so the
+entire graph traversal is Parquet-backed. Typed datatypes resolve the same way a live
+Arches API would: **concepts resolve to their labels** (swap the query to the
+Organisation model — `tiles_aacd4ba3-8395-5092-870d-727143cd489a.parquet` — and its
+`sector` reads back as *"J — Information and communication"*), dates parse, strings
+carry their language.
+
+## How it's wired
+
+```ts
+// lib/rm-arches-client.ts — the tile store
+class extends client.ArchesClientRemoteStatic {
+  // graph models + concept collections: still static JSON (rm-example/…)
+  // resources + tiles: from the tile-row Parquet, via duckdb-wasm
+  getResource(id)      → SELECT … FROM tiles_<graph>.parquet WHERE resource_id = id
+                         → new staticTypes.StaticResource({ resourceinstance, tiles })
+  getResourceTiles(id) → (await getResource(id)).tiles
+}
+graphManager.archesClient = staticStore.archesClient = RDM.archesClient = client
+```
+
+The tile `data` in the Parquet is the **real Arches tile payload** — real node
+UUIDs, multilingual strings, concept value ids, link targets — round-tripped from
+the example business data, so alizarin hydrates it exactly as it would from a live
+backend. Only the *transport* changed: a Parquet range read instead of a per-resource
+JSON fetch.
+
+<Callout title="What's static vs. from Parquet">
+  Static assets: the resource-model graphs and SKOS concept collections (schema and
+  vocabulary — small, cacheable, rarely changing). From Parquet: every resource and
+  every tile (the business data — the large, query-shaped part). That split is
+  exactly the head/detail division RM always made, now with Parquet doing the fetch.
+</Callout>
+
+## Selecting by a reference
+
+The query above just enumerates footprints. Now **select by an alizarin property** —
+a CLM `reference`. RM's reference handler promotes a reference node's key (its
+controlled-list `list_item_id`) into a typed `concept_id` column, so filtering on it
+is a plain column predicate whose row-group stats are the zone-map. This query picks
+Sites whose `heritage_designation` is *"Scheduled Monument"* — **by that list item's
+id, not its label** — then hydrates each Site:
+
+<DuckExample module='/examples/site-references.tsx' defaultSql={REFERENCE_SQL} />
+
+This is precisely the RM query IR's concept predicate, as SQL:
+
+```json
+{ "concept": { "path": "heritage_designation",
+               "op":   "is",
+               "value": "a7d38e93-1442-590e-b976-70a321a45421" } }
+```
+
+`path` is the reference node's **alias**; `value` is the `list_item_id`. Note the
+round trip: we *select* by the reference's id, and the hydrated model *resolves* the
+same reference back to its label — "Scheduled Monument" — because the reference value
+carries its labels inline. A legacy `concept` node works identically (its value id in
+the same column); the only difference is where the id comes from. Other list items to
+try: *Listed Building Grade I* (`53bfcf5e-8349-5305-8025-0ed9b15168ee`), *Conservation
+Area* (`513a85dd-477d-597d-a624-47274b860ba7`).
+
+<Callout title="Emit and query must share the handler">
+  A `reference` is only indexable because the CLM handler is registered at emit time
+  (without it, `reference` degrades to detail-only and never reaches a column). The
+  query side needs the same handler to see the node as concept-like. RM stamps the
+  handler set into the manifest alongside the format version, so a reader built with a
+  different handler set than the artifact is a typed refusal, not a wrong answer.
+</Callout>

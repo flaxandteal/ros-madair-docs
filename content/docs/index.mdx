@@ -1,0 +1,56 @@
+---
+title: Introduction
+description: A static-file query engine for Arches heritage graph data.
+---
+
+**Rós Madair** (Irish: *rose madder*) is a companion to
+[Alizarin](https://github.com/flaxandteal/alizarin) — an ORM for
+[Arches](https://www.archesproject.org/) heritage data management systems.
+Where Alizarin provides a TypeScript/Rust SDK for working with Arches graphs
+live, Rós Madair provides static, pre-built artifacts that can answer queries
+without a running server.
+
+The name follows the pigment theme: alizarin crimson and rose madder are
+closely related red pigments, both derived from the madder root. Rós Madair is
+the static, pre-ground pigment to Alizarin's live colour mixing.
+
+## The problem
+
+Heritage datasets often contain tens or hundreds of thousands of records.
+Standing up a full query backend (a triplestore, a database + API) requires
+server infrastructure, ongoing maintenance, and non-trivial cost. For read-only
+public datasets — museum collections, monument registries, archaeological
+surveys — that is overkill.
+
+## The approach
+
+The `ros-madair-emit` CLI compiles a data directory of graphs, resources, and
+vocabularies into three artifacts:
+
+1. **`head.sqlite`** — an indexed head (spine, concept, ordered-value, geo-bbox,
+   and link tables): the coarse index a query plans against.
+2. **`chunks/*.msgpack`** — content-hashed tile detail: the payload hydration
+   turns back into a schema-shaped tree.
+3. **`manifest.json`** — the layout and format-version contract every reader
+   checks.
+
+A reader queries the head to select the resources and chunks that can match,
+fetches only those (over HTTP Range), and hydrates the tiles — overlay- and
+reverse-traversal-aware.
+
+<Callout title="Direction: DuckDB + Parquet">
+  The coarse/fine read engine above is being replaced by a DuckDB + Parquet
+  substrate; the layered overlay model, reverse traversal (`cited_by`), and
+  Arches tile-graph hydration are kept. See the
+  [README's Direction section](https://github.com/flaxandteal/ros-madair#direction-duckdb--parquet-substrate)
+  for the rationale and roadmap.
+</Callout>
+
+## Next steps
+
+- **[Installation](/docs/installation)** — build the workspace, set up the
+  alizarin sibling checkout, and run the tests.
+- **[Quick Start](/docs/quickstart)** — emit static artifacts from Arches data
+  with the `ros-madair-emit` CLI.
+- **[How It Works](/docs/how-it-works/overview)** — the head + chunks + manifest
+  model, and where the DuckDB + Parquet direction takes it.

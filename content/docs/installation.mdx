@@ -1,0 +1,63 @@
+---
+title: Installation
+description: Build the Rós Madair workspace and set up the alizarin sibling checkout.
+---
+
+Rós Madair is a Rust workspace. The current stack is six crates:
+
+| Crate | Purpose |
+|-------|---------|
+| `ros-madair-handlers` | Datatype → index-class classification; the CLM `reference` handler |
+| `ros-madair-format` | On-disk artifact format — manifest + versioned chunk framing (WASM-safe) |
+| `ros-madair-emit` | CLI: compile a data directory into head + chunks + manifest |
+| `ros-madair-query` | Head-schema query compiler (`Concept` / `Range` / `Bbox` / `HasLink` → SQL) |
+| `ros-madair-read` | Native read path — resolve, hydrate, layered overlay, reverse traversal |
+| `ros-madair-python` | PyO3 bindings (`compile_query`, `hydrate_*`) |
+
+## Prerequisites
+
+- **Rust** (stable) — [rustup.rs](https://rustup.rs/)
+- **Python 3.10+** — only for the PyO3 bindings (`ros-madair-python`).
+
+## The alizarin sibling checkout
+
+Every crate depends on
+[`alizarin-core`](https://github.com/flaxandteal/alizarin) via a relative path.
+The alizarin repository must be checked out as a sibling directory alongside the
+parent `magic/` directory:
+
+```
+magic/
+  alizarin/                     # <- clone here
+  RosMadair-sandbox-parquet/    # this repo
+```
+
+## Build and test
+
+```bash
+cargo build --release
+cargo test --workspace
+```
+
+## Python bindings (optional)
+
+```bash
+pip install maturin
+maturin develop -m crates/ros-madair-python/Cargo.toml
+```
+
+This produces an importable extension module exposing `compile_query` and the
+`hydrate_*` entry points.
+
+## Documentation site
+
+These docs live in the separate
+[`ros-madair-docs`](https://github.com/flaxandteal/ros-madair-docs) repository,
+built with [Fumadocs](https://fumadocs.dev/) on Next.js — the same machinery and
+theme as the [alizarin docs](https://github.com/flaxandteal/alizarin-docs):
+
+```bash
+npm install
+npm run dev      # local preview at http://localhost:3000
+npm run build    # static export in out/
+```

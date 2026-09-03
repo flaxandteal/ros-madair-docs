@@ -1,0 +1,3806 @@
+{
+ "business_data": {
+  "resources": [
+   {
+    "metadata": {},
+    "resourceinstance": {
+     "descriptors": {},
+     "graph_id": "64368e71-abbc-53ba-9bd8-87e2500f8e65",
+     "legacyid": "site-011",
+     "name": "Mí Locha",
+     "resourceinstanceid": "0f307e49-ac35-54ee-96ab-7f17a72a8aaf"
+    },
+    "tiles": [
+     {
+      "data": {
+       "f3a2d94a-536e-5977-bde4-9106de0e62cc": {
+        "en": {
+         "direction": "ltr",
+         "value": "Mí Locha"
+        }
+       }
+      },
+      "nodegroup_id": "f3a2d94a-536e-5977-bde4-9106de0e62cc",
+      "parenttile_id": null,
+      "resourceinstance_id": "0f307e49-ac35-54ee-96ab-7f17a72a8aaf",
+      "sortorder": 0,
+      "tileid": "58d8f749-eccf-52c1-8941-e099a2ca8813"
+     },
+     {
+      "data": {
+       "079cd3c9-4cf6-54d0-aac1-9c95624616be": [
+        {
+         "resourceId": "d793cffb-8aec-57af-9f9d-f3cb0da857b3",
+         "ontologyProperty": "",
+         "inverseOntologyProperty": "",
+         "resourceXresourceId": "f7b703f9-76df-5fbd-b297-3df0c63bc44e"
+        }
+       ]
+      },
+      "nodegroup_id": "079cd3c9-4cf6-54d0-aac1-9c95624616be",
+      "parenttile_id": null,
+      "resourceinstance_id": "0f307e49-ac35-54ee-96ab-7f17a72a8aaf",
+      "sortorder": 0,
+      "tileid": "0fdfa0fa-2086-509d-b359-3b54ba07024c"
+     },
+     {
+      "data": {
+       "773f3fe8-bc58-549c-b7a9-05bb2957fd67": 2710000
+      },
+      "nodegroup_id": "d0415b22-2747-5ded-8914-203fd3709034",
+      "parenttile_id": null,
+      "resourceinstance_id": "0f307e49-ac35-54ee-96ab-7f17a72a8aaf",
+      "sortorder": 0,
+      "tileid": "5729ef36-4262-5459-a774-5ef7e879c66d"
+     },
+     {
+      "data": {
+       "93d67672-dc92-5b7b-855d-5eacb8c2eaf1": [
+        {
+         "resourceId": "23819b3b-3328-5001-9aa6-5cfc0e103c04",
+         "ontologyProperty": "",
+         "inverseOntologyProperty": "",
+         "resourceXresourceId": "10407258-e0a2-50e3-9fe5-b1908099aabb"
+        }
+       ]
+      },
+      "nodegroup_id": "93d67672-dc92-5b7b-855d-5eacb8c2eaf1",
+      "parenttile_id": null,
+      "resourceinstance_id": "0f307e49-ac35-54ee-96ab-7f17a72a8aaf",
+      "sortorder": 0,
+      "tileid": "155f86e7-c147-5c99-bb6d-901716caab55"
+     },
+     {
+      "data": {
+       "0f4e0296-8e30-5e30-80d6-31fe17281ad0": {
+        "en": {
+         "direction": "ltr",
+         "value": "Kodambakkam"
+        }
+       }
+      },
+      "nodegroup_id": "0f4e0296-8e30-5e30-80d6-31fe17281ad0",
+      "parenttile_id": null,
+      "resourceinstance_id": "0f307e49-ac35-54ee-96ab-7f17a72a8aaf",
+      "sortorder": 0,
+      "tileid": "99302a71-3d0e-521f-a410-2c101ecd4f1f"
+     },
+     {
+      "data": {
+       "aeb12fb1-1ff4-5bcc-a64a-7974d874bad5": {
+        "features": [
+         {
+          "geometry": {
+           "coordinates": [
+            [
+             [
+              80.242,
+              13.08
+             ],
+             [
+              80.2607,
+              13.08
+             ],
+             [
+              80.2607,
+              13.092
+             ],
+             [
+              80.242,
+              13.092
+             ],
+             [
+              80.242,
+              13.08
+             ]
+            ]
+           ],
+           "type": "Polygon"
+          },
+          "properties": {},
+          "type": "Feature"
+         }
+        ],
+        "type": "FeatureCollection"
+       }
+      },
+      "nodegroup_id": "aeb12fb1-1ff4-5bcc-a64a-7974d874bad5",
+      "parenttile_id": null,
+      "resourceinstance_id": "0f307e49-ac35-54ee-96ab-7f17a72a8aaf",
+      "sortorder": 0,
+      "tileid": "09f19599-c311-576d-90a9-79111179dd34"
+     },
+     {
+      "tileid": "78c122fe-6b47-51af-b463-15355bee0818",
+      "nodegroup_id": "16d7d3e7-736f-5a5f-87e2-57d5b8562494",
+      "data": {
+       "188eae98-f3ff-5ee6-b4dd-a148319fc66b": null
+      },
+      "parenttile_id": null,
+      "resourceinstance_id": "0f307e49-ac35-54ee-96ab-7f17a72a8aaf",
+      "sortorder": 0
+     },
+     {
+      "data": {
+       "56929b52-5df8-5a61-9f22-b449c0622344": "1988"
+      },
+      "nodegroup_id": "56929b52-5df8-5a61-9f22-b449c0622344",
+      "parenttile_id": null,
+      "resourceinstance_id": "0f307e49-ac35-54ee-96ab-7f17a72a8aaf",
+      "sortorder": 0,
+      "tileid": "adf2fa28-7ae5-5100-943a-ed2dd55e43cb"
+     },
+     {
+      "data": {
+       "7dc72b8a-72f0-5a7e-bc36-45104a2f9b79": true
+      },
+      "nodegroup_id": "7dc72b8a-72f0-5a7e-bc36-45104a2f9b79",
+      "parenttile_id": null,
+      "resourceinstance_id": "0f307e49-ac35-54ee-96ab-7f17a72a8aaf",
+      "sortorder": 0,
+      "tileid": "3bb94a88-c1c2-561a-888d-8523d1e8adb3"
+     },
+     {
+      "data": {
+       "11412fa9-5f8b-52a3-bb70-53e21f34ad61": {
+        "url": "https://records.example.org/site/1",
+        "url_label": "Heritage record"
+       }
+      },
+      "nodegroup_id": "11412fa9-5f8b-52a3-bb70-53e21f34ad61",
+      "parenttile_id": null,
+      "resourceinstance_id": "0f307e49-ac35-54ee-96ab-7f17a72a8aaf",
+      "sortorder": 0,
+      "tileid": "601c3f76-631c-57ce-bce2-9cc8fac8b208"
+     },
+     {
+      "data": {
+       "15bc97aa-9bf2-5610-9d4f-fcbcffa8524b": [
+        {
+         "list_id": "2730d609-3a8d-49dc-bf51-6ac34e80294a",
+         "list_item_id": "a7d38e93-1442-590e-b976-70a321a45421",
+         "labels": [
+          {
+           "value": "Scheduled Monument",
+           "language_id": "en",
+           "valuetype_id": "prefLabel"
+          }
+         ]
+        }
+       ]
+      },
+      "nodegroup_id": "15bc97aa-9bf2-5610-9d4f-fcbcffa8524b",
+      "parenttile_id": null,
+      "resourceinstance_id": "0f307e49-ac35-54ee-96ab-7f17a72a8aaf",
+      "sortorder": 0,
+      "tileid": "1b7710be-a366-58ef-9116-4ae4a4cfd909"
+     },
+     {
+      "data": {
+       "9f8d0bf7-ebc8-5555-9fad-4f38f59ebcba": [
+        {
+         "name": "aerial-view.png",
+         "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABuCAIAAAAvT4++AAAEm0lEQVR42u2dy0tyTRzHxzHSEqXaBF0hguB1UYso6GK1yQItlII2tXgoqE1URBREUPt43tNGAt/XTRTUqlWGtTh5WSSRQgb5B3TZSRsRkp6FIMKpfAovM+P3s7KOZ87M7zPzOxfPmaP657/fBIgLRQggGEAwgGAAwQCCAQQDCIZgAMEAggEEAwgGEAwgGIIBBAMIBhAMCkmZwG2L/Fr6+y8b//8XgoUy+vW6wvguK3GvWcvk3XQZvIptukxgr99SkrVYTk2rOLrxPauDHIa+kNuC4CwRz2usi7XdEhL8WYgLHF9GqiGa4A/DWsSYslYfjgWzHEqONDMqWBlBBsPHRSUp7P4YZa0Kc2rOt2Be7PLimK0Uze8FYWZrThGjfAxldsYxhV2xHVP2I8WvYwhm9+BTmHZR1qLA+++vrCVqynJ0kKi5FyxqcmanjRQdX+y2UAxfsVtK0eXFbhFufBccCIbg/O+WRH2qILNdxdoNYwRjBAMIBhAMIBhAMIBgAMEQXCIXAfINCxdzMIIxggEE5zabiZefS1SwqL8xMNVSii4vdltoyXbtEmkjRccXuxWUtQ7Ou2PW7uNnYgSXwh0dSNEiDGI84S9yombzISt2n2zgyzGzj9AxN8sOX3N0sF9h5vbBXExdw1F35OMJfzYdc5FsMNOdaHXjRjCbocRclYU7ucRss4IIzrobxnzRIggmmPFdeMHfPaLO7TsbuFPLq+BinTvhrStFO13Oq2m8N0lM03jzGdOmf+Ab7y7k3ndpghvfIRgAAAAAAAAAAABACGZnZxOJRG1tbdZvGo3GhYWFDxfFYrEfrAVygurrxaenp9Fo9P7+3uVy/XgbsVisqqoKsS4KX12qrKys1Ol0TqfTYrEQQqqrqw8ODi4uLq6urrq6utLyXC7X4uJieqQajUafz3d3d7e8vKwsMxQK1dfXE0I0Gk00GqWUptZSFv7w8NDc3EwIOT8/lySJEDI4OHh0dARnOcNms62urhJCbm5uysvLnU5nd3c3IaSpqSkUCqW+E4/HzWZzZip2OBz9/f01NTWPj4/KFL25uZnKySMjI3t7e+mlysIlSZqenqaUejweWZYJIVtbWzMzM/DyLb76uXB8fLyjo2NiYqKurm5gYMBsNre2tqYW6XQ6tVqdTCaTyaTH48lca21tbWpqymKxGAwGZZknJyeSJDkcDqvVmjkclYW73W673R4Oh29vb9vb2/V6vclk2t/fh7PcoFarA4FAOvqSJD09PWm1WkIIpdRkMilHZ+qz2+2em5traGh4fX398CArGAwaDIZAIKBSqdJLlYVXVFSEQqH5+fmxsbHt7W2r1er1euElZ/vg3t7ecDic+uz1eoeHh/1+v81mI4SMjo5ubGx8tmJnZ+fx8bFWq9VoNJ8duK2vr19fX7+/v6f/qSw8Ho8/Pz/b7Xa/3+/z+VZWVlKJGuSG3d3dycnJ9J+yLA8NDZ2dncmyfHl52dLS8tkI3tnZiUQih4eHLy8vKcfBYDCzQ7S1tSUSiZ6ensy1GhsblYUvLS1FIhFCiF6vf3t76+vrgxcAAAAAAAAAAAAAAMTkD+ZzMTb5I6asAAAAAElFTkSuQmCC",
+         "type": "image/png",
+         "accepted": true,
+         "selected": true,
+         "alt_text": "Aerial view"
+        },
+        {
+         "name": "elevation.png",
+         "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABuCAIAAAAvT4++AAAC70lEQVR42u3bMUhicRzA8Z96oENJNVlag4tDtEVRVFtHjoKry4GDY05KLsWJtAbRUjdZg5tQPpFCfVRDLQq62GZouGlE1FI3/DkPuia70uz7meL1VPh//b0/PNWwvLYn6F9GloDAIDAIDAKDwCAwCExg9ItvLEFnMj9/vOXh3yO/mGAQGAQmMAgMAoPAIDAIDAKDwARGf+i5Dxs+y018JhgEBoFBYBCYwCAwCAwCg8AgMAgMAhMYnx+/Teoh7/FRKRPMJRoEBoFBYBAYBAaBCYy+8aY7WXxJnQkGgUFgEBgEJjAIDAKDwPgwX+I7WV/5jhsTzCUaBAaBQWAQGAQGgQkMAoPAIDAIDAKDwAQGgUFgEBgExv9jWF7bYxWYYBAYBAaBAQAAAAAA3sX9/X3uj2AwKCLNZrOzpwqFQiIyOTkZCARY2F7xb86OA3f8QLxRJ7cqh4eH4/H48fGxruszMzMiUigU7Ha7iJjN5kqlMjU1dXp6WiqVVldXRWR9fX1gYCCTybRL22y2VCql63oqlbLZbOp4NBrN5/PFYtHj8RCmmxO8u7s7OzsrIhMTE4VCQUQikYi69q6srGxtbe3s7CwuLo6MjNTr9RdPpf7Y39/3+Xwi4vP54vG42g7Uu8HpdFarVRb/o/fgubm5dp7r6+v28aurK5PJ5HK50um0iGxvby8sLAwODvr9/s3Nzbu7u1cD12o1s9msJr5Wq4nIw8PD0NCQOqfVarH43Zzgm5sbi8UiIkajcWlpSf3r8vLSarWen58bDIZ0Ou33+x0Ox+3t7auB6/X6i8DtM9mwu78Hn52dqW3S7XaHw2F1MJlMhkKhi4uL5+fn6enpRCJhsVhURfVWMBr/vlY2m/V6vSLi9XpzuZyIPD09EaObl+hYLKbGNBwOj4+Pa5qWz+dPTk6cTqc62eVyPT4+zs/Pi8jGxka5XD44OGg0Gqrx0dHR4eFhezrHxsY0TdN1XdO00dHRF1PLBAMAAAAAAABfzm9w4itnuKz4TAAAAABJRU5ErkJggg==",
+         "type": "image/png",
+         "accepted": true,
+         "selected": true,
+         "alt_text": "Elevation"
+        }
+       ]
+      },
+      "nodegroup_id": "9f8d0bf7-ebc8-5555-9fad-4f38f59ebcba",
+      "parenttile_id": null,
+      "resourceinstance_id": "0f307e49-ac35-54ee-96ab-7f17a72a8aaf",
+      "sortorder": 0,
+      "tileid": "861670f9-1a6f-5a46-b432-b42158ca56d8"
+     }
+    ],
+    "tiles_loaded": true
+   },
+   {
+    "metadata": {},
+    "resourceinstance": {
+     "descriptors": {},
+     "graph_id": "64368e71-abbc-53ba-9bd8-87e2500f8e65",
+     "legacyid": "zone-a",
+     "name": "Ceantar Thuaidh",
+     "resourceinstanceid": "12b3c1e2-dda3-58ad-b437-79e9c2b9a722"
+    },
+    "tiles": [
+     {
+      "data": {
+       "773f3fe8-bc58-549c-b7a9-05bb2957fd67": 16220000
+      },
+      "nodegroup_id": "d0415b22-2747-5ded-8914-203fd3709034",
+      "parenttile_id": null,
+      "resourceinstance_id": "12b3c1e2-dda3-58ad-b437-79e9c2b9a722",
+      "sortorder": 0,
+      "tileid": "c49a18c4-7c03-5a3b-bd3b-472827a98b99"
+     },
+     {
+      "data": {
+       "0f4e0296-8e30-5e30-80d6-31fe17281ad0": {
+        "en": {
+         "direction": "ltr",
+         "value": "North Chennai Zone"
+        }
+       }
+      },
+      "nodegroup_id": "0f4e0296-8e30-5e30-80d6-31fe17281ad0",
+      "parenttile_id": null,
+      "resourceinstance_id": "12b3c1e2-dda3-58ad-b437-79e9c2b9a722",
+      "sortorder": 0,
+      "tileid": "9ca03267-09bc-537e-8543-3a7e3b9d8774"
+     },
+     {
+      "data": {
+       "079cd3c9-4cf6-54d0-aac1-9c95624616be": [
+        {
+         "resourceId": "a8a3240d-9756-535f-a91d-77af1e9af54b",
+         "ontologyProperty": "",
+         "inverseOntologyProperty": "",
+         "resourceXresourceId": "1f2b29f4-d2c3-5400-ab34-2961827bfc25"
+        }
+       ]
+      },
+      "nodegroup_id": "079cd3c9-4cf6-54d0-aac1-9c95624616be",
+      "parenttile_id": null,
+      "resourceinstance_id": "12b3c1e2-dda3-58ad-b437-79e9c2b9a722",
+      "sortorder": 0,
+      "tileid": "f80e2e8f-0f0c-5fb6-97eb-4ff646703276"
+     },
+     {
+      "data": {
+       "93d67672-dc92-5b7b-855d-5eacb8c2eaf1": [
+        {
+         "resourceId": "23819b3b-3328-5001-9aa6-5cfc0e103c04",
+         "ontologyProperty": "",
+         "inverseOntologyProperty": "",
+         "resourceXresourceId": "6c67a9d5-a50b-5724-af29-310fa38a1833"
+        }
+       ]
+      },
+      "nodegroup_id": "93d67672-dc92-5b7b-855d-5eacb8c2eaf1",
+      "parenttile_id": null,
+      "resourceinstance_id": "12b3c1e2-dda3-58ad-b437-79e9c2b9a722",
+      "sortorder": 0,
+      "tileid": "a31d0864-e4a1-552a-9dfd-99241e66b4cf"
+     },
+     {
+      "data": {
+       "aeb12fb1-1ff4-5bcc-a64a-7974d874bad5": {
+        "features": [
+         {
+          "geometry": {
+           "coordinates": [
+            [
+             [
+              80.242,
+              13.092
+             ],
+             [
+              80.298,
+              13.092
+             ],
+             [
+              80.298,
+              13.116
+             ],
+             [
+              80.242,
+              13.116
+             ],
+             [
+              80.242,
+              13.092
+             ]
+            ]
+           ],
+           "type": "Polygon"
+          },
+          "properties": {},
+          "type": "Feature"
+         }
+        ],
+        "type": "FeatureCollection"
+       }
+      },
+      "nodegroup_id": "aeb12fb1-1ff4-5bcc-a64a-7974d874bad5",
+      "parenttile_id": null,
+      "resourceinstance_id": "12b3c1e2-dda3-58ad-b437-79e9c2b9a722",
+      "sortorder": 0,
+      "tileid": "c560bb8a-035a-5753-a6fd-ef06abc19db2"
+     },
+     {
+      "data": {
+       "f3a2d94a-536e-5977-bde4-9106de0e62cc": {
+        "en": {
+         "direction": "ltr",
+         "value": "North District"
+        },
+        "ga": {
+         "direction": "ltr",
+         "value": "Ceantar Thuaidh"
+        }
+       }
+      },
+      "nodegroup_id": "f3a2d94a-536e-5977-bde4-9106de0e62cc",
+      "parenttile_id": null,
+      "resourceinstance_id": "12b3c1e2-dda3-58ad-b437-79e9c2b9a722",
+      "sortorder": 0,
+      "tileid": "0563575d-8813-596a-8bea-c811e6ae24a1"
+     },
+     {
+      "tileid": "55941591-8034-5d3c-86fb-844055b83309",
+      "nodegroup_id": "16d7d3e7-736f-5a5f-87e2-57d5b8562494",
+      "data": {
+       "188eae98-f3ff-5ee6-b4dd-a148319fc66b": null
+      },
+      "parenttile_id": null,
+      "resourceinstance_id": "12b3c1e2-dda3-58ad-b437-79e9c2b9a722",
+      "sortorder": 0
+     },
+     {
+      "data": {
+       "56929b52-5df8-5a61-9f22-b449c0622344": "1990/1995"
+      },
+      "nodegroup_id": "56929b52-5df8-5a61-9f22-b449c0622344",
+      "parenttile_id": null,
+      "resourceinstance_id": "12b3c1e2-dda3-58ad-b437-79e9c2b9a722",
+      "sortorder": 0,
+      "tileid": "68497939-05cd-5aec-bce2-6774d21ca500"
+     },
+     {
+      "data": {
+       "7dc72b8a-72f0-5a7e-bc36-45104a2f9b79": false
+      },
+      "nodegroup_id": "7dc72b8a-72f0-5a7e-bc36-45104a2f9b79",
+      "parenttile_id": null,
+      "resourceinstance_id": "12b3c1e2-dda3-58ad-b437-79e9c2b9a722",
+      "sortorder": 0,
+      "tileid": "caeeb756-de7f-59a3-bebd-203ae62a5a8f"
+     },
+     {
+      "data": {
+       "11412fa9-5f8b-52a3-bb70-53e21f34ad61": {
+        "url": "https://records.example.org/site/2",
+        "url_label": "Heritage record"
+       }
+      },
+      "nodegroup_id": "11412fa9-5f8b-52a3-bb70-53e21f34ad61",
+      "parenttile_id": null,
+      "resourceinstance_id": "12b3c1e2-dda3-58ad-b437-79e9c2b9a722",
+      "sortorder": 0,
+      "tileid": "e44f6972-9ed4-5a94-8477-98cdceac951d"
+     },
+     {
+      "data": {
+       "15bc97aa-9bf2-5610-9d4f-fcbcffa8524b": [
+        {
+         "list_id": "2730d609-3a8d-49dc-bf51-6ac34e80294a",
+         "list_item_id": "53bfcf5e-8349-5305-8025-0ed9b15168ee",
+         "labels": [
+          {
+           "value": "Listed Building Grade I",
+           "language_id": "en",
+           "valuetype_id": "prefLabel"
+          }
+         ]
+        }
+       ]
+      },
+      "nodegroup_id": "15bc97aa-9bf2-5610-9d4f-fcbcffa8524b",
+      "parenttile_id": null,
+      "resourceinstance_id": "12b3c1e2-dda3-58ad-b437-79e9c2b9a722",
+      "sortorder": 0,
+      "tileid": "e7966404-156e-54df-a965-7dd036034e9a"
+     },
+     {
+      "data": {
+       "9f8d0bf7-ebc8-5555-9fad-4f38f59ebcba": [
+        {
+         "name": "site-plan.png",
+         "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABuCAIAAAAvT4++AAADMklEQVR42u3aP0gycRjA8afrz7kEWQgNXpC02RRREBg45lYRLQ01ODS9b1tuFTRES1tLQUMEORREYphxr1dB0KJQU1MFnm0VYg1R73C8h/jyBtm/0/f7mQ67+yH37dEDfzXmj0FB9VK4BQQGgUFgEBgEBoFBYAKDwCLSurTVurT1/jfBOp+3DhPMBIPAcKyat/6a9CFfKvhYuZ9DTDATXNbT3ev/Pqzz7eswwTxkgcAgMAgMAoPAIDCBQWAQGAQGgUFgEJjAIDAqEHuyqgF7spjgsrAHyvnrMME8ZIHAIDAIDAKDwCAwgUFgEBgEBoFBYBCYwCAwKhB7sqoBe7KY4LKwB8r56zDBPGSBwCAwCAwCg8AgMIFBYBAYBAaBQWAQmMAgMCoQe7KqAXuymOCysAfK+eswwTxk4b/9iAYTDAKDwCAwAAAAAADAa7q6uhKJhK7r+/v7mqb5/f7JyUnrT9PT029d7fb2llvqLOl02uv1isjw8PDm5uY7axHYcbLZbEdHh4jU19cHAgE70uzs7NPTUyKRcLvd6+vryWTSMIyenp6SnIuLi4eHh4ZhtLe329f6/f6jo6Ozs7OpqSn7zPn5+VQqlclkBgf57fILjY+Pm6a5uroaDAZLptA6WFlZ6e3tFZG2trZ0Ol187cPDw+joqIiMjY1tb2/blywvLwcCgebm5mw2a51ZKBSs2D6f7+rqitv+pdxu98TERCaTmZmZ+Tvw9fX1rz8uLi5qa2vtCwuFQkNDg4ioqprL5exLGhsbw+HwwsJCPp+3znx8fGxqarKO7+7uuOdfxOPx9PX12cfFkewD0zRdLpeIKIrS399ffHk+n7d6q6p6eXlpX7K3txcOh71e7/39vXWmfcD39Gf458+FLy8v0WhU0zQRaWlpKfnwVBRFUZTj42PrW3NgYCASiRSfUFdXFwqFRGRkZETXdfv17u7uaDTqcrlUVbVeeX5+JsP3CIVCJycnuq4nk8nOzs7iCYvFYru7u5qmxePxVCp1cHDg8/lKHrLW1tYMw9jZ2fF4PCJyenoaiUTm5ubOz883NjZubm6sxsVTywRXDFI5/SMaAAAAAACg0vwGENaAuDBcqFkAAAAASUVORK5CYII=",
+         "type": "image/png",
+         "accepted": true,
+         "selected": true,
+         "alt_text": "Site plan"
+        },
+        {
+         "name": "detail.png",
+         "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABuCAIAAAAvT4++AAADY0lEQVR42u2dO0tjQRSAxzFiQFCSOlqEdCkDWmnsUpgtLITYpbGIu42NaKl/YXdJYxlSpVs1QQxquIKQJoX+BR9gISmEkAhbBCTsYtyNecw5fl/lY5w7mY8zM86998zYZvK7Ab1YugDBgGBAMCAYEAwIBgQjGBAMCAYEA4IBwYBgBAOCQR4+9Z/w569v3Qt8/fJD8ccfU/nIzrtSP49sbYJ7VqtVsxLBffGq0rTF7khqJoLdEiA3lC12dYeyxa5uxyKH6P/t6y4DbB+rQvBQ7fZgYnA1I7ifDj4oYAiXQHCPXd/HflezwWmx21ttUtZcFru6HYu/mzTQobJduej9LKsgfGmbYMHde3A4K53uV3HcseCtymGuY9mL1mxXtGOnBUtZ3bjcTkv46g5iS1jobq0lfHUHMc9FKwfBCGZKk9xmYRHswhQoaxpmiGaIBgQDggHBgGBAMCAYwc7iwm6RrF02RwVLvPPqZpsZohmiAcGfZwoUd5vLXcGypmFnWytyiB5VGEm8S20JC93tJEeH5vA1ZNnRbVeAYBde/HLhBTjNEexyD7q/ShD/Ang7vAbU0QpSGcqYg0eSTUFHHhYxi6whO1aTZYc8WSO4BIL7EKlkupMq2JCrUr3gUa1veQFcc1+To0OzY7lZdjQcyjHQ4Vr6uRwaHtkZnAMFp65wbpJOr2oFf1AzJ58plM3ZhcAiCxAMCAYEAwAAAAAAAAD0xPPz8/n5+dnZ2eXlZTqdfqvYzs7O3z+MRqOZTKb99dPTE53pIq9ipqamyuXy2tpa92Lv1gOOCjbGxGIxz/MCgUAulzs9Pa1UKvPz88aYvb29Vqt1cnISjUY9z7u+vt7a2vrjzxEsQPDExMT9/f3BwcHCwoIxZm5urlardRbLZrOLi4vBYPD29hbB7vCvr4/6fL5ms5lIJCKRyOu4PT4+/vLy0v52e3s7lUolk8np6Wm6VV4Ex+Px4+Pju7s7v99vjLHWLi0tdRYrlUobGxuhUKherxPBwgQHAoGrq6vl5eVCobC+vm6MWVlZKRaL7d/W63Vr7ePj48zMTCQSaTQaCBb2b5Lneaurq8aY2dnZYrF4cXFRLpfD4XC72NHR0eHh4f7+/s3NTT6ff3h4mJyc7PRarVZ3d3fpTwAAAAAAAAAAAHiT36S9jWqY+rezAAAAAElFTkSuQmCC",
+         "type": "image/png",
+         "accepted": true,
+         "selected": true,
+         "alt_text": "Detail"
+        }
+       ]
+      },
+      "nodegroup_id": "9f8d0bf7-ebc8-5555-9fad-4f38f59ebcba",
+      "parenttile_id": null,
+      "resourceinstance_id": "12b3c1e2-dda3-58ad-b437-79e9c2b9a722",
+      "sortorder": 0,
+      "tileid": "943f8ca6-3643-5f25-a919-131b24e812dc"
+     }
+    ],
+    "tiles_loaded": true
+   },
+   {
+    "metadata": {},
+    "resourceinstance": {
+     "descriptors": {},
+     "graph_id": "64368e71-abbc-53ba-9bd8-87e2500f8e65",
+     "legacyid": "site-013",
+     "name": "Ciumhais an Óir",
+     "resourceinstanceid": "422339c8-b8db-5697-a382-3b34d16a2f47"
+    },
+    "tiles": [
+     {
+      "data": {
+       "f3a2d94a-536e-5977-bde4-9106de0e62cc": {
+        "en": {
+         "direction": "ltr",
+         "value": "Ciumhais an Óir"
+        }
+       }
+      },
+      "nodegroup_id": "f3a2d94a-536e-5977-bde4-9106de0e62cc",
+      "parenttile_id": null,
+      "resourceinstance_id": "422339c8-b8db-5697-a382-3b34d16a2f47",
+      "sortorder": 0,
+      "tileid": "e10bc231-da1f-512c-ab29-7a5f525e937f"
+     },
+     {
+      "data": {
+       "0f4e0296-8e30-5e30-80d6-31fe17281ad0": {
+        "en": {
+         "direction": "ltr",
+         "value": "Sholinganallur"
+        }
+       }
+      },
+      "nodegroup_id": "0f4e0296-8e30-5e30-80d6-31fe17281ad0",
+      "parenttile_id": null,
+      "resourceinstance_id": "422339c8-b8db-5697-a382-3b34d16a2f47",
+      "sortorder": 0,
+      "tileid": "1dc3db2f-fc83-5135-97fb-a9f114e884db"
+     },
+     {
+      "data": {
+       "93d67672-dc92-5b7b-855d-5eacb8c2eaf1": [
+        {
+         "resourceId": "23819b3b-3328-5001-9aa6-5cfc0e103c04",
+         "ontologyProperty": "",
+         "inverseOntologyProperty": "",
+         "resourceXresourceId": "27fad3b4-5358-5411-8331-55cc605fd21f"
+        }
+       ]
+      },
+      "nodegroup_id": "93d67672-dc92-5b7b-855d-5eacb8c2eaf1",
+      "parenttile_id": null,
+      "resourceinstance_id": "422339c8-b8db-5697-a382-3b34d16a2f47",
+      "sortorder": 0,
+      "tileid": "142cc5b1-2c1b-561d-8245-ee473e0f8070"
+     },
+     {
+      "data": {
+       "773f3fe8-bc58-549c-b7a9-05bb2957fd67": 4030000
+      },
+      "nodegroup_id": "d0415b22-2747-5ded-8914-203fd3709034",
+      "parenttile_id": null,
+      "resourceinstance_id": "422339c8-b8db-5697-a382-3b34d16a2f47",
+      "sortorder": 0,
+      "tileid": "f450daeb-d27c-5ecf-834f-c6d3f4decf69"
+     },
+     {
+      "data": {
+       "aeb12fb1-1ff4-5bcc-a64a-7974d874bad5": {
+        "features": [
+         {
+          "geometry": {
+           "coordinates": [
+            [
+             [
+              80.242,
+              13.044
+             ],
+             [
+              80.27,
+              13.044
+             ],
+             [
+              80.27,
+              13.056
+             ],
+             [
+              80.242,
+              13.056
+             ],
+             [
+              80.242,
+              13.044
+             ]
+            ]
+           ],
+           "type": "Polygon"
+          },
+          "properties": {},
+          "type": "Feature"
+         }
+        ],
+        "type": "FeatureCollection"
+       }
+      },
+      "nodegroup_id": "aeb12fb1-1ff4-5bcc-a64a-7974d874bad5",
+      "parenttile_id": null,
+      "resourceinstance_id": "422339c8-b8db-5697-a382-3b34d16a2f47",
+      "sortorder": 0,
+      "tileid": "5310505a-74f0-5ad2-80dc-3e1c9539db74"
+     },
+     {
+      "data": {
+       "079cd3c9-4cf6-54d0-aac1-9c95624616be": [
+        {
+         "resourceId": "7c36c3f5-bec7-53cc-b5ef-1a140351d602",
+         "ontologyProperty": "",
+         "inverseOntologyProperty": "",
+         "resourceXresourceId": "418791f9-ca4f-56d0-9833-015c205bfb84"
+        }
+       ]
+      },
+      "nodegroup_id": "079cd3c9-4cf6-54d0-aac1-9c95624616be",
+      "parenttile_id": null,
+      "resourceinstance_id": "422339c8-b8db-5697-a382-3b34d16a2f47",
+      "sortorder": 0,
+      "tileid": "acc7cfdd-7aaf-55eb-b2ec-4bbf049a57b9"
+     },
+     {
+      "tileid": "8291c242-58d2-5f91-83bd-33778bc07c9d",
+      "nodegroup_id": "16d7d3e7-736f-5a5f-87e2-57d5b8562494",
+      "data": {
+       "188eae98-f3ff-5ee6-b4dd-a148319fc66b": null
+      },
+      "parenttile_id": null,
+      "resourceinstance_id": "422339c8-b8db-5697-a382-3b34d16a2f47",
+      "sortorder": 0
+     },
+     {
+      "data": {
+       "56929b52-5df8-5a61-9f22-b449c0622344": "19XX"
+      },
+      "nodegroup_id": "56929b52-5df8-5a61-9f22-b449c0622344",
+      "parenttile_id": null,
+      "resourceinstance_id": "422339c8-b8db-5697-a382-3b34d16a2f47",
+      "sortorder": 0,
+      "tileid": "3d4da1b4-98fa-5800-88da-91d576282bd8"
+     },
+     {
+      "data": {
+       "7dc72b8a-72f0-5a7e-bc36-45104a2f9b79": true
+      },
+      "nodegroup_id": "7dc72b8a-72f0-5a7e-bc36-45104a2f9b79",
+      "parenttile_id": null,
+      "resourceinstance_id": "422339c8-b8db-5697-a382-3b34d16a2f47",
+      "sortorder": 0,
+      "tileid": "b0bfafb8-4bc5-502b-9b0c-639ae8e485bf"
+     },
+     {
+      "data": {
+       "11412fa9-5f8b-52a3-bb70-53e21f34ad61": {
+        "url": "https://records.example.org/site/3",
+        "url_label": "Heritage record"
+       }
+      },
+      "nodegroup_id": "11412fa9-5f8b-52a3-bb70-53e21f34ad61",
+      "parenttile_id": null,
+      "resourceinstance_id": "422339c8-b8db-5697-a382-3b34d16a2f47",
+      "sortorder": 0,
+      "tileid": "b3656543-e689-5df2-981c-80d121d3bba0"
+     },
+     {
+      "data": {
+       "15bc97aa-9bf2-5610-9d4f-fcbcffa8524b": [
+        {
+         "list_id": "2730d609-3a8d-49dc-bf51-6ac34e80294a",
+         "list_item_id": "513a85dd-477d-597d-a624-47274b860ba7",
+         "labels": [
+          {
+           "value": "Conservation Area",
+           "language_id": "en",
+           "valuetype_id": "prefLabel"
+          }
+         ]
+        }
+       ]
+      },
+      "nodegroup_id": "15bc97aa-9bf2-5610-9d4f-fcbcffa8524b",
+      "parenttile_id": null,
+      "resourceinstance_id": "422339c8-b8db-5697-a382-3b34d16a2f47",
+      "sortorder": 0,
+      "tileid": "8e06a8bd-e42a-5f5a-9d69-4729769c1614"
+     },
+     {
+      "data": {
+       "9f8d0bf7-ebc8-5555-9fad-4f38f59ebcba": [
+        {
+         "name": "photograph.png",
+         "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABuCAIAAAAvT4++AAAEGklEQVR42u2bP0hjSxjFT2bF2AgiiNHKNG7hn0ZTioKFYKEGIhaa0laws1WwCJYWlgaiPtAF4aIJinCTSXALS7XYTpSIgkWEaKLEuMXAfb4YdtWnkHycU93M9Tcj58vFBH66np+fAQD4PhTAO/Nr7wfZCmfV613eeyrZSmb/HfC73h0lJ5GtWFaxKdmsYlOy2W///DxhU4JZxaZks4pNyWYVm5LNKjYlm1VsSjar2JRsVrEp2axiU7JZxaZks4pNyWYVm5LNKjYlm1VsSjar2JRs1uU4WWxKJKvYlGyWTpZwlk6WcJZOlnCWTpZwlk6WcJZOlnCWTpZwlk6WcJZOlnCWTpZwlk6WcJZOlnCWThadLDZVzSydLOEsnSzhLJ0s4SydLDpZbKqaWTpZwlk6WcJZOlnCWTpZwlk6WcJZOlnCWTpZwlk6WcJZOlnCWTpZwlk6WcJZOlnCWTpZwlk6WXSy2FQ1s3SyhLN0soSzdLKEs3Sy6GSxqWpm6WQJZ+lkCWfpZAln6WQJZ+lkCWfpZAln6WQJZ+lkCWfpZAln6WQJZ+lkCWfpZAln6WQJZ+lk0cliU9XM0skSztLJEs7SyRLO0smik8WmqpmlkyWZ/c+A30u+/HmylckCUIb5AOlQZCuZZRiGYRiGYRiGYRjG5P7+Ph6P27adSqV8Ph+ATCbzV2pubu4rfpm3HM18sNOurq6jo6M3tvxFk+CAv7bTm5sbs7K4uJhIJI6Pj/1+PwCPxxONRrXW0WjU4/HMz88XCoX9/f2S9ebmZsuykslkJBIxW5ndVldXZ2ZmOjo6UqnUycnJ7Oysc2tpaSmZTGqtvV5v2aOZTxvw4ODgwcEBgFwuZ2bQ3t5+fn4OYH19PRgMAggGg2traw5Vsh6JRCYnJwGMjY3l83mzbS6XGxoaArCystLX19fY2Hh5eencmpiYADA1NbW9vV32aOZz/gYnEgnLstra2gDk8/mGhgZz9/b2FkA6nXa73QDcbnc6nXYGXLJ+cXFhXtbU1Nzd3ZkdstmsUgpAfX399PR0KBTKZrPO0bW1tQa/uroqezTzlvzpPxseHx8HBgb6+/tHRkbOzs7MivNYG1PA5XKVZUvWzbQAKKWcW4VCoVgsAtja2gKwvLxsXgIoFotPT0/m+uHhoezRzP8d8Os4A3Bi23YgEAAQCATi8bgZoVKqZP3w8HB0dBSA3+9//Z7o7e3d3Nysq6szT7l50IeHhwGMj4/btl32aObzP7i+XDHXra2tsVhMax2LxVpaWgDs7u7u7OyUrHu9Xq211joUCr38kGUuFhYWTk9PNzY2rq+vzYwzmUw4HNZaW5bV1NRU9mimghIOh7u7uwH4fD6tNb8USUtPT4/Wem9vz7btzs5ODphhGIZhGIZhGIZhmC/Ib++fWenbSTJHAAAAAElFTkSuQmCC",
+         "type": "image/png",
+         "accepted": true,
+         "selected": true,
+         "alt_text": "Photograph"
+        },
+        {
+         "name": "context.png",
+         "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABuCAIAAAAvT4++AAAEcUlEQVR42u2dv0sjQRTH36yRIKRQkCOKEUxhbeMPPEsFAxYKKWwWG23uKq0UbAT9DzwLsbCIhY2VyaKYxF3OwsYfYKWdGuWu0kaCRL1iuaA5Lxe8ZHbm7fdTxbiJO++zb3dndt4ofnz/QoAvBkIAwQCCAQQDCAYQDCAYQDAEAwgGEAwgGEAwgGAAwRAMIBhA8Fs+ff6GEHsbpYCcvf958BUiPUkAQ87eI5W9ik9AcnuQypIPd1GjWZXl2+BbzfLDImo6bRaaPQ9Fbe+iy++3fy7MHh7oQs7Ed9+msucNFzIrG3ylWZHGCvmlK+w1K9VAD4YqeV+YVTt8hYfFZ8xSWc3mCM+rCxloVrkJQpHy0TIxUtyx4nsu1KkP1i6VtdhhoVoBuBZR0+hYFGpW+CsbQe1OM4rO6FCzK6Xj/aBQfI0ORWKq762+0GIRFg/jq3svTmi0yo78Dom+nTctBcvMJzajbELHdbJqGn1mA6hC34XQqm6C5WMujSe+V7crxfUhpmCwlOF/uuH9fFqwWavyA578MMNEMFuMtEJn/pk8xK34rJILs6+mhgmuywl/YLya5eTOADHFtVWhZsbzdtkKrlAz++oK5oL/mcHsS+ICvlXrE80GS7UfOyeX/yAEa9MP9lVJHEaymN9aYywaY9F81fpBswG7lWyv74UZMzqYpzLmZDHXjFmVav1FnwrGvGi2glHZwFawgjHVUbMBu7y7UqgPZp7KqPBnvsNYo4P5nmOVHeZNwDpZzJvjjWDGT+hUa5qBEPDuSmG1WeaNxXrRzBtec8FY1d/bIBiwy/vCjP+6wjyVa3iKfrcx+L9JkiMjr3QFaktCIafLZMgxCrtexSeAxOWdymwr/IGMbhKAYAAAAAAAAAAAAAAZTE1NHR0d2badTCYjkUjlH5ydna36lqDKDA0NZTKZhoYGIorFYul0uvLP3t3dVX1LUGV2dnb6+vqKP66urtbX14fD4VQq5ThOKpUKh8OuoaWlJdu2T09Px8bGiGhhYaFQKOzu7jY1NSUSib29Pcdxenp6iGhra2t0dNT9NtM0i1si2h5wfX0dDAZL3tzY2DBNk4hM00wkEkT08PAwPT1NRNFo9PLy8nVerq2t9fb2ElF7e/vJyQkRtbW1HR8fd3d3W5aFDPaY29vbPwXncjn3zWAwmMvliCifzzc2Nrq/vb+/f63t6upq/zcXFxd1dXVENDMzc3Nz09HRAcFy+OsD//Pz866ursPDQyISQqyvr09MTAghSjZ7fHwsSnp5eXnz1YHA8PBwPp83DGNgYODp6YmIQqFQoVAIhUIIvRz++rhwZWVlcXHRzdfx8XH3RTabjcfjRBSPx/f394no+fn5nS81DMMwDg4O3KtyLBabm5sjos7OzsHBwZGRkeXlZfdYcbeEBm+Yn58/OzvLZrObm5vNzc1E1NraalmW4ziWZbW0tJScY4uvk8nk9vZ2JBKxLMu27XQ6HY1GiSiTyfT397tHz+TkZHFLhBoAAAAAAAAAAAAAAL/zC9Qxqy63F0ZBAAAAAElFTkSuQmCC",
+         "type": "image/png",
+         "accepted": true,
+         "selected": true,
+         "alt_text": "Context"
+        }
+       ]
+      },
+      "nodegroup_id": "9f8d0bf7-ebc8-5555-9fad-4f38f59ebcba",
+      "parenttile_id": null,
+      "resourceinstance_id": "422339c8-b8db-5697-a382-3b34d16a2f47",
+      "sortorder": 0,
+      "tileid": "e16cf33a-dc9a-51fe-a313-ecb780cad347"
+     }
+    ],
+    "tiles_loaded": true
+   },
+   {
+    "metadata": {},
+    "resourceinstance": {
+     "descriptors": {},
+     "graph_id": "64368e71-abbc-53ba-9bd8-87e2500f8e65",
+     "legacyid": "site-006",
+     "name": "Baile Thoir",
+     "resourceinstanceid": "5269957d-e150-5a31-bc17-53cc8d9b38ee"
+    },
+    "tiles": [
+     {
+      "data": {
+       "079cd3c9-4cf6-54d0-aac1-9c95624616be": [
+        {
+         "resourceId": "d793cffb-8aec-57af-9f9d-f3cb0da857b3",
+         "ontologyProperty": "",
+         "inverseOntologyProperty": "",
+         "resourceXresourceId": "6151371b-d817-57e0-aa73-0ca4952db74f"
+        }
+       ]
+      },
+      "nodegroup_id": "079cd3c9-4cf6-54d0-aac1-9c95624616be",
+      "parenttile_id": null,
+      "resourceinstance_id": "5269957d-e150-5a31-bc17-53cc8d9b38ee",
+      "sortorder": 0,
+      "tileid": "5a6632b9-a794-5de1-97ee-6d6fcacea184"
+     },
+     {
+      "data": {
+       "f3a2d94a-536e-5977-bde4-9106de0e62cc": {
+        "en": {
+         "direction": "ltr",
+         "value": "East Town"
+        },
+        "ga": {
+         "direction": "ltr",
+         "value": "Baile Thoir"
+        }
+       }
+      },
+      "nodegroup_id": "f3a2d94a-536e-5977-bde4-9106de0e62cc",
+      "parenttile_id": null,
+      "resourceinstance_id": "5269957d-e150-5a31-bc17-53cc8d9b38ee",
+      "sortorder": 0,
+      "tileid": "af56cadf-b582-534e-8222-6801d35303c2"
+     },
+     {
+      "data": {
+       "aeb12fb1-1ff4-5bcc-a64a-7974d874bad5": {
+        "features": [
+         {
+          "geometry": {
+           "coordinates": [
+            [
+             [
+              80.2793,
+              13.08
+             ],
+             [
+              80.298,
+              13.08
+             ],
+             [
+              80.298,
+              13.092
+             ],
+             [
+              80.2793,
+              13.092
+             ],
+             [
+              80.2793,
+              13.08
+             ]
+            ]
+           ],
+           "type": "Polygon"
+          },
+          "properties": {},
+          "type": "Feature"
+         }
+        ],
+        "type": "FeatureCollection"
+       }
+      },
+      "nodegroup_id": "aeb12fb1-1ff4-5bcc-a64a-7974d874bad5",
+      "parenttile_id": null,
+      "resourceinstance_id": "5269957d-e150-5a31-bc17-53cc8d9b38ee",
+      "sortorder": 0,
+      "tileid": "b5169b7b-59ab-5d7c-90f5-743b6f5cbd38"
+     },
+     {
+      "data": {
+       "93d67672-dc92-5b7b-855d-5eacb8c2eaf1": [
+        {
+         "resourceId": "23819b3b-3328-5001-9aa6-5cfc0e103c04",
+         "ontologyProperty": "",
+         "inverseOntologyProperty": "",
+         "resourceXresourceId": "14dd352b-5db2-5131-a00f-7ef0ed7ab39a"
+        }
+       ]
+      },
+      "nodegroup_id": "93d67672-dc92-5b7b-855d-5eacb8c2eaf1",
+      "parenttile_id": null,
+      "resourceinstance_id": "5269957d-e150-5a31-bc17-53cc8d9b38ee",
+      "sortorder": 0,
+      "tileid": "bb02f0a0-94d5-5ffc-9cdf-897cfeb3e214"
+     },
+     {
+      "data": {
+       "0f4e0296-8e30-5e30-80d6-31fe17281ad0": {
+        "en": {
+         "direction": "ltr",
+         "value": "Adyar"
+        }
+       }
+      },
+      "nodegroup_id": "0f4e0296-8e30-5e30-80d6-31fe17281ad0",
+      "parenttile_id": null,
+      "resourceinstance_id": "5269957d-e150-5a31-bc17-53cc8d9b38ee",
+      "sortorder": 0,
+      "tileid": "0bc26de7-93de-592f-9697-b5600f87b7ea"
+     },
+     {
+      "data": {
+       "773f3fe8-bc58-549c-b7a9-05bb2957fd67": 2710000
+      },
+      "nodegroup_id": "d0415b22-2747-5ded-8914-203fd3709034",
+      "parenttile_id": null,
+      "resourceinstance_id": "5269957d-e150-5a31-bc17-53cc8d9b38ee",
+      "sortorder": 0,
+      "tileid": "8924502e-36b7-5907-8081-d12f30e283d6"
+     },
+     {
+      "tileid": "7d69f5bf-f0d3-5299-ae3e-389b5c4fb116",
+      "nodegroup_id": "16d7d3e7-736f-5a5f-87e2-57d5b8562494",
+      "data": {
+       "188eae98-f3ff-5ee6-b4dd-a148319fc66b": null
+      },
+      "parenttile_id": null,
+      "resourceinstance_id": "5269957d-e150-5a31-bc17-53cc8d9b38ee",
+      "sortorder": 0
+     },
+     {
+      "data": {
+       "56929b52-5df8-5a61-9f22-b449c0622344": "2001-06"
+      },
+      "nodegroup_id": "56929b52-5df8-5a61-9f22-b449c0622344",
+      "parenttile_id": null,
+      "resourceinstance_id": "5269957d-e150-5a31-bc17-53cc8d9b38ee",
+      "sortorder": 0,
+      "tileid": "3adb5974-7b30-5b8b-b686-442b42424d48"
+     },
+     {
+      "data": {
+       "7dc72b8a-72f0-5a7e-bc36-45104a2f9b79": false
+      },
+      "nodegroup_id": "7dc72b8a-72f0-5a7e-bc36-45104a2f9b79",
+      "parenttile_id": null,
+      "resourceinstance_id": "5269957d-e150-5a31-bc17-53cc8d9b38ee",
+      "sortorder": 0,
+      "tileid": "49f4e3b0-a666-5cd0-a70e-cd5b22d9cf76"
+     },
+     {
+      "data": {
+       "11412fa9-5f8b-52a3-bb70-53e21f34ad61": {
+        "url": "https://records.example.org/site/4",
+        "url_label": "Heritage record"
+       }
+      },
+      "nodegroup_id": "11412fa9-5f8b-52a3-bb70-53e21f34ad61",
+      "parenttile_id": null,
+      "resourceinstance_id": "5269957d-e150-5a31-bc17-53cc8d9b38ee",
+      "sortorder": 0,
+      "tileid": "e60b8df7-76c7-5c9e-a0f2-21b717fe5a4a"
+     },
+     {
+      "data": {
+       "15bc97aa-9bf2-5610-9d4f-fcbcffa8524b": [
+        {
+         "list_id": "2730d609-3a8d-49dc-bf51-6ac34e80294a",
+         "list_item_id": "7e633ade-4cd4-5955-854b-e6fe322ed2b0",
+         "labels": [
+          {
+           "value": "Registered Park",
+           "language_id": "en",
+           "valuetype_id": "prefLabel"
+          }
+         ]
+        }
+       ]
+      },
+      "nodegroup_id": "15bc97aa-9bf2-5610-9d4f-fcbcffa8524b",
+      "parenttile_id": null,
+      "resourceinstance_id": "5269957d-e150-5a31-bc17-53cc8d9b38ee",
+      "sortorder": 0,
+      "tileid": "aea47c86-2a5e-5bf6-9bc9-70609b14d532"
+     },
+     {
+      "data": {
+       "9f8d0bf7-ebc8-5555-9fad-4f38f59ebcba": [
+        {
+         "name": "elevation.png",
+         "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABuCAIAAAAvT4++AAAC70lEQVR42u3bMUhicRzA8Z96oENJNVlag4tDtEVRVFtHjoKry4GDY05KLsWJtAbRUjdZg5tQPpFCfVRDLQq62GZouGlE1FI3/DkPuia70uz7meL1VPh//b0/PNWwvLYn6F9GloDAIDAIDAKDwCAwCExg9ItvLEFnMj9/vOXh3yO/mGAQGAQmMAgMAoPAIDAIDAKDwARGf+i5Dxs+y018JhgEBoFBYBCYwCAwCAwCg8AgMAgMAhMYnx+/Teoh7/FRKRPMJRoEBoFBYBAYBAaBCYy+8aY7WXxJnQkGgUFgEBgEJjAIDAKDwPgwX+I7WV/5jhsTzCUaBAaBQWAQGAQGgQkMAoPAIDAIDAKDwAQGgUFgEBgExv9jWF7bYxWYYBAYBAaBAQAAAAAA3sX9/X3uj2AwKCLNZrOzpwqFQiIyOTkZCARY2F7xb86OA3f8QLxRJ7cqh4eH4/H48fGxruszMzMiUigU7Ha7iJjN5kqlMjU1dXp6WiqVVldXRWR9fX1gYCCTybRL22y2VCql63oqlbLZbOp4NBrN5/PFYtHj8RCmmxO8u7s7OzsrIhMTE4VCQUQikYi69q6srGxtbe3s7CwuLo6MjNTr9RdPpf7Y39/3+Xwi4vP54vG42g7Uu8HpdFarVRb/o/fgubm5dp7r6+v28aurK5PJ5HK50um0iGxvby8sLAwODvr9/s3Nzbu7u1cD12o1s9msJr5Wq4nIw8PD0NCQOqfVarH43Zzgm5sbi8UiIkajcWlpSf3r8vLSarWen58bDIZ0Ou33+x0Ox+3t7auB6/X6i8DtM9mwu78Hn52dqW3S7XaHw2F1MJlMhkKhi4uL5+fn6enpRCJhsVhURfVWMBr/vlY2m/V6vSLi9XpzuZyIPD09EaObl+hYLKbGNBwOj4+Pa5qWz+dPTk6cTqc62eVyPT4+zs/Pi8jGxka5XD44OGg0Gqrx0dHR4eFhezrHxsY0TdN1XdO00dHRF1PLBAMAAAAAAABfzm9w4itnuKz4TAAAAABJRU5ErkJggg==",
+         "type": "image/png",
+         "accepted": true,
+         "selected": true,
+         "alt_text": "Elevation"
+        },
+        {
+         "name": "aerial-view.png",
+         "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABuCAIAAAAvT4++AAAEm0lEQVR42u2dy0tyTRzHxzHSEqXaBF0hguB1UYso6GK1yQItlII2tXgoqE1URBREUPt43tNGAt/XTRTUqlWGtTh5WSSRQgb5B3TZSRsRkp6FIMKpfAovM+P3s7KOZ87M7zPzOxfPmaP657/fBIgLRQggGEAwgGAAwQCCAQQDCIZgAMEAggEEAwgGEAwgGIIBBAMIBhAMCkmZwG2L/Fr6+y8b//8XgoUy+vW6wvguK3GvWcvk3XQZvIptukxgr99SkrVYTk2rOLrxPauDHIa+kNuC4CwRz2usi7XdEhL8WYgLHF9GqiGa4A/DWsSYslYfjgWzHEqONDMqWBlBBsPHRSUp7P4YZa0Kc2rOt2Be7PLimK0Uze8FYWZrThGjfAxldsYxhV2xHVP2I8WvYwhm9+BTmHZR1qLA+++vrCVqynJ0kKi5FyxqcmanjRQdX+y2UAxfsVtK0eXFbhFufBccCIbg/O+WRH2qILNdxdoNYwRjBAMIBhAMIBhAMIBgAMEQXCIXAfINCxdzMIIxggEE5zabiZefS1SwqL8xMNVSii4vdltoyXbtEmkjRccXuxWUtQ7Ou2PW7uNnYgSXwh0dSNEiDGI84S9yombzISt2n2zgyzGzj9AxN8sOX3N0sF9h5vbBXExdw1F35OMJfzYdc5FsMNOdaHXjRjCbocRclYU7ucRss4IIzrobxnzRIggmmPFdeMHfPaLO7TsbuFPLq+BinTvhrStFO13Oq2m8N0lM03jzGdOmf+Ab7y7k3ndpghvfIRgAAAAAAAAAAABACGZnZxOJRG1tbdZvGo3GhYWFDxfFYrEfrAVygurrxaenp9Fo9P7+3uVy/XgbsVisqqoKsS4KX12qrKys1Ol0TqfTYrEQQqqrqw8ODi4uLq6urrq6utLyXC7X4uJieqQajUafz3d3d7e8vKwsMxQK1dfXE0I0Gk00GqWUptZSFv7w8NDc3EwIOT8/lySJEDI4OHh0dARnOcNms62urhJCbm5uysvLnU5nd3c3IaSpqSkUCqW+E4/HzWZzZip2OBz9/f01NTWPj4/KFL25uZnKySMjI3t7e+mlysIlSZqenqaUejweWZYJIVtbWzMzM/DyLb76uXB8fLyjo2NiYqKurm5gYMBsNre2tqYW6XQ6tVqdTCaTyaTH48lca21tbWpqymKxGAwGZZknJyeSJDkcDqvVmjkclYW73W673R4Oh29vb9vb2/V6vclk2t/fh7PcoFarA4FAOvqSJD09PWm1WkIIpdRkMilHZ+qz2+2em5traGh4fX398CArGAwaDIZAIKBSqdJLlYVXVFSEQqH5+fmxsbHt7W2r1er1euElZ/vg3t7ecDic+uz1eoeHh/1+v81mI4SMjo5ubGx8tmJnZ+fx8bFWq9VoNJ8duK2vr19fX7+/v6f/qSw8Ho8/Pz/b7Xa/3+/z+VZWVlKJGuSG3d3dycnJ9J+yLA8NDZ2dncmyfHl52dLS8tkI3tnZiUQih4eHLy8vKcfBYDCzQ7S1tSUSiZ6ensy1GhsblYUvLS1FIhFCiF6vf3t76+vrgxcAAAAAAAAAAAAAAMTkD+ZzMTb5I6asAAAAAElFTkSuQmCC",
+         "type": "image/png",
+         "accepted": true,
+         "selected": true,
+         "alt_text": "Aerial view"
+        }
+       ]
+      },
+      "nodegroup_id": "9f8d0bf7-ebc8-5555-9fad-4f38f59ebcba",
+      "parenttile_id": null,
+      "resourceinstance_id": "5269957d-e150-5a31-bc17-53cc8d9b38ee",
+      "sortorder": 0,
+      "tileid": "e661d244-ade9-5701-8a8a-49aac319e75d"
+     }
+    ],
+    "tiles_loaded": true
+   },
+   {
+    "metadata": {},
+    "resourceinstance": {
+     "descriptors": {},
+     "graph_id": "64368e71-abbc-53ba-9bd8-87e2500f8e65",
+     "legacyid": "site-012",
+     "name": "Baile na Cíoraí",
+     "resourceinstanceid": "58dc24e1-eeea-539d-838d-26628ce2da5b"
+    },
+    "tiles": [
+     {
+      "data": {
+       "f3a2d94a-536e-5977-bde4-9106de0e62cc": {
+        "en": {
+         "direction": "ltr",
+         "value": "Baile na Cíoraí"
+        }
+       }
+      },
+      "nodegroup_id": "f3a2d94a-536e-5977-bde4-9106de0e62cc",
+      "parenttile_id": null,
+      "resourceinstance_id": "58dc24e1-eeea-539d-838d-26628ce2da5b",
+      "sortorder": 0,
+      "tileid": "6c51e69e-7a05-5920-8f19-13471afa8d48"
+     },
+     {
+      "data": {
+       "0f4e0296-8e30-5e30-80d6-31fe17281ad0": {
+        "en": {
+         "direction": "ltr",
+         "value": "Ambattur"
+        }
+       }
+      },
+      "nodegroup_id": "0f4e0296-8e30-5e30-80d6-31fe17281ad0",
+      "parenttile_id": null,
+      "resourceinstance_id": "58dc24e1-eeea-539d-838d-26628ce2da5b",
+      "sortorder": 0,
+      "tileid": "17d6dddf-6a4a-5f8d-a62c-258c48de51ee"
+     },
+     {
+      "data": {
+       "aeb12fb1-1ff4-5bcc-a64a-7974d874bad5": {
+        "features": [
+         {
+          "geometry": {
+           "coordinates": [
+            [
+             [
+              80.27,
+              13.044
+             ],
+             [
+              80.298,
+              13.044
+             ],
+             [
+              80.298,
+              13.068
+             ],
+             [
+              80.27,
+              13.068
+             ],
+             [
+              80.27,
+              13.044
+             ]
+            ]
+           ],
+           "type": "Polygon"
+          },
+          "properties": {},
+          "type": "Feature"
+         }
+        ],
+        "type": "FeatureCollection"
+       }
+      },
+      "nodegroup_id": "aeb12fb1-1ff4-5bcc-a64a-7974d874bad5",
+      "parenttile_id": null,
+      "resourceinstance_id": "58dc24e1-eeea-539d-838d-26628ce2da5b",
+      "sortorder": 0,
+      "tileid": "471adedd-a5fa-51f1-9a53-3b816dbdd6f9"
+     },
+     {
+      "data": {
+       "93d67672-dc92-5b7b-855d-5eacb8c2eaf1": [
+        {
+         "resourceId": "23819b3b-3328-5001-9aa6-5cfc0e103c04",
+         "ontologyProperty": "",
+         "inverseOntologyProperty": "",
+         "resourceXresourceId": "c17f23cd-df4b-5b37-a835-7a2844d7b686"
+        }
+       ]
+      },
+      "nodegroup_id": "93d67672-dc92-5b7b-855d-5eacb8c2eaf1",
+      "parenttile_id": null,
+      "resourceinstance_id": "58dc24e1-eeea-539d-838d-26628ce2da5b",
+      "sortorder": 0,
+      "tileid": "5602311b-2f37-5cf8-8eff-1c9c941b1d5c"
+     },
+     {
+      "data": {
+       "079cd3c9-4cf6-54d0-aac1-9c95624616be": [
+        {
+         "resourceId": "7c36c3f5-bec7-53cc-b5ef-1a140351d602",
+         "ontologyProperty": "",
+         "inverseOntologyProperty": "",
+         "resourceXresourceId": "0e6f6bb3-97a0-5c10-9146-efcbf5fba61c"
+        }
+       ]
+      },
+      "nodegroup_id": "079cd3c9-4cf6-54d0-aac1-9c95624616be",
+      "parenttile_id": null,
+      "resourceinstance_id": "58dc24e1-eeea-539d-838d-26628ce2da5b",
+      "sortorder": 0,
+      "tileid": "811152ab-81c1-5a20-a487-d05b582e485e"
+     },
+     {
+      "data": {
+       "773f3fe8-bc58-549c-b7a9-05bb2957fd67": 8070000
+      },
+      "nodegroup_id": "d0415b22-2747-5ded-8914-203fd3709034",
+      "parenttile_id": null,
+      "resourceinstance_id": "58dc24e1-eeea-539d-838d-26628ce2da5b",
+      "sortorder": 0,
+      "tileid": "85d7837f-708c-503f-aacc-5c6f48ece327"
+     },
+     {
+      "tileid": "3199bbbe-42ab-5d65-acdb-37aa78557745",
+      "nodegroup_id": "16d7d3e7-736f-5a5f-87e2-57d5b8562494",
+      "data": {
+       "188eae98-f3ff-5ee6-b4dd-a148319fc66b": null
+      },
+      "parenttile_id": null,
+      "resourceinstance_id": "58dc24e1-eeea-539d-838d-26628ce2da5b",
+      "sortorder": 0
+     },
+     {
+      "data": {
+       "56929b52-5df8-5a61-9f22-b449c0622344": "1975?"
+      },
+      "nodegroup_id": "56929b52-5df8-5a61-9f22-b449c0622344",
+      "parenttile_id": null,
+      "resourceinstance_id": "58dc24e1-eeea-539d-838d-26628ce2da5b",
+      "sortorder": 0,
+      "tileid": "8ff6200a-d6c1-5c23-ac81-78c58dd319a3"
+     },
+     {
+      "data": {
+       "7dc72b8a-72f0-5a7e-bc36-45104a2f9b79": true
+      },
+      "nodegroup_id": "7dc72b8a-72f0-5a7e-bc36-45104a2f9b79",
+      "parenttile_id": null,
+      "resourceinstance_id": "58dc24e1-eeea-539d-838d-26628ce2da5b",
+      "sortorder": 0,
+      "tileid": "8d06b4d2-88f9-53b8-be06-97caaf3a981e"
+     },
+     {
+      "data": {
+       "11412fa9-5f8b-52a3-bb70-53e21f34ad61": {
+        "url": "https://records.example.org/site/5",
+        "url_label": "Heritage record"
+       }
+      },
+      "nodegroup_id": "11412fa9-5f8b-52a3-bb70-53e21f34ad61",
+      "parenttile_id": null,
+      "resourceinstance_id": "58dc24e1-eeea-539d-838d-26628ce2da5b",
+      "sortorder": 0,
+      "tileid": "758e0230-bafa-5ac7-a543-b454a9e43df4"
+     },
+     {
+      "data": {
+       "15bc97aa-9bf2-5610-9d4f-fcbcffa8524b": [
+        {
+         "list_id": "2730d609-3a8d-49dc-bf51-6ac34e80294a",
+         "list_item_id": "388293d0-bb7d-5468-91e5-9baa4088b7de",
+         "labels": [
+          {
+           "value": "Listed Building Grade II",
+           "language_id": "en",
+           "valuetype_id": "prefLabel"
+          }
+         ]
+        }
+       ]
+      },
+      "nodegroup_id": "15bc97aa-9bf2-5610-9d4f-fcbcffa8524b",
+      "parenttile_id": null,
+      "resourceinstance_id": "58dc24e1-eeea-539d-838d-26628ce2da5b",
+      "sortorder": 0,
+      "tileid": "5e53f16a-6bd4-5c31-8707-75a5e6264bf3"
+     },
+     {
+      "data": {
+       "9f8d0bf7-ebc8-5555-9fad-4f38f59ebcba": [
+        {
+         "name": "detail.png",
+         "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABuCAIAAAAvT4++AAADY0lEQVR42u2dO0tjQRSAxzFiQFCSOlqEdCkDWmnsUpgtLITYpbGIu42NaKl/YXdJYxlSpVs1QQxquIKQJoX+BR9gISmEkAhbBCTsYtyNecw5fl/lY5w7mY8zM86998zYZvK7Ab1YugDBgGBAMCAYEAwIBgQjGBAMCAYEA4IBwYBgBAOCQR4+9Z/w569v3Qt8/fJD8ccfU/nIzrtSP49sbYJ7VqtVsxLBffGq0rTF7khqJoLdEiA3lC12dYeyxa5uxyKH6P/t6y4DbB+rQvBQ7fZgYnA1I7ifDj4oYAiXQHCPXd/HflezwWmx21ttUtZcFru6HYu/mzTQobJduej9LKsgfGmbYMHde3A4K53uV3HcseCtymGuY9mL1mxXtGOnBUtZ3bjcTkv46g5iS1jobq0lfHUHMc9FKwfBCGZKk9xmYRHswhQoaxpmiGaIBgQDggHBgGBAMCAYwc7iwm6RrF02RwVLvPPqZpsZohmiAcGfZwoUd5vLXcGypmFnWytyiB5VGEm8S20JC93tJEeH5vA1ZNnRbVeAYBde/HLhBTjNEexyD7q/ShD/Ang7vAbU0QpSGcqYg0eSTUFHHhYxi6whO1aTZYc8WSO4BIL7EKlkupMq2JCrUr3gUa1veQFcc1+To0OzY7lZdjQcyjHQ4Vr6uRwaHtkZnAMFp65wbpJOr2oFf1AzJ58plM3ZhcAiCxAMCAYEAwAAAAAAAAD0xPPz8/n5+dnZ2eXlZTqdfqvYzs7O3z+MRqOZTKb99dPTE53pIq9ipqamyuXy2tpa92Lv1gOOCjbGxGIxz/MCgUAulzs9Pa1UKvPz88aYvb29Vqt1cnISjUY9z7u+vt7a2vrjzxEsQPDExMT9/f3BwcHCwoIxZm5urlardRbLZrOLi4vBYPD29hbB7vCvr4/6fL5ms5lIJCKRyOu4PT4+/vLy0v52e3s7lUolk8np6Wm6VV4Ex+Px4+Pju7s7v99vjLHWLi0tdRYrlUobGxuhUKherxPBwgQHAoGrq6vl5eVCobC+vm6MWVlZKRaL7d/W63Vr7ePj48zMTCQSaTQaCBb2b5Lneaurq8aY2dnZYrF4cXFRLpfD4XC72NHR0eHh4f7+/s3NTT6ff3h4mJyc7PRarVZ3d3fpTwAAAAAAAAAAAHiT36S9jWqY+rezAAAAAElFTkSuQmCC",
+         "type": "image/png",
+         "accepted": true,
+         "selected": true,
+         "alt_text": "Detail"
+        },
+        {
+         "name": "site-plan.png",
+         "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABuCAIAAAAvT4++AAADMklEQVR42u3aP0gycRjA8afrz7kEWQgNXpC02RRREBg45lYRLQ01ODS9b1tuFTRES1tLQUMEORREYphxr1dB0KJQU1MFnm0VYg1R73C8h/jyBtm/0/f7mQ67+yH37dEDfzXmj0FB9VK4BQQGgUFgEBgEBoFBYAKDwCLSurTVurT1/jfBOp+3DhPMBIPAcKyat/6a9CFfKvhYuZ9DTDATXNbT3ev/Pqzz7eswwTxkgcAgMAgMAoPAIDCBQWAQGAQGgUFgEJjAIDAqEHuyqgF7spjgsrAHyvnrMME8ZIHAIDAIDAKDwCAwgUFgEBgEBoFBYBCYwCAwKhB7sqoBe7KY4LKwB8r56zDBPGSBwCAwCAwCg8AgMIFBYBAYBAaBQWAQmMAgMCoQe7KqAXuymOCysAfK+eswwTxk4b/9iAYTDAKDwCAwAAAAAADAa7q6uhKJhK7r+/v7mqb5/f7JyUnrT9PT029d7fb2llvqLOl02uv1isjw8PDm5uY7axHYcbLZbEdHh4jU19cHAgE70uzs7NPTUyKRcLvd6+vryWTSMIyenp6SnIuLi4eHh4ZhtLe329f6/f6jo6Ozs7OpqSn7zPn5+VQqlclkBgf57fILjY+Pm6a5uroaDAZLptA6WFlZ6e3tFZG2trZ0Ol187cPDw+joqIiMjY1tb2/blywvLwcCgebm5mw2a51ZKBSs2D6f7+rqitv+pdxu98TERCaTmZmZ+Tvw9fX1rz8uLi5qa2vtCwuFQkNDg4ioqprL5exLGhsbw+HwwsJCPp+3znx8fGxqarKO7+7uuOdfxOPx9PX12cfFkewD0zRdLpeIKIrS399ffHk+n7d6q6p6eXlpX7K3txcOh71e7/39vXWmfcD39Gf458+FLy8v0WhU0zQRaWlpKfnwVBRFUZTj42PrW3NgYCASiRSfUFdXFwqFRGRkZETXdfv17u7uaDTqcrlUVbVeeX5+JsP3CIVCJycnuq4nk8nOzs7iCYvFYru7u5qmxePxVCp1cHDg8/lKHrLW1tYMw9jZ2fF4PCJyenoaiUTm5ubOz883NjZubm6sxsVTywRXDFI5/SMaAAAAAACg0vwGENaAuDBcqFkAAAAASUVORK5CYII=",
+         "type": "image/png",
+         "accepted": true,
+         "selected": true,
+         "alt_text": "Site plan"
+        }
+       ]
+      },
+      "nodegroup_id": "9f8d0bf7-ebc8-5555-9fad-4f38f59ebcba",
+      "parenttile_id": null,
+      "resourceinstance_id": "58dc24e1-eeea-539d-838d-26628ce2da5b",
+      "sortorder": 0,
+      "tileid": "f93bc321-90d7-55a8-bb65-3443bf6232de"
+     }
+    ],
+    "tiles_loaded": true
+   },
+   {
+    "metadata": {},
+    "resourceinstance": {
+     "descriptors": {},
+     "graph_id": "64368e71-abbc-53ba-9bd8-87e2500f8e65",
+     "legacyid": "site-001",
+     "name": "Trá Bealtaine",
+     "resourceinstanceid": "675cc864-5f55-51e9-ac43-b74b48dbdd84"
+    },
+    "tiles": [
+     {
+      "data": {
+       "f3a2d94a-536e-5977-bde4-9106de0e62cc": {
+        "en": {
+         "direction": "ltr",
+         "value": "Trá Bealtaine"
+        }
+       }
+      },
+      "nodegroup_id": "f3a2d94a-536e-5977-bde4-9106de0e62cc",
+      "parenttile_id": null,
+      "resourceinstance_id": "675cc864-5f55-51e9-ac43-b74b48dbdd84",
+      "sortorder": 0,
+      "tileid": "5d4b9c41-32e4-5d94-83ef-4febfa888a0f"
+     },
+     {
+      "data": {
+       "93d67672-dc92-5b7b-855d-5eacb8c2eaf1": [
+        {
+         "resourceId": "23819b3b-3328-5001-9aa6-5cfc0e103c04",
+         "ontologyProperty": "",
+         "inverseOntologyProperty": "",
+         "resourceXresourceId": "66ba3425-ca44-5e18-90d2-5b65d76674c0"
+        }
+       ]
+      },
+      "nodegroup_id": "93d67672-dc92-5b7b-855d-5eacb8c2eaf1",
+      "parenttile_id": null,
+      "resourceinstance_id": "675cc864-5f55-51e9-ac43-b74b48dbdd84",
+      "sortorder": 0,
+      "tileid": "9aa9a66a-a5d8-52e0-aa92-9847245f281b"
+     },
+     {
+      "data": {
+       "773f3fe8-bc58-549c-b7a9-05bb2957fd67": 2710000
+      },
+      "nodegroup_id": "d0415b22-2747-5ded-8914-203fd3709034",
+      "parenttile_id": null,
+      "resourceinstance_id": "675cc864-5f55-51e9-ac43-b74b48dbdd84",
+      "sortorder": 0,
+      "tileid": "e2273ca7-825a-519b-a8f6-e4407dc89bd9"
+     },
+     {
+      "data": {
+       "aeb12fb1-1ff4-5bcc-a64a-7974d874bad5": {
+        "features": [
+         {
+          "geometry": {
+           "coordinates": [
+            [
+             [
+              80.2793,
+              13.104
+             ],
+             [
+              80.298,
+              13.104
+             ],
+             [
+              80.298,
+              13.116
+             ],
+             [
+              80.2793,
+              13.116
+             ],
+             [
+              80.2793,
+              13.104
+             ]
+            ]
+           ],
+           "type": "Polygon"
+          },
+          "properties": {},
+          "type": "Feature"
+         }
+        ],
+        "type": "FeatureCollection"
+       }
+      },
+      "nodegroup_id": "aeb12fb1-1ff4-5bcc-a64a-7974d874bad5",
+      "parenttile_id": null,
+      "resourceinstance_id": "675cc864-5f55-51e9-ac43-b74b48dbdd84",
+      "sortorder": 0,
+      "tileid": "f902646f-44b2-5c20-8406-b8c028c66e28"
+     },
+     {
+      "data": {
+       "0f4e0296-8e30-5e30-80d6-31fe17281ad0": {
+        "en": {
+         "direction": "ltr",
+         "value": "Marina Beach North"
+        }
+       }
+      },
+      "nodegroup_id": "0f4e0296-8e30-5e30-80d6-31fe17281ad0",
+      "parenttile_id": null,
+      "resourceinstance_id": "675cc864-5f55-51e9-ac43-b74b48dbdd84",
+      "sortorder": 0,
+      "tileid": "f992e65d-7ee0-5133-86c0-c88b713c11c6"
+     },
+     {
+      "data": {
+       "079cd3c9-4cf6-54d0-aac1-9c95624616be": [
+        {
+         "resourceId": "12b3c1e2-dda3-58ad-b437-79e9c2b9a722",
+         "ontologyProperty": "",
+         "inverseOntologyProperty": "",
+         "resourceXresourceId": "f6caa84e-adfa-5198-a2bc-d60833af6f5f"
+        }
+       ]
+      },
+      "nodegroup_id": "079cd3c9-4cf6-54d0-aac1-9c95624616be",
+      "parenttile_id": null,
+      "resourceinstance_id": "675cc864-5f55-51e9-ac43-b74b48dbdd84",
+      "sortorder": 0,
+      "tileid": "1153df4e-540d-5af0-beb2-ddb9a97c7f74"
+     },
+     {
+      "tileid": "501d855f-36ae-5fc2-8380-b9c098a3a235",
+      "nodegroup_id": "16d7d3e7-736f-5a5f-87e2-57d5b8562494",
+      "data": {
+       "188eae98-f3ff-5ee6-b4dd-a148319fc66b": null
+      },
+      "parenttile_id": null,
+      "resourceinstance_id": "675cc864-5f55-51e9-ac43-b74b48dbdd84",
+      "sortorder": 0
+     },
+     {
+      "data": {
+       "56929b52-5df8-5a61-9f22-b449c0622344": "1960/1969"
+      },
+      "nodegroup_id": "56929b52-5df8-5a61-9f22-b449c0622344",
+      "parenttile_id": null,
+      "resourceinstance_id": "675cc864-5f55-51e9-ac43-b74b48dbdd84",
+      "sortorder": 0,
+      "tileid": "0a80fc4a-4e35-5110-9982-eaedda621d32"
+     },
+     {
+      "data": {
+       "7dc72b8a-72f0-5a7e-bc36-45104a2f9b79": false
+      },
+      "nodegroup_id": "7dc72b8a-72f0-5a7e-bc36-45104a2f9b79",
+      "parenttile_id": null,
+      "resourceinstance_id": "675cc864-5f55-51e9-ac43-b74b48dbdd84",
+      "sortorder": 0,
+      "tileid": "3e735f24-40ed-5d6a-b4a7-de83702d6515"
+     },
+     {
+      "data": {
+       "11412fa9-5f8b-52a3-bb70-53e21f34ad61": {
+        "url": "https://records.example.org/site/6",
+        "url_label": "Heritage record"
+       }
+      },
+      "nodegroup_id": "11412fa9-5f8b-52a3-bb70-53e21f34ad61",
+      "parenttile_id": null,
+      "resourceinstance_id": "675cc864-5f55-51e9-ac43-b74b48dbdd84",
+      "sortorder": 0,
+      "tileid": "e9539ba7-f778-5cce-9c1f-7d42c6754bd7"
+     },
+     {
+      "data": {
+       "15bc97aa-9bf2-5610-9d4f-fcbcffa8524b": [
+        {
+         "list_id": "2730d609-3a8d-49dc-bf51-6ac34e80294a",
+         "list_item_id": "6df0d13c-d682-56e9-af73-34a328f06e6f",
+         "labels": [
+          {
+           "value": "World Heritage Buffer",
+           "language_id": "en",
+           "valuetype_id": "prefLabel"
+          }
+         ]
+        }
+       ]
+      },
+      "nodegroup_id": "15bc97aa-9bf2-5610-9d4f-fcbcffa8524b",
+      "parenttile_id": null,
+      "resourceinstance_id": "675cc864-5f55-51e9-ac43-b74b48dbdd84",
+      "sortorder": 0,
+      "tileid": "a5c1dfb0-1238-567e-b6a8-5fa99c26bb01"
+     },
+     {
+      "data": {
+       "9f8d0bf7-ebc8-5555-9fad-4f38f59ebcba": [
+        {
+         "name": "context.png",
+         "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABuCAIAAAAvT4++AAAEcUlEQVR42u2dv0sjQRTH36yRIKRQkCOKEUxhbeMPPEsFAxYKKWwWG23uKq0UbAT9DzwLsbCIhY2VyaKYxF3OwsYfYKWdGuWu0kaCRL1iuaA5Lxe8ZHbm7fdTxbiJO++zb3dndt4ofnz/QoAvBkIAwQCCAQQDCAYQDCAYQDAEAwgGEAwgGEAwgGAAwRAMIBhA8Fs+ff6GEHsbpYCcvf958BUiPUkAQ87eI5W9ik9AcnuQypIPd1GjWZXl2+BbzfLDImo6bRaaPQ9Fbe+iy++3fy7MHh7oQs7Ed9+msucNFzIrG3ylWZHGCvmlK+w1K9VAD4YqeV+YVTt8hYfFZ8xSWc3mCM+rCxloVrkJQpHy0TIxUtyx4nsu1KkP1i6VtdhhoVoBuBZR0+hYFGpW+CsbQe1OM4rO6FCzK6Xj/aBQfI0ORWKq762+0GIRFg/jq3svTmi0yo78Dom+nTctBcvMJzajbELHdbJqGn1mA6hC34XQqm6C5WMujSe+V7crxfUhpmCwlOF/uuH9fFqwWavyA578MMNEMFuMtEJn/pk8xK34rJILs6+mhgmuywl/YLya5eTOADHFtVWhZsbzdtkKrlAz++oK5oL/mcHsS+ICvlXrE80GS7UfOyeX/yAEa9MP9lVJHEaymN9aYywaY9F81fpBswG7lWyv74UZMzqYpzLmZDHXjFmVav1FnwrGvGi2glHZwFawgjHVUbMBu7y7UqgPZp7KqPBnvsNYo4P5nmOVHeZNwDpZzJvjjWDGT+hUa5qBEPDuSmG1WeaNxXrRzBtec8FY1d/bIBiwy/vCjP+6wjyVa3iKfrcx+L9JkiMjr3QFaktCIafLZMgxCrtexSeAxOWdymwr/IGMbhKAYAAAAAAAAAAAAAAZTE1NHR0d2badTCYjkUjlH5ydna36lqDKDA0NZTKZhoYGIorFYul0uvLP3t3dVX1LUGV2dnb6+vqKP66urtbX14fD4VQq5ThOKpUKh8OuoaWlJdu2T09Px8bGiGhhYaFQKOzu7jY1NSUSib29Pcdxenp6iGhra2t0dNT9NtM0i1si2h5wfX0dDAZL3tzY2DBNk4hM00wkEkT08PAwPT1NRNFo9PLy8nVerq2t9fb2ElF7e/vJyQkRtbW1HR8fd3d3W5aFDPaY29vbPwXncjn3zWAwmMvliCifzzc2Nrq/vb+/f63t6upq/zcXFxd1dXVENDMzc3Nz09HRAcFy+OsD//Pz866ursPDQyISQqyvr09MTAghSjZ7fHwsSnp5eXnz1YHA8PBwPp83DGNgYODp6YmIQqFQoVAIhUIIvRz++rhwZWVlcXHRzdfx8XH3RTabjcfjRBSPx/f394no+fn5nS81DMMwDg4O3KtyLBabm5sjos7OzsHBwZGRkeXlZfdYcbeEBm+Yn58/OzvLZrObm5vNzc1E1NraalmW4ziWZbW0tJScY4uvk8nk9vZ2JBKxLMu27XQ6HY1GiSiTyfT397tHz+TkZHFLhBoAAAAAAAAAAAAAAL/zC9Qxqy63F0ZBAAAAAElFTkSuQmCC",
+         "type": "image/png",
+         "accepted": true,
+         "selected": true,
+         "alt_text": "Context"
+        },
+        {
+         "name": "photograph.png",
+         "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABuCAIAAAAvT4++AAAEGklEQVR42u2bP0hjSxjFT2bF2AgiiNHKNG7hn0ZTioKFYKEGIhaa0laws1WwCJYWlgaiPtAF4aIJinCTSXALS7XYTpSIgkWEaKLEuMXAfb4YdtWnkHycU93M9Tcj58vFBH66np+fAQD4PhTAO/Nr7wfZCmfV613eeyrZSmb/HfC73h0lJ5GtWFaxKdmsYlOy2W///DxhU4JZxaZks4pNyWYVm5LNKjYlm1VsSjar2JRsVrEp2axiU7JZxaZks4pNyWYVm5LNKjYlm1VsSjar2JRs1uU4WWxKJKvYlGyWTpZwlk6WcJZOlnCWTpZwlk6WcJZOlnCWTpZwlk6WcJZOlnCWTpZwlk6WcJZOlnCWThadLDZVzSydLOEsnSzhLJ0s4SydLDpZbKqaWTpZwlk6WcJZOlnCWTpZwlk6WcJZOlnCWTpZwlk6WcJZOlnCWTpZwlk6WcJZOlnCWTpZwlk6WXSy2FQ1s3SyhLN0soSzdLKEs3Sy6GSxqWpm6WQJZ+lkCWfpZAln6WQJZ+lkCWfpZAln6WQJZ+lkCWfpZAln6WQJZ+lkCWfpZAln6WQJZ+lk0cliU9XM0skSztLJEs7SyRLO0smik8WmqpmlkyWZ/c+A30u+/HmylckCUIb5AOlQZCuZZRiGYRiGYRiGYRjG5P7+Ph6P27adSqV8Ph+ATCbzV2pubu4rfpm3HM18sNOurq6jo6M3tvxFk+CAv7bTm5sbs7K4uJhIJI6Pj/1+PwCPxxONRrXW0WjU4/HMz88XCoX9/f2S9ebmZsuykslkJBIxW5ndVldXZ2ZmOjo6UqnUycnJ7Oysc2tpaSmZTGqtvV5v2aOZTxvw4ODgwcEBgFwuZ2bQ3t5+fn4OYH19PRgMAggGg2traw5Vsh6JRCYnJwGMjY3l83mzbS6XGxoaArCystLX19fY2Hh5eencmpiYADA1NbW9vV32aOZz/gYnEgnLstra2gDk8/mGhgZz9/b2FkA6nXa73QDcbnc6nXYGXLJ+cXFhXtbU1Nzd3ZkdstmsUgpAfX399PR0KBTKZrPO0bW1tQa/uroqezTzlvzpPxseHx8HBgb6+/tHRkbOzs7MivNYG1PA5XKVZUvWzbQAKKWcW4VCoVgsAtja2gKwvLxsXgIoFotPT0/m+uHhoezRzP8d8Os4A3Bi23YgEAAQCATi8bgZoVKqZP3w8HB0dBSA3+9//Z7o7e3d3Nysq6szT7l50IeHhwGMj4/btl32aObzP7i+XDHXra2tsVhMax2LxVpaWgDs7u7u7OyUrHu9Xq211joUCr38kGUuFhYWTk9PNzY2rq+vzYwzmUw4HNZaW5bV1NRU9mimghIOh7u7uwH4fD6tNb8USUtPT4/Wem9vz7btzs5ODphhGIZhGIZhGIZhmC/Ib++fWenbSTJHAAAAAElFTkSuQmCC",
+         "type": "image/png",
+         "accepted": true,
+         "selected": true,
+         "alt_text": "Photograph"
+        }
+       ]
+      },
+      "nodegroup_id": "9f8d0bf7-ebc8-5555-9fad-4f38f59ebcba",
+      "parenttile_id": null,
+      "resourceinstance_id": "675cc864-5f55-51e9-ac43-b74b48dbdd84",
+      "sortorder": 0,
+      "tileid": "5622c7ce-0d1d-50f8-bb40-d3778ff2f537"
+     }
+    ],
+    "tiles_loaded": true
+   },
+   {
+    "metadata": {},
+    "resourceinstance": {
+     "descriptors": {},
+     "graph_id": "64368e71-abbc-53ba-9bd8-87e2500f8e65",
+     "legacyid": "zone-c",
+     "name": "Ceantar Theas",
+     "resourceinstanceid": "7c36c3f5-bec7-53cc-b5ef-1a140351d602"
+    },
+    "tiles": [
+     {
+      "data": {
+       "0f4e0296-8e30-5e30-80d6-31fe17281ad0": {
+        "en": {
+         "direction": "ltr",
+         "value": "South Chennai Zone"
+        }
+       }
+      },
+      "nodegroup_id": "0f4e0296-8e30-5e30-80d6-31fe17281ad0",
+      "parenttile_id": null,
+      "resourceinstance_id": "7c36c3f5-bec7-53cc-b5ef-1a140351d602",
+      "sortorder": 0,
+      "tileid": "f5719a62-d342-5ffe-a4ce-ae941dd93ea8"
+     },
+     {
+      "data": {
+       "f3a2d94a-536e-5977-bde4-9106de0e62cc": {
+        "en": {
+         "direction": "ltr",
+         "value": "South District"
+        },
+        "ga": {
+         "direction": "ltr",
+         "value": "Ceantar Theas"
+        }
+       }
+      },
+      "nodegroup_id": "f3a2d94a-536e-5977-bde4-9106de0e62cc",
+      "parenttile_id": null,
+      "resourceinstance_id": "7c36c3f5-bec7-53cc-b5ef-1a140351d602",
+      "sortorder": 0,
+      "tileid": "35938f7d-6277-5b22-9523-b244c1b11aa7"
+     },
+     {
+      "data": {
+       "93d67672-dc92-5b7b-855d-5eacb8c2eaf1": [
+        {
+         "resourceId": "23819b3b-3328-5001-9aa6-5cfc0e103c04",
+         "ontologyProperty": "",
+         "inverseOntologyProperty": "",
+         "resourceXresourceId": "8f21f870-185c-5123-b37d-d22b5b2309f5"
+        }
+       ]
+      },
+      "nodegroup_id": "93d67672-dc92-5b7b-855d-5eacb8c2eaf1",
+      "parenttile_id": null,
+      "resourceinstance_id": "7c36c3f5-bec7-53cc-b5ef-1a140351d602",
+      "sortorder": 0,
+      "tileid": "7db1d974-ff72-5283-9399-1af4052cbc57"
+     },
+     {
+      "data": {
+       "079cd3c9-4cf6-54d0-aac1-9c95624616be": [
+        {
+         "resourceId": "a8a3240d-9756-535f-a91d-77af1e9af54b",
+         "ontologyProperty": "",
+         "inverseOntologyProperty": "",
+         "resourceXresourceId": "a9074ade-5a7f-51bf-bf66-df43a4a42ac4"
+        }
+       ]
+      },
+      "nodegroup_id": "079cd3c9-4cf6-54d0-aac1-9c95624616be",
+      "parenttile_id": null,
+      "resourceinstance_id": "7c36c3f5-bec7-53cc-b5ef-1a140351d602",
+      "sortorder": 0,
+      "tileid": "4601b8a5-5549-599d-ac8f-49e06f00a12b"
+     },
+     {
+      "data": {
+       "aeb12fb1-1ff4-5bcc-a64a-7974d874bad5": {
+        "features": [
+         {
+          "geometry": {
+           "coordinates": [
+            [
+             [
+              80.242,
+              13.044
+             ],
+             [
+              80.298,
+              13.044
+             ],
+             [
+              80.298,
+              13.068
+             ],
+             [
+              80.242,
+              13.068
+             ],
+             [
+              80.242,
+              13.044
+             ]
+            ]
+           ],
+           "type": "Polygon"
+          },
+          "properties": {},
+          "type": "Feature"
+         }
+        ],
+        "type": "FeatureCollection"
+       }
+      },
+      "nodegroup_id": "aeb12fb1-1ff4-5bcc-a64a-7974d874bad5",
+      "parenttile_id": null,
+      "resourceinstance_id": "7c36c3f5-bec7-53cc-b5ef-1a140351d602",
+      "sortorder": 0,
+      "tileid": "fd1bcae7-eaa3-5860-9377-b29213b1cc77"
+     },
+     {
+      "data": {
+       "773f3fe8-bc58-549c-b7a9-05bb2957fd67": 16220000
+      },
+      "nodegroup_id": "d0415b22-2747-5ded-8914-203fd3709034",
+      "parenttile_id": null,
+      "resourceinstance_id": "7c36c3f5-bec7-53cc-b5ef-1a140351d602",
+      "sortorder": 0,
+      "tileid": "b2eaa597-ae53-5769-8666-d017efd2e681"
+     },
+     {
+      "tileid": "e86a8b82-33e8-5d55-98da-fba3a4eb7ed6",
+      "nodegroup_id": "16d7d3e7-736f-5a5f-87e2-57d5b8562494",
+      "data": {
+       "188eae98-f3ff-5ee6-b4dd-a148319fc66b": null
+      },
+      "parenttile_id": null,
+      "resourceinstance_id": "7c36c3f5-bec7-53cc-b5ef-1a140351d602",
+      "sortorder": 0
+     },
+     {
+      "data": {
+       "56929b52-5df8-5a61-9f22-b449c0622344": "2010-05-12"
+      },
+      "nodegroup_id": "56929b52-5df8-5a61-9f22-b449c0622344",
+      "parenttile_id": null,
+      "resourceinstance_id": "7c36c3f5-bec7-53cc-b5ef-1a140351d602",
+      "sortorder": 0,
+      "tileid": "bbeaaa8a-2e22-5881-826e-837bec030bdf"
+     },
+     {
+      "data": {
+       "7dc72b8a-72f0-5a7e-bc36-45104a2f9b79": true
+      },
+      "nodegroup_id": "7dc72b8a-72f0-5a7e-bc36-45104a2f9b79",
+      "parenttile_id": null,
+      "resourceinstance_id": "7c36c3f5-bec7-53cc-b5ef-1a140351d602",
+      "sortorder": 0,
+      "tileid": "9bc32985-b057-5515-85d7-f944320d5cff"
+     },
+     {
+      "data": {
+       "11412fa9-5f8b-52a3-bb70-53e21f34ad61": {
+        "url": "https://records.example.org/site/7",
+        "url_label": "Heritage record"
+       }
+      },
+      "nodegroup_id": "11412fa9-5f8b-52a3-bb70-53e21f34ad61",
+      "parenttile_id": null,
+      "resourceinstance_id": "7c36c3f5-bec7-53cc-b5ef-1a140351d602",
+      "sortorder": 0,
+      "tileid": "acefbf0f-c363-5df6-bea9-81135e53249d"
+     },
+     {
+      "data": {
+       "15bc97aa-9bf2-5610-9d4f-fcbcffa8524b": [
+        {
+         "list_id": "2730d609-3a8d-49dc-bf51-6ac34e80294a",
+         "list_item_id": "a7d38e93-1442-590e-b976-70a321a45421",
+         "labels": [
+          {
+           "value": "Scheduled Monument",
+           "language_id": "en",
+           "valuetype_id": "prefLabel"
+          }
+         ]
+        }
+       ]
+      },
+      "nodegroup_id": "15bc97aa-9bf2-5610-9d4f-fcbcffa8524b",
+      "parenttile_id": null,
+      "resourceinstance_id": "7c36c3f5-bec7-53cc-b5ef-1a140351d602",
+      "sortorder": 0,
+      "tileid": "8a63b6f9-5009-58cb-aad0-66465dea24d4"
+     },
+     {
+      "data": {
+       "9f8d0bf7-ebc8-5555-9fad-4f38f59ebcba": [
+        {
+         "name": "aerial-view.png",
+         "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABuCAIAAAAvT4++AAAEm0lEQVR42u2dy0tyTRzHxzHSEqXaBF0hguB1UYso6GK1yQItlII2tXgoqE1URBREUPt43tNGAt/XTRTUqlWGtTh5WSSRQgb5B3TZSRsRkp6FIMKpfAovM+P3s7KOZ87M7zPzOxfPmaP657/fBIgLRQggGEAwgGAAwQCCAQQDCIZgAMEAggEEAwgGEAwgGIIBBAMIBhAMCkmZwG2L/Fr6+y8b//8XgoUy+vW6wvguK3GvWcvk3XQZvIptukxgr99SkrVYTk2rOLrxPauDHIa+kNuC4CwRz2usi7XdEhL8WYgLHF9GqiGa4A/DWsSYslYfjgWzHEqONDMqWBlBBsPHRSUp7P4YZa0Kc2rOt2Be7PLimK0Uze8FYWZrThGjfAxldsYxhV2xHVP2I8WvYwhm9+BTmHZR1qLA+++vrCVqynJ0kKi5FyxqcmanjRQdX+y2UAxfsVtK0eXFbhFufBccCIbg/O+WRH2qILNdxdoNYwRjBAMIBhAMIBhAMIBgAMEQXCIXAfINCxdzMIIxggEE5zabiZefS1SwqL8xMNVSii4vdltoyXbtEmkjRccXuxWUtQ7Ou2PW7uNnYgSXwh0dSNEiDGI84S9yombzISt2n2zgyzGzj9AxN8sOX3N0sF9h5vbBXExdw1F35OMJfzYdc5FsMNOdaHXjRjCbocRclYU7ucRss4IIzrobxnzRIggmmPFdeMHfPaLO7TsbuFPLq+BinTvhrStFO13Oq2m8N0lM03jzGdOmf+Ab7y7k3ndpghvfIRgAAAAAAAAAAABACGZnZxOJRG1tbdZvGo3GhYWFDxfFYrEfrAVygurrxaenp9Fo9P7+3uVy/XgbsVisqqoKsS4KX12qrKys1Ol0TqfTYrEQQqqrqw8ODi4uLq6urrq6utLyXC7X4uJieqQajUafz3d3d7e8vKwsMxQK1dfXE0I0Gk00GqWUptZSFv7w8NDc3EwIOT8/lySJEDI4OHh0dARnOcNms62urhJCbm5uysvLnU5nd3c3IaSpqSkUCqW+E4/HzWZzZip2OBz9/f01NTWPj4/KFL25uZnKySMjI3t7e+mlysIlSZqenqaUejweWZYJIVtbWzMzM/DyLb76uXB8fLyjo2NiYqKurm5gYMBsNre2tqYW6XQ6tVqdTCaTyaTH48lca21tbWpqymKxGAwGZZknJyeSJDkcDqvVmjkclYW73W673R4Oh29vb9vb2/V6vclk2t/fh7PcoFarA4FAOvqSJD09PWm1WkIIpdRkMilHZ+qz2+2em5traGh4fX398CArGAwaDIZAIKBSqdJLlYVXVFSEQqH5+fmxsbHt7W2r1er1euElZ/vg3t7ecDic+uz1eoeHh/1+v81mI4SMjo5ubGx8tmJnZ+fx8bFWq9VoNJ8duK2vr19fX7+/v6f/qSw8Ho8/Pz/b7Xa/3+/z+VZWVlKJGuSG3d3dycnJ9J+yLA8NDZ2dncmyfHl52dLS8tkI3tnZiUQih4eHLy8vKcfBYDCzQ7S1tSUSiZ6ensy1GhsblYUvLS1FIhFCiF6vf3t76+vrgxcAAAAAAAAAAAAAAMTkD+ZzMTb5I6asAAAAAElFTkSuQmCC",
+         "type": "image/png",
+         "accepted": true,
+         "selected": true,
+         "alt_text": "Aerial view"
+        },
+        {
+         "name": "elevation.png",
+         "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABuCAIAAAAvT4++AAAC70lEQVR42u3bMUhicRzA8Z96oENJNVlag4tDtEVRVFtHjoKry4GDY05KLsWJtAbRUjdZg5tQPpFCfVRDLQq62GZouGlE1FI3/DkPuia70uz7meL1VPh//b0/PNWwvLYn6F9GloDAIDAIDAKDwCAwCExg9ItvLEFnMj9/vOXh3yO/mGAQGAQmMAgMAoPAIDAIDAKDwARGf+i5Dxs+y018JhgEBoFBYBCYwCAwCAwCg8AgMAgMAhMYnx+/Teoh7/FRKRPMJRoEBoFBYBAYBAaBCYy+8aY7WXxJnQkGgUFgEBgEJjAIDAKDwPgwX+I7WV/5jhsTzCUaBAaBQWAQGAQGgQkMAoPAIDAIDAKDwAQGgUFgEBgExv9jWF7bYxWYYBAYBAaBAQAAAAAA3sX9/X3uj2AwKCLNZrOzpwqFQiIyOTkZCARY2F7xb86OA3f8QLxRJ7cqh4eH4/H48fGxruszMzMiUigU7Ha7iJjN5kqlMjU1dXp6WiqVVldXRWR9fX1gYCCTybRL22y2VCql63oqlbLZbOp4NBrN5/PFYtHj8RCmmxO8u7s7OzsrIhMTE4VCQUQikYi69q6srGxtbe3s7CwuLo6MjNTr9RdPpf7Y39/3+Xwi4vP54vG42g7Uu8HpdFarVRb/o/fgubm5dp7r6+v28aurK5PJ5HK50um0iGxvby8sLAwODvr9/s3Nzbu7u1cD12o1s9msJr5Wq4nIw8PD0NCQOqfVarH43Zzgm5sbi8UiIkajcWlpSf3r8vLSarWen58bDIZ0Ou33+x0Ox+3t7auB6/X6i8DtM9mwu78Hn52dqW3S7XaHw2F1MJlMhkKhi4uL5+fn6enpRCJhsVhURfVWMBr/vlY2m/V6vSLi9XpzuZyIPD09EaObl+hYLKbGNBwOj4+Pa5qWz+dPTk6cTqc62eVyPT4+zs/Pi8jGxka5XD44OGg0Gqrx0dHR4eFhezrHxsY0TdN1XdO00dHRF1PLBAMAAAAAAABfzm9w4itnuKz4TAAAAABJRU5ErkJggg==",
+         "type": "image/png",
+         "accepted": true,
+         "selected": true,
+         "alt_text": "Elevation"
+        }
+       ]
+      },
+      "nodegroup_id": "9f8d0bf7-ebc8-5555-9fad-4f38f59ebcba",
+      "parenttile_id": null,
+      "resourceinstance_id": "7c36c3f5-bec7-53cc-b5ef-1a140351d602",
+      "sortorder": 0,
+      "tileid": "e9008f03-efee-57fe-89ed-0739c6891c53"
+     }
+    ],
+    "tiles_loaded": true
+   },
+   {
+    "metadata": {},
+    "resourceinstance": {
+     "descriptors": {},
+     "graph_id": "64368e71-abbc-53ba-9bd8-87e2500f8e65",
+     "legacyid": "site-003",
+     "name": "Trá Theas",
+     "resourceinstanceid": "8b1b5468-0ffe-5ee4-84f3-3b6791d734f3"
+    },
+    "tiles": [
+     {
+      "data": {
+       "773f3fe8-bc58-549c-b7a9-05bb2957fd67": 4030000
+      },
+      "nodegroup_id": "d0415b22-2747-5ded-8914-203fd3709034",
+      "parenttile_id": null,
+      "resourceinstance_id": "8b1b5468-0ffe-5ee4-84f3-3b6791d734f3",
+      "sortorder": 0,
+      "tileid": "a37de90e-54fd-5697-9489-4a0eb11c6c64"
+     },
+     {
+      "data": {
+       "aeb12fb1-1ff4-5bcc-a64a-7974d874bad5": {
+        "features": [
+         {
+          "geometry": {
+           "coordinates": [
+            [
+             [
+              80.27,
+              13.092
+             ],
+             [
+              80.298,
+              13.092
+             ],
+             [
+              80.298,
+              13.104
+             ],
+             [
+              80.27,
+              13.104
+             ],
+             [
+              80.27,
+              13.092
+             ]
+            ]
+           ],
+           "type": "Polygon"
+          },
+          "properties": {},
+          "type": "Feature"
+         }
+        ],
+        "type": "FeatureCollection"
+       }
+      },
+      "nodegroup_id": "aeb12fb1-1ff4-5bcc-a64a-7974d874bad5",
+      "parenttile_id": null,
+      "resourceinstance_id": "8b1b5468-0ffe-5ee4-84f3-3b6791d734f3",
+      "sortorder": 0,
+      "tileid": "674c7b15-12e9-542a-866c-53445b8fa316"
+     },
+     {
+      "data": {
+       "0f4e0296-8e30-5e30-80d6-31fe17281ad0": {
+        "en": {
+         "direction": "ltr",
+         "value": "Besant Nagar"
+        }
+       }
+      },
+      "nodegroup_id": "0f4e0296-8e30-5e30-80d6-31fe17281ad0",
+      "parenttile_id": null,
+      "resourceinstance_id": "8b1b5468-0ffe-5ee4-84f3-3b6791d734f3",
+      "sortorder": 0,
+      "tileid": "4e3d4848-0531-515b-8b43-b11c67f5a9c4"
+     },
+     {
+      "data": {
+       "93d67672-dc92-5b7b-855d-5eacb8c2eaf1": [
+        {
+         "resourceId": "23819b3b-3328-5001-9aa6-5cfc0e103c04",
+         "ontologyProperty": "",
+         "inverseOntologyProperty": "",
+         "resourceXresourceId": "da7bca82-cb65-5e1d-87d5-da5b6a148c58"
+        }
+       ]
+      },
+      "nodegroup_id": "93d67672-dc92-5b7b-855d-5eacb8c2eaf1",
+      "parenttile_id": null,
+      "resourceinstance_id": "8b1b5468-0ffe-5ee4-84f3-3b6791d734f3",
+      "sortorder": 0,
+      "tileid": "00e11fee-24e8-5b72-b4af-17ebc6adc999"
+     },
+     {
+      "data": {
+       "f3a2d94a-536e-5977-bde4-9106de0e62cc": {
+        "en": {
+         "direction": "ltr",
+         "value": "Trá Theas"
+        }
+       }
+      },
+      "nodegroup_id": "f3a2d94a-536e-5977-bde4-9106de0e62cc",
+      "parenttile_id": null,
+      "resourceinstance_id": "8b1b5468-0ffe-5ee4-84f3-3b6791d734f3",
+      "sortorder": 0,
+      "tileid": "234aa922-cda2-5e7c-ae4b-de0aaca42b94"
+     },
+     {
+      "data": {
+       "079cd3c9-4cf6-54d0-aac1-9c95624616be": [
+        {
+         "resourceId": "12b3c1e2-dda3-58ad-b437-79e9c2b9a722",
+         "ontologyProperty": "",
+         "inverseOntologyProperty": "",
+         "resourceXresourceId": "a4ebfa9b-6927-5e47-b841-f236b6375393"
+        }
+       ]
+      },
+      "nodegroup_id": "079cd3c9-4cf6-54d0-aac1-9c95624616be",
+      "parenttile_id": null,
+      "resourceinstance_id": "8b1b5468-0ffe-5ee4-84f3-3b6791d734f3",
+      "sortorder": 0,
+      "tileid": "3dd2d433-de05-5fb9-84b1-66103a6c006e"
+     },
+     {
+      "tileid": "ab9ce780-7bb4-5842-9b95-f9bec4b716cf",
+      "nodegroup_id": "16d7d3e7-736f-5a5f-87e2-57d5b8562494",
+      "data": {
+       "188eae98-f3ff-5ee6-b4dd-a148319fc66b": null
+      },
+      "parenttile_id": null,
+      "resourceinstance_id": "8b1b5468-0ffe-5ee4-84f3-3b6791d734f3",
+      "sortorder": 0
+     },
+     {
+      "data": {
+       "56929b52-5df8-5a61-9f22-b449c0622344": "185X"
+      },
+      "nodegroup_id": "56929b52-5df8-5a61-9f22-b449c0622344",
+      "parenttile_id": null,
+      "resourceinstance_id": "8b1b5468-0ffe-5ee4-84f3-3b6791d734f3",
+      "sortorder": 0,
+      "tileid": "c1ebbe0c-5ac1-5bd6-b0bd-9c1287a21c6a"
+     },
+     {
+      "data": {
+       "7dc72b8a-72f0-5a7e-bc36-45104a2f9b79": false
+      },
+      "nodegroup_id": "7dc72b8a-72f0-5a7e-bc36-45104a2f9b79",
+      "parenttile_id": null,
+      "resourceinstance_id": "8b1b5468-0ffe-5ee4-84f3-3b6791d734f3",
+      "sortorder": 0,
+      "tileid": "fc358543-0f03-56f4-9553-1d2fb04bd700"
+     },
+     {
+      "data": {
+       "11412fa9-5f8b-52a3-bb70-53e21f34ad61": {
+        "url": "https://records.example.org/site/8",
+        "url_label": "Heritage record"
+       }
+      },
+      "nodegroup_id": "11412fa9-5f8b-52a3-bb70-53e21f34ad61",
+      "parenttile_id": null,
+      "resourceinstance_id": "8b1b5468-0ffe-5ee4-84f3-3b6791d734f3",
+      "sortorder": 0,
+      "tileid": "a7c59e3c-e8f9-5ea3-a1cf-d0a3649eb569"
+     },
+     {
+      "data": {
+       "15bc97aa-9bf2-5610-9d4f-fcbcffa8524b": [
+        {
+         "list_id": "2730d609-3a8d-49dc-bf51-6ac34e80294a",
+         "list_item_id": "53bfcf5e-8349-5305-8025-0ed9b15168ee",
+         "labels": [
+          {
+           "value": "Listed Building Grade I",
+           "language_id": "en",
+           "valuetype_id": "prefLabel"
+          }
+         ]
+        }
+       ]
+      },
+      "nodegroup_id": "15bc97aa-9bf2-5610-9d4f-fcbcffa8524b",
+      "parenttile_id": null,
+      "resourceinstance_id": "8b1b5468-0ffe-5ee4-84f3-3b6791d734f3",
+      "sortorder": 0,
+      "tileid": "736bc611-271b-5073-a3bd-4ef3a91abad1"
+     },
+     {
+      "data": {
+       "9f8d0bf7-ebc8-5555-9fad-4f38f59ebcba": [
+        {
+         "name": "site-plan.png",
+         "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABuCAIAAAAvT4++AAADMklEQVR42u3aP0gycRjA8afrz7kEWQgNXpC02RRREBg45lYRLQ01ODS9b1tuFTRES1tLQUMEORREYphxr1dB0KJQU1MFnm0VYg1R73C8h/jyBtm/0/f7mQ67+yH37dEDfzXmj0FB9VK4BQQGgUFgEBgEBoFBYAKDwCLSurTVurT1/jfBOp+3DhPMBIPAcKyat/6a9CFfKvhYuZ9DTDATXNbT3ev/Pqzz7eswwTxkgcAgMAgMAoPAIDCBQWAQGAQGgUFgEJjAIDAqEHuyqgF7spjgsrAHyvnrMME8ZIHAIDAIDAKDwCAwgUFgEBgEBoFBYBCYwCAwKhB7sqoBe7KY4LKwB8r56zDBPGSBwCAwCAwCg8AgMIFBYBAYBAaBQWAQmMAgMCoQe7KqAXuymOCysAfK+eswwTxk4b/9iAYTDAKDwCAwAAAAAADAa7q6uhKJhK7r+/v7mqb5/f7JyUnrT9PT029d7fb2llvqLOl02uv1isjw8PDm5uY7axHYcbLZbEdHh4jU19cHAgE70uzs7NPTUyKRcLvd6+vryWTSMIyenp6SnIuLi4eHh4ZhtLe329f6/f6jo6Ozs7OpqSn7zPn5+VQqlclkBgf57fILjY+Pm6a5uroaDAZLptA6WFlZ6e3tFZG2trZ0Ol187cPDw+joqIiMjY1tb2/blywvLwcCgebm5mw2a51ZKBSs2D6f7+rqitv+pdxu98TERCaTmZmZ+Tvw9fX1rz8uLi5qa2vtCwuFQkNDg4ioqprL5exLGhsbw+HwwsJCPp+3znx8fGxqarKO7+7uuOdfxOPx9PX12cfFkewD0zRdLpeIKIrS399ffHk+n7d6q6p6eXlpX7K3txcOh71e7/39vXWmfcD39Gf458+FLy8v0WhU0zQRaWlpKfnwVBRFUZTj42PrW3NgYCASiRSfUFdXFwqFRGRkZETXdfv17u7uaDTqcrlUVbVeeX5+JsP3CIVCJycnuq4nk8nOzs7iCYvFYru7u5qmxePxVCp1cHDg8/lKHrLW1tYMw9jZ2fF4PCJyenoaiUTm5ubOz883NjZubm6sxsVTywRXDFI5/SMaAAAAAACg0vwGENaAuDBcqFkAAAAASUVORK5CYII=",
+         "type": "image/png",
+         "accepted": true,
+         "selected": true,
+         "alt_text": "Site plan"
+        },
+        {
+         "name": "detail.png",
+         "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABuCAIAAAAvT4++AAADY0lEQVR42u2dO0tjQRSAxzFiQFCSOlqEdCkDWmnsUpgtLITYpbGIu42NaKl/YXdJYxlSpVs1QQxquIKQJoX+BR9gISmEkAhbBCTsYtyNecw5fl/lY5w7mY8zM86998zYZvK7Ab1YugDBgGBAMCAYEAwIBgQjGBAMCAYEA4IBwYBgBAOCQR4+9Z/w569v3Qt8/fJD8ccfU/nIzrtSP49sbYJ7VqtVsxLBffGq0rTF7khqJoLdEiA3lC12dYeyxa5uxyKH6P/t6y4DbB+rQvBQ7fZgYnA1I7ifDj4oYAiXQHCPXd/HflezwWmx21ttUtZcFru6HYu/mzTQobJduej9LKsgfGmbYMHde3A4K53uV3HcseCtymGuY9mL1mxXtGOnBUtZ3bjcTkv46g5iS1jobq0lfHUHMc9FKwfBCGZKk9xmYRHswhQoaxpmiGaIBgQDggHBgGBAMCAYwc7iwm6RrF02RwVLvPPqZpsZohmiAcGfZwoUd5vLXcGypmFnWytyiB5VGEm8S20JC93tJEeH5vA1ZNnRbVeAYBde/HLhBTjNEexyD7q/ShD/Ang7vAbU0QpSGcqYg0eSTUFHHhYxi6whO1aTZYc8WSO4BIL7EKlkupMq2JCrUr3gUa1veQFcc1+To0OzY7lZdjQcyjHQ4Vr6uRwaHtkZnAMFp65wbpJOr2oFf1AzJ58plM3ZhcAiCxAMCAYEAwAAAAAAAAD0xPPz8/n5+dnZ2eXlZTqdfqvYzs7O3z+MRqOZTKb99dPTE53pIq9ipqamyuXy2tpa92Lv1gOOCjbGxGIxz/MCgUAulzs9Pa1UKvPz88aYvb29Vqt1cnISjUY9z7u+vt7a2vrjzxEsQPDExMT9/f3BwcHCwoIxZm5urlardRbLZrOLi4vBYPD29hbB7vCvr4/6fL5ms5lIJCKRyOu4PT4+/vLy0v52e3s7lUolk8np6Wm6VV4Ex+Px4+Pju7s7v99vjLHWLi0tdRYrlUobGxuhUKherxPBwgQHAoGrq6vl5eVCobC+vm6MWVlZKRaL7d/W63Vr7ePj48zMTCQSaTQaCBb2b5Lneaurq8aY2dnZYrF4cXFRLpfD4XC72NHR0eHh4f7+/s3NTT6ff3h4mJyc7PRarVZ3d3fpTwAAAAAAAAAAAHiT36S9jWqY+rezAAAAAElFTkSuQmCC",
+         "type": "image/png",
+         "accepted": true,
+         "selected": true,
+         "alt_text": "Detail"
+        }
+       ]
+      },
+      "nodegroup_id": "9f8d0bf7-ebc8-5555-9fad-4f38f59ebcba",
+      "parenttile_id": null,
+      "resourceinstance_id": "8b1b5468-0ffe-5ee4-84f3-3b6791d734f3",
+      "sortorder": 0,
+      "tileid": "64bf09e3-e040-5bd5-bf8e-e19aa77c015e"
+     }
+    ],
+    "tiles_loaded": true
+   },
+   {
+    "metadata": {},
+    "resourceinstance": {
+     "descriptors": {},
+     "graph_id": "64368e71-abbc-53ba-9bd8-87e2500f8e65",
+     "legacyid": "site-008",
+     "name": "Cé an Rí",
+     "resourceinstanceid": "8e1c27b9-c743-5bcf-83c8-318179bb2edd"
+    },
+    "tiles": [
+     {
+      "data": {
+       "0f4e0296-8e30-5e30-80d6-31fe17281ad0": {
+        "en": {
+         "direction": "ltr",
+         "value": "Royapuram"
+        }
+       }
+      },
+      "nodegroup_id": "0f4e0296-8e30-5e30-80d6-31fe17281ad0",
+      "parenttile_id": null,
+      "resourceinstance_id": "8e1c27b9-c743-5bcf-83c8-318179bb2edd",
+      "sortorder": 0,
+      "tileid": "25c20b6c-c8c0-5acb-ae74-20c77e989fe7"
+     },
+     {
+      "data": {
+       "773f3fe8-bc58-549c-b7a9-05bb2957fd67": 4030000
+      },
+      "nodegroup_id": "d0415b22-2747-5ded-8914-203fd3709034",
+      "parenttile_id": null,
+      "resourceinstance_id": "8e1c27b9-c743-5bcf-83c8-318179bb2edd",
+      "sortorder": 0,
+      "tileid": "d8cae263-ff28-573c-b130-2a4a367518b8"
+     },
+     {
+      "data": {
+       "079cd3c9-4cf6-54d0-aac1-9c95624616be": [
+        {
+         "resourceId": "12b3c1e2-dda3-58ad-b437-79e9c2b9a722",
+         "ontologyProperty": "",
+         "inverseOntologyProperty": "",
+         "resourceXresourceId": "16c06f7c-c05e-520f-82cf-d56424ca4d98"
+        }
+       ]
+      },
+      "nodegroup_id": "079cd3c9-4cf6-54d0-aac1-9c95624616be",
+      "parenttile_id": null,
+      "resourceinstance_id": "8e1c27b9-c743-5bcf-83c8-318179bb2edd",
+      "sortorder": 0,
+      "tileid": "96d75543-1bf3-5e3f-a5c3-d84854bea95c"
+     },
+     {
+      "data": {
+       "f3a2d94a-536e-5977-bde4-9106de0e62cc": {
+        "en": {
+         "direction": "ltr",
+         "value": "Cé an Rí"
+        }
+       }
+      },
+      "nodegroup_id": "f3a2d94a-536e-5977-bde4-9106de0e62cc",
+      "parenttile_id": null,
+      "resourceinstance_id": "8e1c27b9-c743-5bcf-83c8-318179bb2edd",
+      "sortorder": 0,
+      "tileid": "f94886ab-4f3e-516d-87cf-63294b902b10"
+     },
+     {
+      "data": {
+       "93d67672-dc92-5b7b-855d-5eacb8c2eaf1": [
+        {
+         "resourceId": "23819b3b-3328-5001-9aa6-5cfc0e103c04",
+         "ontologyProperty": "",
+         "inverseOntologyProperty": "",
+         "resourceXresourceId": "7a360f00-13f0-575f-8a8c-9c4bc06799ba"
+        }
+       ]
+      },
+      "nodegroup_id": "93d67672-dc92-5b7b-855d-5eacb8c2eaf1",
+      "parenttile_id": null,
+      "resourceinstance_id": "8e1c27b9-c743-5bcf-83c8-318179bb2edd",
+      "sortorder": 0,
+      "tileid": "6ebad884-c829-51fa-a916-2b8221899914"
+     },
+     {
+      "data": {
+       "aeb12fb1-1ff4-5bcc-a64a-7974d874bad5": {
+        "features": [
+         {
+          "geometry": {
+           "coordinates": [
+            [
+             [
+              80.242,
+              13.092
+             ],
+             [
+              80.27,
+              13.092
+             ],
+             [
+              80.27,
+              13.104
+             ],
+             [
+              80.242,
+              13.104
+             ],
+             [
+              80.242,
+              13.092
+             ]
+            ]
+           ],
+           "type": "Polygon"
+          },
+          "properties": {},
+          "type": "Feature"
+         }
+        ],
+        "type": "FeatureCollection"
+       }
+      },
+      "nodegroup_id": "aeb12fb1-1ff4-5bcc-a64a-7974d874bad5",
+      "parenttile_id": null,
+      "resourceinstance_id": "8e1c27b9-c743-5bcf-83c8-318179bb2edd",
+      "sortorder": 0,
+      "tileid": "88f6e322-419e-55a3-90e9-db3872e79524"
+     },
+     {
+      "tileid": "93cc3b34-2774-5fcc-b027-58baea21de2e",
+      "nodegroup_id": "16d7d3e7-736f-5a5f-87e2-57d5b8562494",
+      "data": {
+       "188eae98-f3ff-5ee6-b4dd-a148319fc66b": null
+      },
+      "parenttile_id": null,
+      "resourceinstance_id": "8e1c27b9-c743-5bcf-83c8-318179bb2edd",
+      "sortorder": 0
+     },
+     {
+      "data": {
+       "56929b52-5df8-5a61-9f22-b449c0622344": "199X"
+      },
+      "nodegroup_id": "56929b52-5df8-5a61-9f22-b449c0622344",
+      "parenttile_id": null,
+      "resourceinstance_id": "8e1c27b9-c743-5bcf-83c8-318179bb2edd",
+      "sortorder": 0,
+      "tileid": "12202237-7f91-5bed-a4fa-37395a76fd88"
+     },
+     {
+      "data": {
+       "7dc72b8a-72f0-5a7e-bc36-45104a2f9b79": true
+      },
+      "nodegroup_id": "7dc72b8a-72f0-5a7e-bc36-45104a2f9b79",
+      "parenttile_id": null,
+      "resourceinstance_id": "8e1c27b9-c743-5bcf-83c8-318179bb2edd",
+      "sortorder": 0,
+      "tileid": "a74cc397-951a-5e68-b6fc-c776285ce83e"
+     },
+     {
+      "data": {
+       "11412fa9-5f8b-52a3-bb70-53e21f34ad61": {
+        "url": "https://records.example.org/site/9",
+        "url_label": "Heritage record"
+       }
+      },
+      "nodegroup_id": "11412fa9-5f8b-52a3-bb70-53e21f34ad61",
+      "parenttile_id": null,
+      "resourceinstance_id": "8e1c27b9-c743-5bcf-83c8-318179bb2edd",
+      "sortorder": 0,
+      "tileid": "0803426e-fdad-5af7-a23e-732b6c13aa62"
+     },
+     {
+      "data": {
+       "15bc97aa-9bf2-5610-9d4f-fcbcffa8524b": [
+        {
+         "list_id": "2730d609-3a8d-49dc-bf51-6ac34e80294a",
+         "list_item_id": "513a85dd-477d-597d-a624-47274b860ba7",
+         "labels": [
+          {
+           "value": "Conservation Area",
+           "language_id": "en",
+           "valuetype_id": "prefLabel"
+          }
+         ]
+        }
+       ]
+      },
+      "nodegroup_id": "15bc97aa-9bf2-5610-9d4f-fcbcffa8524b",
+      "parenttile_id": null,
+      "resourceinstance_id": "8e1c27b9-c743-5bcf-83c8-318179bb2edd",
+      "sortorder": 0,
+      "tileid": "6429d94e-927c-5c15-86f8-9408c0bdd65e"
+     },
+     {
+      "data": {
+       "9f8d0bf7-ebc8-5555-9fad-4f38f59ebcba": [
+        {
+         "name": "photograph.png",
+         "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABuCAIAAAAvT4++AAAEGklEQVR42u2bP0hjSxjFT2bF2AgiiNHKNG7hn0ZTioKFYKEGIhaa0laws1WwCJYWlgaiPtAF4aIJinCTSXALS7XYTpSIgkWEaKLEuMXAfb4YdtWnkHycU93M9Tcj58vFBH66np+fAQD4PhTAO/Nr7wfZCmfV613eeyrZSmb/HfC73h0lJ5GtWFaxKdmsYlOy2W///DxhU4JZxaZks4pNyWYVm5LNKjYlm1VsSjar2JRsVrEp2axiU7JZxaZks4pNyWYVm5LNKjYlm1VsSjar2JRs1uU4WWxKJKvYlGyWTpZwlk6WcJZOlnCWTpZwlk6WcJZOlnCWTpZwlk6WcJZOlnCWTpZwlk6WcJZOlnCWThadLDZVzSydLOEsnSzhLJ0s4SydLDpZbKqaWTpZwlk6WcJZOlnCWTpZwlk6WcJZOlnCWTpZwlk6WcJZOlnCWTpZwlk6WcJZOlnCWTpZwlk6WXSy2FQ1s3SyhLN0soSzdLKEs3Sy6GSxqWpm6WQJZ+lkCWfpZAln6WQJZ+lkCWfpZAln6WQJZ+lkCWfpZAln6WQJZ+lkCWfpZAln6WQJZ+lk0cliU9XM0skSztLJEs7SyRLO0smik8WmqpmlkyWZ/c+A30u+/HmylckCUIb5AOlQZCuZZRiGYRiGYRiGYRjG5P7+Ph6P27adSqV8Ph+ATCbzV2pubu4rfpm3HM18sNOurq6jo6M3tvxFk+CAv7bTm5sbs7K4uJhIJI6Pj/1+PwCPxxONRrXW0WjU4/HMz88XCoX9/f2S9ebmZsuykslkJBIxW5ndVldXZ2ZmOjo6UqnUycnJ7Oysc2tpaSmZTGqtvV5v2aOZTxvw4ODgwcEBgFwuZ2bQ3t5+fn4OYH19PRgMAggGg2traw5Vsh6JRCYnJwGMjY3l83mzbS6XGxoaArCystLX19fY2Hh5eencmpiYADA1NbW9vV32aOZz/gYnEgnLstra2gDk8/mGhgZz9/b2FkA6nXa73QDcbnc6nXYGXLJ+cXFhXtbU1Nzd3ZkdstmsUgpAfX399PR0KBTKZrPO0bW1tQa/uroqezTzlvzpPxseHx8HBgb6+/tHRkbOzs7MivNYG1PA5XKVZUvWzbQAKKWcW4VCoVgsAtja2gKwvLxsXgIoFotPT0/m+uHhoezRzP8d8Os4A3Bi23YgEAAQCATi8bgZoVKqZP3w8HB0dBSA3+9//Z7o7e3d3Nysq6szT7l50IeHhwGMj4/btl32aObzP7i+XDHXra2tsVhMax2LxVpaWgDs7u7u7OyUrHu9Xq211joUCr38kGUuFhYWTk9PNzY2rq+vzYwzmUw4HNZaW5bV1NRU9mimghIOh7u7uwH4fD6tNb8USUtPT4/Wem9vz7btzs5ODphhGIZhGIZhGIZhmC/Ib++fWenbSTJHAAAAAElFTkSuQmCC",
+         "type": "image/png",
+         "accepted": true,
+         "selected": true,
+         "alt_text": "Photograph"
+        },
+        {
+         "name": "context.png",
+         "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABuCAIAAAAvT4++AAAEcUlEQVR42u2dv0sjQRTH36yRIKRQkCOKEUxhbeMPPEsFAxYKKWwWG23uKq0UbAT9DzwLsbCIhY2VyaKYxF3OwsYfYKWdGuWu0kaCRL1iuaA5Lxe8ZHbm7fdTxbiJO++zb3dndt4ofnz/QoAvBkIAwQCCAQQDCAYQDCAYQDAEAwgGEAwgGEAwgGAAwRAMIBhA8Fs+ff6GEHsbpYCcvf958BUiPUkAQ87eI5W9ik9AcnuQypIPd1GjWZXl2+BbzfLDImo6bRaaPQ9Fbe+iy++3fy7MHh7oQs7Ed9+msucNFzIrG3ylWZHGCvmlK+w1K9VAD4YqeV+YVTt8hYfFZ8xSWc3mCM+rCxloVrkJQpHy0TIxUtyx4nsu1KkP1i6VtdhhoVoBuBZR0+hYFGpW+CsbQe1OM4rO6FCzK6Xj/aBQfI0ORWKq762+0GIRFg/jq3svTmi0yo78Dom+nTctBcvMJzajbELHdbJqGn1mA6hC34XQqm6C5WMujSe+V7crxfUhpmCwlOF/uuH9fFqwWavyA578MMNEMFuMtEJn/pk8xK34rJILs6+mhgmuywl/YLya5eTOADHFtVWhZsbzdtkKrlAz++oK5oL/mcHsS+ICvlXrE80GS7UfOyeX/yAEa9MP9lVJHEaymN9aYywaY9F81fpBswG7lWyv74UZMzqYpzLmZDHXjFmVav1FnwrGvGi2glHZwFawgjHVUbMBu7y7UqgPZp7KqPBnvsNYo4P5nmOVHeZNwDpZzJvjjWDGT+hUa5qBEPDuSmG1WeaNxXrRzBtec8FY1d/bIBiwy/vCjP+6wjyVa3iKfrcx+L9JkiMjr3QFaktCIafLZMgxCrtexSeAxOWdymwr/IGMbhKAYAAAAAAAAAAAAAAZTE1NHR0d2badTCYjkUjlH5ydna36lqDKDA0NZTKZhoYGIorFYul0uvLP3t3dVX1LUGV2dnb6+vqKP66urtbX14fD4VQq5ThOKpUKh8OuoaWlJdu2T09Px8bGiGhhYaFQKOzu7jY1NSUSib29Pcdxenp6iGhra2t0dNT9NtM0i1si2h5wfX0dDAZL3tzY2DBNk4hM00wkEkT08PAwPT1NRNFo9PLy8nVerq2t9fb2ElF7e/vJyQkRtbW1HR8fd3d3W5aFDPaY29vbPwXncjn3zWAwmMvliCifzzc2Nrq/vb+/f63t6upq/zcXFxd1dXVENDMzc3Nz09HRAcFy+OsD//Pz866ursPDQyISQqyvr09MTAghSjZ7fHwsSnp5eXnz1YHA8PBwPp83DGNgYODp6YmIQqFQoVAIhUIIvRz++rhwZWVlcXHRzdfx8XH3RTabjcfjRBSPx/f394no+fn5nS81DMMwDg4O3KtyLBabm5sjos7OzsHBwZGRkeXlZfdYcbeEBm+Yn58/OzvLZrObm5vNzc1E1NraalmW4ziWZbW0tJScY4uvk8nk9vZ2JBKxLMu27XQ6HY1GiSiTyfT397tHz+TkZHFLhBoAAAAAAAAAAAAAAL/zC9Qxqy63F0ZBAAAAAElFTkSuQmCC",
+         "type": "image/png",
+         "accepted": true,
+         "selected": true,
+         "alt_text": "Context"
+        }
+       ]
+      },
+      "nodegroup_id": "9f8d0bf7-ebc8-5555-9fad-4f38f59ebcba",
+      "parenttile_id": null,
+      "resourceinstance_id": "8e1c27b9-c743-5bcf-83c8-318179bb2edd",
+      "sortorder": 0,
+      "tileid": "7c72c846-9d45-51bb-86cf-d653ea424d76"
+     }
+    ],
+    "tiles_loaded": true
+   },
+   {
+    "metadata": {},
+    "resourceinstance": {
+     "descriptors": {},
+     "graph_id": "64368e71-abbc-53ba-9bd8-87e2500f8e65",
+     "legacyid": "site-009",
+     "name": "Imeall Eanach",
+     "resourceinstanceid": "997b2ed6-48e2-5e66-b72b-c72861f3f622"
+    },
+    "tiles": [
+     {
+      "data": {
+       "079cd3c9-4cf6-54d0-aac1-9c95624616be": [
+        {
+         "resourceId": "7c36c3f5-bec7-53cc-b5ef-1a140351d602",
+         "ontologyProperty": "",
+         "inverseOntologyProperty": "",
+         "resourceXresourceId": "dcbaf6a0-d971-5b4c-a1fa-ef899e98648f"
+        }
+       ]
+      },
+      "nodegroup_id": "079cd3c9-4cf6-54d0-aac1-9c95624616be",
+      "parenttile_id": null,
+      "resourceinstance_id": "997b2ed6-48e2-5e66-b72b-c72861f3f622",
+      "sortorder": 0,
+      "tileid": "3bbeb879-0f8e-5847-870b-c05700bbbd4f"
+     },
+     {
+      "data": {
+       "773f3fe8-bc58-549c-b7a9-05bb2957fd67": 4030000
+      },
+      "nodegroup_id": "d0415b22-2747-5ded-8914-203fd3709034",
+      "parenttile_id": null,
+      "resourceinstance_id": "997b2ed6-48e2-5e66-b72b-c72861f3f622",
+      "sortorder": 0,
+      "tileid": "85f96151-599d-5e35-a622-242e6761df7a"
+     },
+     {
+      "data": {
+       "aeb12fb1-1ff4-5bcc-a64a-7974d874bad5": {
+        "features": [
+         {
+          "geometry": {
+           "coordinates": [
+            [
+             [
+              80.242,
+              13.056
+             ],
+             [
+              80.27,
+              13.056
+             ],
+             [
+              80.27,
+              13.068
+             ],
+             [
+              80.242,
+              13.068
+             ],
+             [
+              80.242,
+              13.056
+             ]
+            ]
+           ],
+           "type": "Polygon"
+          },
+          "properties": {},
+          "type": "Feature"
+         }
+        ],
+        "type": "FeatureCollection"
+       }
+      },
+      "nodegroup_id": "aeb12fb1-1ff4-5bcc-a64a-7974d874bad5",
+      "parenttile_id": null,
+      "resourceinstance_id": "997b2ed6-48e2-5e66-b72b-c72861f3f622",
+      "sortorder": 0,
+      "tileid": "2c1326fa-c661-547a-ae29-e2c68b3a5ea4"
+     },
+     {
+      "data": {
+       "93d67672-dc92-5b7b-855d-5eacb8c2eaf1": [
+        {
+         "resourceId": "23819b3b-3328-5001-9aa6-5cfc0e103c04",
+         "ontologyProperty": "",
+         "inverseOntologyProperty": "",
+         "resourceXresourceId": "37d85001-e7d0-53f5-8a4f-1a2de2ca6325"
+        }
+       ]
+      },
+      "nodegroup_id": "93d67672-dc92-5b7b-855d-5eacb8c2eaf1",
+      "parenttile_id": null,
+      "resourceinstance_id": "997b2ed6-48e2-5e66-b72b-c72861f3f622",
+      "sortorder": 0,
+      "tileid": "b5dbdfc0-74b0-511b-b6d8-7cd5cddea601"
+     },
+     {
+      "data": {
+       "0f4e0296-8e30-5e30-80d6-31fe17281ad0": {
+        "en": {
+         "direction": "ltr",
+         "value": "Pallavaram"
+        }
+       }
+      },
+      "nodegroup_id": "0f4e0296-8e30-5e30-80d6-31fe17281ad0",
+      "parenttile_id": null,
+      "resourceinstance_id": "997b2ed6-48e2-5e66-b72b-c72861f3f622",
+      "sortorder": 0,
+      "tileid": "75614f7e-f9f4-54f0-a4d3-d8bf405ae78f"
+     },
+     {
+      "data": {
+       "f3a2d94a-536e-5977-bde4-9106de0e62cc": {
+        "en": {
+         "direction": "ltr",
+         "value": "Imeall Eanach"
+        }
+       }
+      },
+      "nodegroup_id": "f3a2d94a-536e-5977-bde4-9106de0e62cc",
+      "parenttile_id": null,
+      "resourceinstance_id": "997b2ed6-48e2-5e66-b72b-c72861f3f622",
+      "sortorder": 0,
+      "tileid": "5703c281-d917-5e29-b4d3-21f5ad425fca"
+     },
+     {
+      "tileid": "8c34d752-c34c-5cfd-b561-6970aaf0eda1",
+      "nodegroup_id": "16d7d3e7-736f-5a5f-87e2-57d5b8562494",
+      "data": {
+       "188eae98-f3ff-5ee6-b4dd-a148319fc66b": null
+      },
+      "parenttile_id": null,
+      "resourceinstance_id": "997b2ed6-48e2-5e66-b72b-c72861f3f622",
+      "sortorder": 0
+     },
+     {
+      "data": {
+       "56929b52-5df8-5a61-9f22-b449c0622344": "2005/2008"
+      },
+      "nodegroup_id": "56929b52-5df8-5a61-9f22-b449c0622344",
+      "parenttile_id": null,
+      "resourceinstance_id": "997b2ed6-48e2-5e66-b72b-c72861f3f622",
+      "sortorder": 0,
+      "tileid": "6ebcab33-8a0d-58c9-a386-6471e6f9d02a"
+     },
+     {
+      "data": {
+       "7dc72b8a-72f0-5a7e-bc36-45104a2f9b79": false
+      },
+      "nodegroup_id": "7dc72b8a-72f0-5a7e-bc36-45104a2f9b79",
+      "parenttile_id": null,
+      "resourceinstance_id": "997b2ed6-48e2-5e66-b72b-c72861f3f622",
+      "sortorder": 0,
+      "tileid": "731d273d-8e6e-5280-bd54-4bd1e274bc70"
+     },
+     {
+      "data": {
+       "11412fa9-5f8b-52a3-bb70-53e21f34ad61": {
+        "url": "https://records.example.org/site/10",
+        "url_label": "Heritage record"
+       }
+      },
+      "nodegroup_id": "11412fa9-5f8b-52a3-bb70-53e21f34ad61",
+      "parenttile_id": null,
+      "resourceinstance_id": "997b2ed6-48e2-5e66-b72b-c72861f3f622",
+      "sortorder": 0,
+      "tileid": "523e5c25-a9b8-5c76-90f1-69cfb4787871"
+     },
+     {
+      "data": {
+       "15bc97aa-9bf2-5610-9d4f-fcbcffa8524b": [
+        {
+         "list_id": "2730d609-3a8d-49dc-bf51-6ac34e80294a",
+         "list_item_id": "7e633ade-4cd4-5955-854b-e6fe322ed2b0",
+         "labels": [
+          {
+           "value": "Registered Park",
+           "language_id": "en",
+           "valuetype_id": "prefLabel"
+          }
+         ]
+        }
+       ]
+      },
+      "nodegroup_id": "15bc97aa-9bf2-5610-9d4f-fcbcffa8524b",
+      "parenttile_id": null,
+      "resourceinstance_id": "997b2ed6-48e2-5e66-b72b-c72861f3f622",
+      "sortorder": 0,
+      "tileid": "0421e723-ccbf-542e-b0fd-e694b9c753c1"
+     },
+     {
+      "data": {
+       "9f8d0bf7-ebc8-5555-9fad-4f38f59ebcba": [
+        {
+         "name": "elevation.png",
+         "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABuCAIAAAAvT4++AAAC70lEQVR42u3bMUhicRzA8Z96oENJNVlag4tDtEVRVFtHjoKry4GDY05KLsWJtAbRUjdZg5tQPpFCfVRDLQq62GZouGlE1FI3/DkPuia70uz7meL1VPh//b0/PNWwvLYn6F9GloDAIDAIDAKDwCAwCExg9ItvLEFnMj9/vOXh3yO/mGAQGAQmMAgMAoPAIDAIDAKDwARGf+i5Dxs+y018JhgEBoFBYBCYwCAwCAwCg8AgMAgMAhMYnx+/Teoh7/FRKRPMJRoEBoFBYBAYBAaBCYy+8aY7WXxJnQkGgUFgEBgEJjAIDAKDwPgwX+I7WV/5jhsTzCUaBAaBQWAQGAQGgQkMAoPAIDAIDAKDwAQGgUFgEBgExv9jWF7bYxWYYBAYBAaBAQAAAAAA3sX9/X3uj2AwKCLNZrOzpwqFQiIyOTkZCARY2F7xb86OA3f8QLxRJ7cqh4eH4/H48fGxruszMzMiUigU7Ha7iJjN5kqlMjU1dXp6WiqVVldXRWR9fX1gYCCTybRL22y2VCql63oqlbLZbOp4NBrN5/PFYtHj8RCmmxO8u7s7OzsrIhMTE4VCQUQikYi69q6srGxtbe3s7CwuLo6MjNTr9RdPpf7Y39/3+Xwi4vP54vG42g7Uu8HpdFarVRb/o/fgubm5dp7r6+v28aurK5PJ5HK50um0iGxvby8sLAwODvr9/s3Nzbu7u1cD12o1s9msJr5Wq4nIw8PD0NCQOqfVarH43Zzgm5sbi8UiIkajcWlpSf3r8vLSarWen58bDIZ0Ou33+x0Ox+3t7auB6/X6i8DtM9mwu78Hn52dqW3S7XaHw2F1MJlMhkKhi4uL5+fn6enpRCJhsVhURfVWMBr/vlY2m/V6vSLi9XpzuZyIPD09EaObl+hYLKbGNBwOj4+Pa5qWz+dPTk6cTqc62eVyPT4+zs/Pi8jGxka5XD44OGg0Gqrx0dHR4eFhezrHxsY0TdN1XdO00dHRF1PLBAMAAAAAAABfzm9w4itnuKz4TAAAAABJRU5ErkJggg==",
+         "type": "image/png",
+         "accepted": true,
+         "selected": true,
+         "alt_text": "Elevation"
+        },
+        {
+         "name": "aerial-view.png",
+         "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABuCAIAAAAvT4++AAAEm0lEQVR42u2dy0tyTRzHxzHSEqXaBF0hguB1UYso6GK1yQItlII2tXgoqE1URBREUPt43tNGAt/XTRTUqlWGtTh5WSSRQgb5B3TZSRsRkp6FIMKpfAovM+P3s7KOZ87M7zPzOxfPmaP657/fBIgLRQggGEAwgGAAwQCCAQQDCIZgAMEAggEEAwgGEAwgGIIBBAMIBhAMCkmZwG2L/Fr6+y8b//8XgoUy+vW6wvguK3GvWcvk3XQZvIptukxgr99SkrVYTk2rOLrxPauDHIa+kNuC4CwRz2usi7XdEhL8WYgLHF9GqiGa4A/DWsSYslYfjgWzHEqONDMqWBlBBsPHRSUp7P4YZa0Kc2rOt2Be7PLimK0Uze8FYWZrThGjfAxldsYxhV2xHVP2I8WvYwhm9+BTmHZR1qLA+++vrCVqynJ0kKi5FyxqcmanjRQdX+y2UAxfsVtK0eXFbhFufBccCIbg/O+WRH2qILNdxdoNYwRjBAMIBhAMIBhAMIBgAMEQXCIXAfINCxdzMIIxggEE5zabiZefS1SwqL8xMNVSii4vdltoyXbtEmkjRccXuxWUtQ7Ou2PW7uNnYgSXwh0dSNEiDGI84S9yombzISt2n2zgyzGzj9AxN8sOX3N0sF9h5vbBXExdw1F35OMJfzYdc5FsMNOdaHXjRjCbocRclYU7ucRss4IIzrobxnzRIggmmPFdeMHfPaLO7TsbuFPLq+BinTvhrStFO13Oq2m8N0lM03jzGdOmf+Ab7y7k3ndpghvfIRgAAAAAAAAAAABACGZnZxOJRG1tbdZvGo3GhYWFDxfFYrEfrAVygurrxaenp9Fo9P7+3uVy/XgbsVisqqoKsS4KX12qrKys1Ol0TqfTYrEQQqqrqw8ODi4uLq6urrq6utLyXC7X4uJieqQajUafz3d3d7e8vKwsMxQK1dfXE0I0Gk00GqWUptZSFv7w8NDc3EwIOT8/lySJEDI4OHh0dARnOcNms62urhJCbm5uysvLnU5nd3c3IaSpqSkUCqW+E4/HzWZzZip2OBz9/f01NTWPj4/KFL25uZnKySMjI3t7e+mlysIlSZqenqaUejweWZYJIVtbWzMzM/DyLb76uXB8fLyjo2NiYqKurm5gYMBsNre2tqYW6XQ6tVqdTCaTyaTH48lca21tbWpqymKxGAwGZZknJyeSJDkcDqvVmjkclYW73W673R4Oh29vb9vb2/V6vclk2t/fh7PcoFarA4FAOvqSJD09PWm1WkIIpdRkMilHZ+qz2+2em5traGh4fX398CArGAwaDIZAIKBSqdJLlYVXVFSEQqH5+fmxsbHt7W2r1er1euElZ/vg3t7ecDic+uz1eoeHh/1+v81mI4SMjo5ubGx8tmJnZ+fx8bFWq9VoNJ8duK2vr19fX7+/v6f/qSw8Ho8/Pz/b7Xa/3+/z+VZWVlKJGuSG3d3dycnJ9J+yLA8NDZ2dncmyfHl52dLS8tkI3tnZiUQih4eHLy8vKcfBYDCzQ7S1tSUSiZ6ensy1GhsblYUvLS1FIhFCiF6vf3t76+vrgxcAAAAAAAAAAAAAAMTkD+ZzMTb5I6asAAAAAElFTkSuQmCC",
+         "type": "image/png",
+         "accepted": true,
+         "selected": true,
+         "alt_text": "Aerial view"
+        }
+       ]
+      },
+      "nodegroup_id": "9f8d0bf7-ebc8-5555-9fad-4f38f59ebcba",
+      "parenttile_id": null,
+      "resourceinstance_id": "997b2ed6-48e2-5e66-b72b-c72861f3f622",
+      "sortorder": 0,
+      "tileid": "2822704c-fd27-59e5-98b9-a3c8e4d9c209"
+     }
+    ],
+    "tiles_loaded": true
+   },
+   {
+    "metadata": {},
+    "resourceinstance": {
+     "descriptors": {},
+     "graph_id": "64368e71-abbc-53ba-9bd8-87e2500f8e65",
+     "legacyid": "corp-001",
+     "name": "Bardas Cathrach Aonach Mór",
+     "resourceinstanceid": "a8a3240d-9756-535f-a91d-77af1e9af54b"
+    },
+    "tiles": [
+     {
+      "data": {
+       "f3a2d94a-536e-5977-bde4-9106de0e62cc": {
+        "en": {
+         "direction": "ltr",
+         "value": "Aonach Mór City Council"
+        },
+        "ga": {
+         "direction": "ltr",
+         "value": "Bardas Cathrach Aonach Mór"
+        }
+       }
+      },
+      "nodegroup_id": "f3a2d94a-536e-5977-bde4-9106de0e62cc",
+      "parenttile_id": null,
+      "resourceinstance_id": "a8a3240d-9756-535f-a91d-77af1e9af54b",
+      "sortorder": 0,
+      "tileid": "0d4fb1db-56ee-5f04-86ba-623edbb4ad4a"
+     },
+     {
+      "data": {
+       "93d67672-dc92-5b7b-855d-5eacb8c2eaf1": [
+        {
+         "resourceId": "23819b3b-3328-5001-9aa6-5cfc0e103c04",
+         "ontologyProperty": "",
+         "inverseOntologyProperty": "",
+         "resourceXresourceId": "33c91c9c-a845-5552-a2d2-24db7733740b"
+        }
+       ]
+      },
+      "nodegroup_id": "93d67672-dc92-5b7b-855d-5eacb8c2eaf1",
+      "parenttile_id": null,
+      "resourceinstance_id": "a8a3240d-9756-535f-a91d-77af1e9af54b",
+      "sortorder": 0,
+      "tileid": "c4579efb-3444-51ba-abb9-30fdf6438f02"
+     },
+     {
+      "data": {
+       "773f3fe8-bc58-549c-b7a9-05bb2957fd67": 48660000
+      },
+      "nodegroup_id": "d0415b22-2747-5ded-8914-203fd3709034",
+      "parenttile_id": null,
+      "resourceinstance_id": "a8a3240d-9756-535f-a91d-77af1e9af54b",
+      "sortorder": 0,
+      "tileid": "feab22bf-cc52-5985-849b-9c6b3082d93a"
+     },
+     {
+      "data": {
+       "aeb12fb1-1ff4-5bcc-a64a-7974d874bad5": {
+        "features": [
+         {
+          "geometry": {
+           "coordinates": [
+            [
+             [
+              80.242,
+              13.044
+             ],
+             [
+              80.298,
+              13.044
+             ],
+             [
+              80.298,
+              13.116
+             ],
+             [
+              80.242,
+              13.116
+             ],
+             [
+              80.242,
+              13.044
+             ]
+            ]
+           ],
+           "type": "Polygon"
+          },
+          "properties": {},
+          "type": "Feature"
+         }
+        ],
+        "type": "FeatureCollection"
+       }
+      },
+      "nodegroup_id": "aeb12fb1-1ff4-5bcc-a64a-7974d874bad5",
+      "parenttile_id": null,
+      "resourceinstance_id": "a8a3240d-9756-535f-a91d-77af1e9af54b",
+      "sortorder": 0,
+      "tileid": "827db16a-6861-5d1d-b4fa-2898ee3f7a60"
+     },
+     {
+      "tileid": "e42f7195-2406-5fe9-8c31-be30e097b11a",
+      "nodegroup_id": "16d7d3e7-736f-5a5f-87e2-57d5b8562494",
+      "data": {
+       "188eae98-f3ff-5ee6-b4dd-a148319fc66b": null
+      },
+      "parenttile_id": null,
+      "resourceinstance_id": "a8a3240d-9756-535f-a91d-77af1e9af54b",
+      "sortorder": 0
+     },
+     {
+      "data": {
+       "56929b52-5df8-5a61-9f22-b449c0622344": "1988"
+      },
+      "nodegroup_id": "56929b52-5df8-5a61-9f22-b449c0622344",
+      "parenttile_id": null,
+      "resourceinstance_id": "a8a3240d-9756-535f-a91d-77af1e9af54b",
+      "sortorder": 0,
+      "tileid": "33f3c3b4-aefb-5e0e-adb5-23a96c8e66a0"
+     },
+     {
+      "data": {
+       "7dc72b8a-72f0-5a7e-bc36-45104a2f9b79": true
+      },
+      "nodegroup_id": "7dc72b8a-72f0-5a7e-bc36-45104a2f9b79",
+      "parenttile_id": null,
+      "resourceinstance_id": "a8a3240d-9756-535f-a91d-77af1e9af54b",
+      "sortorder": 0,
+      "tileid": "86468ad8-cf62-55c4-b849-f9eb2bf09764"
+     },
+     {
+      "data": {
+       "11412fa9-5f8b-52a3-bb70-53e21f34ad61": {
+        "url": "https://records.example.org/site/11",
+        "url_label": "Heritage record"
+       }
+      },
+      "nodegroup_id": "11412fa9-5f8b-52a3-bb70-53e21f34ad61",
+      "parenttile_id": null,
+      "resourceinstance_id": "a8a3240d-9756-535f-a91d-77af1e9af54b",
+      "sortorder": 0,
+      "tileid": "3b7c5c9f-b708-5e6e-ba43-c93d6c12cb5b"
+     },
+     {
+      "data": {
+       "15bc97aa-9bf2-5610-9d4f-fcbcffa8524b": [
+        {
+         "list_id": "2730d609-3a8d-49dc-bf51-6ac34e80294a",
+         "list_item_id": "388293d0-bb7d-5468-91e5-9baa4088b7de",
+         "labels": [
+          {
+           "value": "Listed Building Grade II",
+           "language_id": "en",
+           "valuetype_id": "prefLabel"
+          }
+         ]
+        }
+       ]
+      },
+      "nodegroup_id": "15bc97aa-9bf2-5610-9d4f-fcbcffa8524b",
+      "parenttile_id": null,
+      "resourceinstance_id": "a8a3240d-9756-535f-a91d-77af1e9af54b",
+      "sortorder": 0,
+      "tileid": "3523e3d3-597e-57a3-8eae-4ad9fc95c69d"
+     },
+     {
+      "data": {
+       "9f8d0bf7-ebc8-5555-9fad-4f38f59ebcba": [
+        {
+         "name": "detail.png",
+         "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABuCAIAAAAvT4++AAADY0lEQVR42u2dO0tjQRSAxzFiQFCSOlqEdCkDWmnsUpgtLITYpbGIu42NaKl/YXdJYxlSpVs1QQxquIKQJoX+BR9gISmEkAhbBCTsYtyNecw5fl/lY5w7mY8zM86998zYZvK7Ab1YugDBgGBAMCAYEAwIBgQjGBAMCAYEA4IBwYBgBAOCQR4+9Z/w569v3Qt8/fJD8ccfU/nIzrtSP49sbYJ7VqtVsxLBffGq0rTF7khqJoLdEiA3lC12dYeyxa5uxyKH6P/t6y4DbB+rQvBQ7fZgYnA1I7ifDj4oYAiXQHCPXd/HflezwWmx21ttUtZcFru6HYu/mzTQobJduej9LKsgfGmbYMHde3A4K53uV3HcseCtymGuY9mL1mxXtGOnBUtZ3bjcTkv46g5iS1jobq0lfHUHMc9FKwfBCGZKk9xmYRHswhQoaxpmiGaIBgQDggHBgGBAMCAYwc7iwm6RrF02RwVLvPPqZpsZohmiAcGfZwoUd5vLXcGypmFnWytyiB5VGEm8S20JC93tJEeH5vA1ZNnRbVeAYBde/HLhBTjNEexyD7q/ShD/Ang7vAbU0QpSGcqYg0eSTUFHHhYxi6whO1aTZYc8WSO4BIL7EKlkupMq2JCrUr3gUa1veQFcc1+To0OzY7lZdjQcyjHQ4Vr6uRwaHtkZnAMFp65wbpJOr2oFf1AzJ58plM3ZhcAiCxAMCAYEAwAAAAAAAAD0xPPz8/n5+dnZ2eXlZTqdfqvYzs7O3z+MRqOZTKb99dPTE53pIq9ipqamyuXy2tpa92Lv1gOOCjbGxGIxz/MCgUAulzs9Pa1UKvPz88aYvb29Vqt1cnISjUY9z7u+vt7a2vrjzxEsQPDExMT9/f3BwcHCwoIxZm5urlardRbLZrOLi4vBYPD29hbB7vCvr4/6fL5ms5lIJCKRyOu4PT4+/vLy0v52e3s7lUolk8np6Wm6VV4Ex+Px4+Pju7s7v99vjLHWLi0tdRYrlUobGxuhUKherxPBwgQHAoGrq6vl5eVCobC+vm6MWVlZKRaL7d/W63Vr7ePj48zMTCQSaTQaCBb2b5Lneaurq8aY2dnZYrF4cXFRLpfD4XC72NHR0eHh4f7+/s3NTT6ff3h4mJyc7PRarVZ3d3fpTwAAAAAAAAAAAHiT36S9jWqY+rezAAAAAElFTkSuQmCC",
+         "type": "image/png",
+         "accepted": true,
+         "selected": true,
+         "alt_text": "Detail"
+        },
+        {
+         "name": "site-plan.png",
+         "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABuCAIAAAAvT4++AAADMklEQVR42u3aP0gycRjA8afrz7kEWQgNXpC02RRREBg45lYRLQ01ODS9b1tuFTRES1tLQUMEORREYphxr1dB0KJQU1MFnm0VYg1R73C8h/jyBtm/0/f7mQ67+yH37dEDfzXmj0FB9VK4BQQGgUFgEBgEBoFBYAKDwCLSurTVurT1/jfBOp+3DhPMBIPAcKyat/6a9CFfKvhYuZ9DTDATXNbT3ev/Pqzz7eswwTxkgcAgMAgMAoPAIDCBQWAQGAQGgUFgEJjAIDAqEHuyqgF7spjgsrAHyvnrMME8ZIHAIDAIDAKDwCAwgUFgEBgEBoFBYBCYwCAwKhB7sqoBe7KY4LKwB8r56zDBPGSBwCAwCAwCg8AgMIFBYBAYBAaBQWAQmMAgMCoQe7KqAXuymOCysAfK+eswwTxk4b/9iAYTDAKDwCAwAAAAAADAa7q6uhKJhK7r+/v7mqb5/f7JyUnrT9PT029d7fb2llvqLOl02uv1isjw8PDm5uY7axHYcbLZbEdHh4jU19cHAgE70uzs7NPTUyKRcLvd6+vryWTSMIyenp6SnIuLi4eHh4ZhtLe329f6/f6jo6Ozs7OpqSn7zPn5+VQqlclkBgf57fILjY+Pm6a5uroaDAZLptA6WFlZ6e3tFZG2trZ0Ol187cPDw+joqIiMjY1tb2/blywvLwcCgebm5mw2a51ZKBSs2D6f7+rqitv+pdxu98TERCaTmZmZ+Tvw9fX1rz8uLi5qa2vtCwuFQkNDg4ioqprL5exLGhsbw+HwwsJCPp+3znx8fGxqarKO7+7uuOdfxOPx9PX12cfFkewD0zRdLpeIKIrS399ffHk+n7d6q6p6eXlpX7K3txcOh71e7/39vXWmfcD39Gf458+FLy8v0WhU0zQRaWlpKfnwVBRFUZTj42PrW3NgYCASiRSfUFdXFwqFRGRkZETXdfv17u7uaDTqcrlUVbVeeX5+JsP3CIVCJycnuq4nk8nOzs7iCYvFYru7u5qmxePxVCp1cHDg8/lKHrLW1tYMw9jZ2fF4PCJyenoaiUTm5ubOz883NjZubm6sxsVTywRXDFI5/SMaAAAAAACg0vwGENaAuDBcqFkAAAAASUVORK5CYII=",
+         "type": "image/png",
+         "accepted": true,
+         "selected": true,
+         "alt_text": "Site plan"
+        }
+       ]
+      },
+      "nodegroup_id": "9f8d0bf7-ebc8-5555-9fad-4f38f59ebcba",
+      "parenttile_id": null,
+      "resourceinstance_id": "a8a3240d-9756-535f-a91d-77af1e9af54b",
+      "sortorder": 0,
+      "tileid": "c88a8350-76d6-50f7-8daa-989b49bf3fdc"
+     }
+    ],
+    "tiles_loaded": true
+   },
+   {
+    "metadata": {},
+    "resourceinstance": {
+     "descriptors": {},
+     "graph_id": "64368e71-abbc-53ba-9bd8-87e2500f8e65",
+     "legacyid": "site-005",
+     "name": "Seandún",
+     "resourceinstanceid": "bb8ec53b-0d84-5d36-95a9-e02fdd046f24"
+    },
+    "tiles": [
+     {
+      "data": {
+       "773f3fe8-bc58-549c-b7a9-05bb2957fd67": 2710000
+      },
+      "nodegroup_id": "d0415b22-2747-5ded-8914-203fd3709034",
+      "parenttile_id": null,
+      "resourceinstance_id": "bb8ec53b-0d84-5d36-95a9-e02fdd046f24",
+      "sortorder": 0,
+      "tileid": "2fbc472d-d551-5e3b-8ab5-4f1d61c34ade"
+     },
+     {
+      "data": {
+       "079cd3c9-4cf6-54d0-aac1-9c95624616be": [
+        {
+         "resourceId": "d793cffb-8aec-57af-9f9d-f3cb0da857b3",
+         "ontologyProperty": "",
+         "inverseOntologyProperty": "",
+         "resourceXresourceId": "4600c342-92af-5c1c-b67b-524301eb3ecc"
+        }
+       ]
+      },
+      "nodegroup_id": "079cd3c9-4cf6-54d0-aac1-9c95624616be",
+      "parenttile_id": null,
+      "resourceinstance_id": "bb8ec53b-0d84-5d36-95a9-e02fdd046f24",
+      "sortorder": 0,
+      "tileid": "bfbb5a18-9c76-5c22-a6d2-9d1695fd349e"
+     },
+     {
+      "data": {
+       "0f4e0296-8e30-5e30-80d6-31fe17281ad0": {
+        "en": {
+         "direction": "ltr",
+         "value": "T. Nagar"
+        }
+       }
+      },
+      "nodegroup_id": "0f4e0296-8e30-5e30-80d6-31fe17281ad0",
+      "parenttile_id": null,
+      "resourceinstance_id": "bb8ec53b-0d84-5d36-95a9-e02fdd046f24",
+      "sortorder": 0,
+      "tileid": "d22ad47d-a156-5cb3-a91b-e2e9dfa15844"
+     },
+     {
+      "data": {
+       "93d67672-dc92-5b7b-855d-5eacb8c2eaf1": [
+        {
+         "resourceId": "23819b3b-3328-5001-9aa6-5cfc0e103c04",
+         "ontologyProperty": "",
+         "inverseOntologyProperty": "",
+         "resourceXresourceId": "b94a90f7-3431-5787-b9da-ba2b5a5e780f"
+        }
+       ]
+      },
+      "nodegroup_id": "93d67672-dc92-5b7b-855d-5eacb8c2eaf1",
+      "parenttile_id": null,
+      "resourceinstance_id": "bb8ec53b-0d84-5d36-95a9-e02fdd046f24",
+      "sortorder": 0,
+      "tileid": "888c71f6-7458-5e1a-8c09-27033dde868a"
+     },
+     {
+      "data": {
+       "f3a2d94a-536e-5977-bde4-9106de0e62cc": {
+        "en": {
+         "direction": "ltr",
+         "value": "Seandún"
+        }
+       }
+      },
+      "nodegroup_id": "f3a2d94a-536e-5977-bde4-9106de0e62cc",
+      "parenttile_id": null,
+      "resourceinstance_id": "bb8ec53b-0d84-5d36-95a9-e02fdd046f24",
+      "sortorder": 0,
+      "tileid": "50703fff-b8eb-5a6d-986a-fdcdb6f6e129"
+     },
+     {
+      "data": {
+       "aeb12fb1-1ff4-5bcc-a64a-7974d874bad5": {
+        "features": [
+         {
+          "geometry": {
+           "coordinates": [
+            [
+             [
+              80.2607,
+              13.08
+             ],
+             [
+              80.2793,
+              13.08
+             ],
+             [
+              80.2793,
+              13.092
+             ],
+             [
+              80.2607,
+              13.092
+             ],
+             [
+              80.2607,
+              13.08
+             ]
+            ]
+           ],
+           "type": "Polygon"
+          },
+          "properties": {},
+          "type": "Feature"
+         }
+        ],
+        "type": "FeatureCollection"
+       }
+      },
+      "nodegroup_id": "aeb12fb1-1ff4-5bcc-a64a-7974d874bad5",
+      "parenttile_id": null,
+      "resourceinstance_id": "bb8ec53b-0d84-5d36-95a9-e02fdd046f24",
+      "sortorder": 0,
+      "tileid": "b33cba10-8c83-5e3f-89e0-d34decfd5f06"
+     },
+     {
+      "tileid": "511ce00f-65de-52d0-9d39-ba8063755c50",
+      "nodegroup_id": "16d7d3e7-736f-5a5f-87e2-57d5b8562494",
+      "data": {
+       "188eae98-f3ff-5ee6-b4dd-a148319fc66b": null
+      },
+      "parenttile_id": null,
+      "resourceinstance_id": "bb8ec53b-0d84-5d36-95a9-e02fdd046f24",
+      "sortorder": 0
+     },
+     {
+      "data": {
+       "56929b52-5df8-5a61-9f22-b449c0622344": "1990/1995"
+      },
+      "nodegroup_id": "56929b52-5df8-5a61-9f22-b449c0622344",
+      "parenttile_id": null,
+      "resourceinstance_id": "bb8ec53b-0d84-5d36-95a9-e02fdd046f24",
+      "sortorder": 0,
+      "tileid": "eee6e2ed-9a25-523d-89de-a30e3f7af45f"
+     },
+     {
+      "data": {
+       "7dc72b8a-72f0-5a7e-bc36-45104a2f9b79": false
+      },
+      "nodegroup_id": "7dc72b8a-72f0-5a7e-bc36-45104a2f9b79",
+      "parenttile_id": null,
+      "resourceinstance_id": "bb8ec53b-0d84-5d36-95a9-e02fdd046f24",
+      "sortorder": 0,
+      "tileid": "3e92adc1-fda3-55ab-8d93-907ea86f91e2"
+     },
+     {
+      "data": {
+       "11412fa9-5f8b-52a3-bb70-53e21f34ad61": {
+        "url": "https://records.example.org/site/12",
+        "url_label": "Heritage record"
+       }
+      },
+      "nodegroup_id": "11412fa9-5f8b-52a3-bb70-53e21f34ad61",
+      "parenttile_id": null,
+      "resourceinstance_id": "bb8ec53b-0d84-5d36-95a9-e02fdd046f24",
+      "sortorder": 0,
+      "tileid": "cdbb0832-40ed-562c-ab0a-9959927981cc"
+     },
+     {
+      "data": {
+       "15bc97aa-9bf2-5610-9d4f-fcbcffa8524b": [
+        {
+         "list_id": "2730d609-3a8d-49dc-bf51-6ac34e80294a",
+         "list_item_id": "6df0d13c-d682-56e9-af73-34a328f06e6f",
+         "labels": [
+          {
+           "value": "World Heritage Buffer",
+           "language_id": "en",
+           "valuetype_id": "prefLabel"
+          }
+         ]
+        }
+       ]
+      },
+      "nodegroup_id": "15bc97aa-9bf2-5610-9d4f-fcbcffa8524b",
+      "parenttile_id": null,
+      "resourceinstance_id": "bb8ec53b-0d84-5d36-95a9-e02fdd046f24",
+      "sortorder": 0,
+      "tileid": "66f1b91d-b62f-5e47-92f8-06abe6f2acaf"
+     },
+     {
+      "data": {
+       "9f8d0bf7-ebc8-5555-9fad-4f38f59ebcba": [
+        {
+         "name": "context.png",
+         "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABuCAIAAAAvT4++AAAEcUlEQVR42u2dv0sjQRTH36yRIKRQkCOKEUxhbeMPPEsFAxYKKWwWG23uKq0UbAT9DzwLsbCIhY2VyaKYxF3OwsYfYKWdGuWu0kaCRL1iuaA5Lxe8ZHbm7fdTxbiJO++zb3dndt4ofnz/QoAvBkIAwQCCAQQDCAYQDCAYQDAEAwgGEAwgGEAwgGAAwRAMIBhA8Fs+ff6GEHsbpYCcvf958BUiPUkAQ87eI5W9ik9AcnuQypIPd1GjWZXl2+BbzfLDImo6bRaaPQ9Fbe+iy++3fy7MHh7oQs7Ed9+msucNFzIrG3ylWZHGCvmlK+w1K9VAD4YqeV+YVTt8hYfFZ8xSWc3mCM+rCxloVrkJQpHy0TIxUtyx4nsu1KkP1i6VtdhhoVoBuBZR0+hYFGpW+CsbQe1OM4rO6FCzK6Xj/aBQfI0ORWKq762+0GIRFg/jq3svTmi0yo78Dom+nTctBcvMJzajbELHdbJqGn1mA6hC34XQqm6C5WMujSe+V7crxfUhpmCwlOF/uuH9fFqwWavyA578MMNEMFuMtEJn/pk8xK34rJILs6+mhgmuywl/YLya5eTOADHFtVWhZsbzdtkKrlAz++oK5oL/mcHsS+ICvlXrE80GS7UfOyeX/yAEa9MP9lVJHEaymN9aYywaY9F81fpBswG7lWyv74UZMzqYpzLmZDHXjFmVav1FnwrGvGi2glHZwFawgjHVUbMBu7y7UqgPZp7KqPBnvsNYo4P5nmOVHeZNwDpZzJvjjWDGT+hUa5qBEPDuSmG1WeaNxXrRzBtec8FY1d/bIBiwy/vCjP+6wjyVa3iKfrcx+L9JkiMjr3QFaktCIafLZMgxCrtexSeAxOWdymwr/IGMbhKAYAAAAAAAAAAAAAAZTE1NHR0d2badTCYjkUjlH5ydna36lqDKDA0NZTKZhoYGIorFYul0uvLP3t3dVX1LUGV2dnb6+vqKP66urtbX14fD4VQq5ThOKpUKh8OuoaWlJdu2T09Px8bGiGhhYaFQKOzu7jY1NSUSib29Pcdxenp6iGhra2t0dNT9NtM0i1si2h5wfX0dDAZL3tzY2DBNk4hM00wkEkT08PAwPT1NRNFo9PLy8nVerq2t9fb2ElF7e/vJyQkRtbW1HR8fd3d3W5aFDPaY29vbPwXncjn3zWAwmMvliCifzzc2Nrq/vb+/f63t6upq/zcXFxd1dXVENDMzc3Nz09HRAcFy+OsD//Pz866ursPDQyISQqyvr09MTAghSjZ7fHwsSnp5eXnz1YHA8PBwPp83DGNgYODp6YmIQqFQoVAIhUIIvRz++rhwZWVlcXHRzdfx8XH3RTabjcfjRBSPx/f394no+fn5nS81DMMwDg4O3KtyLBabm5sjos7OzsHBwZGRkeXlZfdYcbeEBm+Yn58/OzvLZrObm5vNzc1E1NraalmW4ziWZbW0tJScY4uvk8nk9vZ2JBKxLMu27XQ6HY1GiSiTyfT397tHz+TkZHFLhBoAAAAAAAAAAAAAAL/zC9Qxqy63F0ZBAAAAAElFTkSuQmCC",
+         "type": "image/png",
+         "accepted": true,
+         "selected": true,
+         "alt_text": "Context"
+        },
+        {
+         "name": "photograph.png",
+         "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABuCAIAAAAvT4++AAAEGklEQVR42u2bP0hjSxjFT2bF2AgiiNHKNG7hn0ZTioKFYKEGIhaa0laws1WwCJYWlgaiPtAF4aIJinCTSXALS7XYTpSIgkWEaKLEuMXAfb4YdtWnkHycU93M9Tcj58vFBH66np+fAQD4PhTAO/Nr7wfZCmfV613eeyrZSmb/HfC73h0lJ5GtWFaxKdmsYlOy2W///DxhU4JZxaZks4pNyWYVm5LNKjYlm1VsSjar2JRsVrEp2axiU7JZxaZks4pNyWYVm5LNKjYlm1VsSjar2JRs1uU4WWxKJKvYlGyWTpZwlk6WcJZOlnCWTpZwlk6WcJZOlnCWTpZwlk6WcJZOlnCWTpZwlk6WcJZOlnCWThadLDZVzSydLOEsnSzhLJ0s4SydLDpZbKqaWTpZwlk6WcJZOlnCWTpZwlk6WcJZOlnCWTpZwlk6WcJZOlnCWTpZwlk6WcJZOlnCWTpZwlk6WXSy2FQ1s3SyhLN0soSzdLKEs3Sy6GSxqWpm6WQJZ+lkCWfpZAln6WQJZ+lkCWfpZAln6WQJZ+lkCWfpZAln6WQJZ+lkCWfpZAln6WQJZ+lk0cliU9XM0skSztLJEs7SyRLO0smik8WmqpmlkyWZ/c+A30u+/HmylckCUIb5AOlQZCuZZRiGYRiGYRiGYRjG5P7+Ph6P27adSqV8Ph+ATCbzV2pubu4rfpm3HM18sNOurq6jo6M3tvxFk+CAv7bTm5sbs7K4uJhIJI6Pj/1+PwCPxxONRrXW0WjU4/HMz88XCoX9/f2S9ebmZsuykslkJBIxW5ndVldXZ2ZmOjo6UqnUycnJ7Oysc2tpaSmZTGqtvV5v2aOZTxvw4ODgwcEBgFwuZ2bQ3t5+fn4OYH19PRgMAggGg2traw5Vsh6JRCYnJwGMjY3l83mzbS6XGxoaArCystLX19fY2Hh5eencmpiYADA1NbW9vV32aOZz/gYnEgnLstra2gDk8/mGhgZz9/b2FkA6nXa73QDcbnc6nXYGXLJ+cXFhXtbU1Nzd3ZkdstmsUgpAfX399PR0KBTKZrPO0bW1tQa/uroqezTzlvzpPxseHx8HBgb6+/tHRkbOzs7MivNYG1PA5XKVZUvWzbQAKKWcW4VCoVgsAtja2gKwvLxsXgIoFotPT0/m+uHhoezRzP8d8Os4A3Bi23YgEAAQCATi8bgZoVKqZP3w8HB0dBSA3+9//Z7o7e3d3Nysq6szT7l50IeHhwGMj4/btl32aObzP7i+XDHXra2tsVhMax2LxVpaWgDs7u7u7OyUrHu9Xq211joUCr38kGUuFhYWTk9PNzY2rq+vzYwzmUw4HNZaW5bV1NRU9mimghIOh7u7uwH4fD6tNb8USUtPT4/Wem9vz7btzs5ODphhGIZhGIZhGIZhmC/Ib++fWenbSTJHAAAAAElFTkSuQmCC",
+         "type": "image/png",
+         "accepted": true,
+         "selected": true,
+         "alt_text": "Photograph"
+        }
+       ]
+      },
+      "nodegroup_id": "9f8d0bf7-ebc8-5555-9fad-4f38f59ebcba",
+      "parenttile_id": null,
+      "resourceinstance_id": "bb8ec53b-0d84-5d36-95a9-e02fdd046f24",
+      "sortorder": 0,
+      "tileid": "cf0ec1f3-2b72-5427-a2a5-15584aa9d7d4"
+     }
+    ],
+    "tiles_loaded": true
+   },
+   {
+    "metadata": {},
+    "resourceinstance": {
+     "descriptors": {},
+     "graph_id": "64368e71-abbc-53ba-9bd8-87e2500f8e65",
+     "legacyid": "site-002",
+     "name": "Baile an Iarthair",
+     "resourceinstanceid": "c37f54a1-48a0-53b2-b079-8e28c4bfd45f"
+    },
+    "tiles": [
+     {
+      "data": {
+       "93d67672-dc92-5b7b-855d-5eacb8c2eaf1": [
+        {
+         "resourceId": "23819b3b-3328-5001-9aa6-5cfc0e103c04",
+         "ontologyProperty": "",
+         "inverseOntologyProperty": "",
+         "resourceXresourceId": "6955a1bc-368c-596b-88bf-69eea806759d"
+        }
+       ]
+      },
+      "nodegroup_id": "93d67672-dc92-5b7b-855d-5eacb8c2eaf1",
+      "parenttile_id": null,
+      "resourceinstance_id": "c37f54a1-48a0-53b2-b079-8e28c4bfd45f",
+      "sortorder": 0,
+      "tileid": "577d8495-f160-5b23-89e5-b5af65a1a93f"
+     },
+     {
+      "data": {
+       "aeb12fb1-1ff4-5bcc-a64a-7974d874bad5": {
+        "features": [
+         {
+          "geometry": {
+           "coordinates": [
+            [
+             [
+              80.242,
+              13.068
+             ],
+             [
+              80.27,
+              13.068
+             ],
+             [
+              80.27,
+              13.08
+             ],
+             [
+              80.242,
+              13.08
+             ],
+             [
+              80.242,
+              13.068
+             ]
+            ]
+           ],
+           "type": "Polygon"
+          },
+          "properties": {},
+          "type": "Feature"
+         }
+        ],
+        "type": "FeatureCollection"
+       }
+      },
+      "nodegroup_id": "aeb12fb1-1ff4-5bcc-a64a-7974d874bad5",
+      "parenttile_id": null,
+      "resourceinstance_id": "c37f54a1-48a0-53b2-b079-8e28c4bfd45f",
+      "sortorder": 0,
+      "tileid": "748f3e1e-8397-5289-9243-5b09e0a7cce3"
+     },
+     {
+      "data": {
+       "079cd3c9-4cf6-54d0-aac1-9c95624616be": [
+        {
+         "resourceId": "d793cffb-8aec-57af-9f9d-f3cb0da857b3",
+         "ontologyProperty": "",
+         "inverseOntologyProperty": "",
+         "resourceXresourceId": "f7752431-909f-5faa-9eff-aa5be4a9493d"
+        }
+       ]
+      },
+      "nodegroup_id": "079cd3c9-4cf6-54d0-aac1-9c95624616be",
+      "parenttile_id": null,
+      "resourceinstance_id": "c37f54a1-48a0-53b2-b079-8e28c4bfd45f",
+      "sortorder": 0,
+      "tileid": "65a4e03d-29ce-5560-87d2-db81fd873f24"
+     },
+     {
+      "data": {
+       "f3a2d94a-536e-5977-bde4-9106de0e62cc": {
+        "en": {
+         "direction": "ltr",
+         "value": "West Town"
+        },
+        "ga": {
+         "direction": "ltr",
+         "value": "Baile an Iarthair"
+        }
+       }
+      },
+      "nodegroup_id": "f3a2d94a-536e-5977-bde4-9106de0e62cc",
+      "parenttile_id": null,
+      "resourceinstance_id": "c37f54a1-48a0-53b2-b079-8e28c4bfd45f",
+      "sortorder": 0,
+      "tileid": "84e97162-5068-50b3-a2d7-5b230633bf98"
+     },
+     {
+      "data": {
+       "773f3fe8-bc58-549c-b7a9-05bb2957fd67": 4030000
+      },
+      "nodegroup_id": "d0415b22-2747-5ded-8914-203fd3709034",
+      "parenttile_id": null,
+      "resourceinstance_id": "c37f54a1-48a0-53b2-b079-8e28c4bfd45f",
+      "sortorder": 0,
+      "tileid": "aa23897a-4590-5a68-816f-905d92d35098"
+     },
+     {
+      "data": {
+       "0f4e0296-8e30-5e30-80d6-31fe17281ad0": {
+        "en": {
+         "direction": "ltr",
+         "value": "West Mambalam"
+        }
+       }
+      },
+      "nodegroup_id": "0f4e0296-8e30-5e30-80d6-31fe17281ad0",
+      "parenttile_id": null,
+      "resourceinstance_id": "c37f54a1-48a0-53b2-b079-8e28c4bfd45f",
+      "sortorder": 0,
+      "tileid": "d5882569-c275-5495-bc90-3702fb69f1cf"
+     },
+     {
+      "tileid": "bda9e563-0e12-5622-b0a1-b1513f36c092",
+      "nodegroup_id": "16d7d3e7-736f-5a5f-87e2-57d5b8562494",
+      "data": {
+       "188eae98-f3ff-5ee6-b4dd-a148319fc66b": null
+      },
+      "parenttile_id": null,
+      "resourceinstance_id": "c37f54a1-48a0-53b2-b079-8e28c4bfd45f",
+      "sortorder": 0
+     },
+     {
+      "data": {
+       "56929b52-5df8-5a61-9f22-b449c0622344": "19XX"
+      },
+      "nodegroup_id": "56929b52-5df8-5a61-9f22-b449c0622344",
+      "parenttile_id": null,
+      "resourceinstance_id": "c37f54a1-48a0-53b2-b079-8e28c4bfd45f",
+      "sortorder": 0,
+      "tileid": "04fa968b-d861-5970-96b1-26224339d98f"
+     },
+     {
+      "data": {
+       "7dc72b8a-72f0-5a7e-bc36-45104a2f9b79": true
+      },
+      "nodegroup_id": "7dc72b8a-72f0-5a7e-bc36-45104a2f9b79",
+      "parenttile_id": null,
+      "resourceinstance_id": "c37f54a1-48a0-53b2-b079-8e28c4bfd45f",
+      "sortorder": 0,
+      "tileid": "92784aea-863e-55d6-a503-0d514c33b03a"
+     },
+     {
+      "data": {
+       "11412fa9-5f8b-52a3-bb70-53e21f34ad61": {
+        "url": "https://records.example.org/site/13",
+        "url_label": "Heritage record"
+       }
+      },
+      "nodegroup_id": "11412fa9-5f8b-52a3-bb70-53e21f34ad61",
+      "parenttile_id": null,
+      "resourceinstance_id": "c37f54a1-48a0-53b2-b079-8e28c4bfd45f",
+      "sortorder": 0,
+      "tileid": "55c933ae-ff93-5413-858b-04896ccaa78d"
+     },
+     {
+      "data": {
+       "15bc97aa-9bf2-5610-9d4f-fcbcffa8524b": [
+        {
+         "list_id": "2730d609-3a8d-49dc-bf51-6ac34e80294a",
+         "list_item_id": "a7d38e93-1442-590e-b976-70a321a45421",
+         "labels": [
+          {
+           "value": "Scheduled Monument",
+           "language_id": "en",
+           "valuetype_id": "prefLabel"
+          }
+         ]
+        }
+       ]
+      },
+      "nodegroup_id": "15bc97aa-9bf2-5610-9d4f-fcbcffa8524b",
+      "parenttile_id": null,
+      "resourceinstance_id": "c37f54a1-48a0-53b2-b079-8e28c4bfd45f",
+      "sortorder": 0,
+      "tileid": "9c5cac19-c636-563e-b9e7-358ce5f4de34"
+     },
+     {
+      "data": {
+       "9f8d0bf7-ebc8-5555-9fad-4f38f59ebcba": [
+        {
+         "name": "aerial-view.png",
+         "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABuCAIAAAAvT4++AAAEm0lEQVR42u2dy0tyTRzHxzHSEqXaBF0hguB1UYso6GK1yQItlII2tXgoqE1URBREUPt43tNGAt/XTRTUqlWGtTh5WSSRQgb5B3TZSRsRkp6FIMKpfAovM+P3s7KOZ87M7zPzOxfPmaP657/fBIgLRQggGEAwgGAAwQCCAQQDCIZgAMEAggEEAwgGEAwgGIIBBAMIBhAMCkmZwG2L/Fr6+y8b//8XgoUy+vW6wvguK3GvWcvk3XQZvIptukxgr99SkrVYTk2rOLrxPauDHIa+kNuC4CwRz2usi7XdEhL8WYgLHF9GqiGa4A/DWsSYslYfjgWzHEqONDMqWBlBBsPHRSUp7P4YZa0Kc2rOt2Be7PLimK0Uze8FYWZrThGjfAxldsYxhV2xHVP2I8WvYwhm9+BTmHZR1qLA+++vrCVqynJ0kKi5FyxqcmanjRQdX+y2UAxfsVtK0eXFbhFufBccCIbg/O+WRH2qILNdxdoNYwRjBAMIBhAMIBhAMIBgAMEQXCIXAfINCxdzMIIxggEE5zabiZefS1SwqL8xMNVSii4vdltoyXbtEmkjRccXuxWUtQ7Ou2PW7uNnYgSXwh0dSNEiDGI84S9yombzISt2n2zgyzGzj9AxN8sOX3N0sF9h5vbBXExdw1F35OMJfzYdc5FsMNOdaHXjRjCbocRclYU7ucRss4IIzrobxnzRIggmmPFdeMHfPaLO7TsbuFPLq+BinTvhrStFO13Oq2m8N0lM03jzGdOmf+Ab7y7k3ndpghvfIRgAAAAAAAAAAABACGZnZxOJRG1tbdZvGo3GhYWFDxfFYrEfrAVygurrxaenp9Fo9P7+3uVy/XgbsVisqqoKsS4KX12qrKys1Ol0TqfTYrEQQqqrqw8ODi4uLq6urrq6utLyXC7X4uJieqQajUafz3d3d7e8vKwsMxQK1dfXE0I0Gk00GqWUptZSFv7w8NDc3EwIOT8/lySJEDI4OHh0dARnOcNms62urhJCbm5uysvLnU5nd3c3IaSpqSkUCqW+E4/HzWZzZip2OBz9/f01NTWPj4/KFL25uZnKySMjI3t7e+mlysIlSZqenqaUejweWZYJIVtbWzMzM/DyLb76uXB8fLyjo2NiYqKurm5gYMBsNre2tqYW6XQ6tVqdTCaTyaTH48lca21tbWpqymKxGAwGZZknJyeSJDkcDqvVmjkclYW73W673R4Oh29vb9vb2/V6vclk2t/fh7PcoFarA4FAOvqSJD09PWm1WkIIpdRkMilHZ+qz2+2em5traGh4fX398CArGAwaDIZAIKBSqdJLlYVXVFSEQqH5+fmxsbHt7W2r1er1euElZ/vg3t7ecDic+uz1eoeHh/1+v81mI4SMjo5ubGx8tmJnZ+fx8bFWq9VoNJ8duK2vr19fX7+/v6f/qSw8Ho8/Pz/b7Xa/3+/z+VZWVlKJGuSG3d3dycnJ9J+yLA8NDZ2dncmyfHl52dLS8tkI3tnZiUQih4eHLy8vKcfBYDCzQ7S1tSUSiZ6ensy1GhsblYUvLS1FIhFCiF6vf3t76+vrgxcAAAAAAAAAAAAAAMTkD+ZzMTb5I6asAAAAAElFTkSuQmCC",
+         "type": "image/png",
+         "accepted": true,
+         "selected": true,
+         "alt_text": "Aerial view"
+        },
+        {
+         "name": "elevation.png",
+         "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABuCAIAAAAvT4++AAAC70lEQVR42u3bMUhicRzA8Z96oENJNVlag4tDtEVRVFtHjoKry4GDY05KLsWJtAbRUjdZg5tQPpFCfVRDLQq62GZouGlE1FI3/DkPuia70uz7meL1VPh//b0/PNWwvLYn6F9GloDAIDAIDAKDwCAwCExg9ItvLEFnMj9/vOXh3yO/mGAQGAQmMAgMAoPAIDAIDAKDwARGf+i5Dxs+y018JhgEBoFBYBCYwCAwCAwCg8AgMAgMAhMYnx+/Teoh7/FRKRPMJRoEBoFBYBAYBAaBCYy+8aY7WXxJnQkGgUFgEBgEJjAIDAKDwPgwX+I7WV/5jhsTzCUaBAaBQWAQGAQGgQkMAoPAIDAIDAKDwAQGgUFgEBgExv9jWF7bYxWYYBAYBAaBAQAAAAAA3sX9/X3uj2AwKCLNZrOzpwqFQiIyOTkZCARY2F7xb86OA3f8QLxRJ7cqh4eH4/H48fGxruszMzMiUigU7Ha7iJjN5kqlMjU1dXp6WiqVVldXRWR9fX1gYCCTybRL22y2VCql63oqlbLZbOp4NBrN5/PFYtHj8RCmmxO8u7s7OzsrIhMTE4VCQUQikYi69q6srGxtbe3s7CwuLo6MjNTr9RdPpf7Y39/3+Xwi4vP54vG42g7Uu8HpdFarVRb/o/fgubm5dp7r6+v28aurK5PJ5HK50um0iGxvby8sLAwODvr9/s3Nzbu7u1cD12o1s9msJr5Wq4nIw8PD0NCQOqfVarH43Zzgm5sbi8UiIkajcWlpSf3r8vLSarWen58bDIZ0Ou33+x0Ox+3t7auB6/X6i8DtM9mwu78Hn52dqW3S7XaHw2F1MJlMhkKhi4uL5+fn6enpRCJhsVhURfVWMBr/vlY2m/V6vSLi9XpzuZyIPD09EaObl+hYLKbGNBwOj4+Pa5qWz+dPTk6cTqc62eVyPT4+zs/Pi8jGxka5XD44OGg0Gqrx0dHR4eFhezrHxsY0TdN1XdO00dHRF1PLBAMAAAAAAABfzm9w4itnuKz4TAAAAABJRU5ErkJggg==",
+         "type": "image/png",
+         "accepted": true,
+         "selected": true,
+         "alt_text": "Elevation"
+        }
+       ]
+      },
+      "nodegroup_id": "9f8d0bf7-ebc8-5555-9fad-4f38f59ebcba",
+      "parenttile_id": null,
+      "resourceinstance_id": "c37f54a1-48a0-53b2-b079-8e28c4bfd45f",
+      "sortorder": 0,
+      "tileid": "a19cc6e0-8ae4-50e1-bcc8-c115dda69ebc"
+     }
+    ],
+    "tiles_loaded": true
+   },
+   {
+    "metadata": {},
+    "resourceinstance": {
+     "descriptors": {},
+     "graph_id": "64368e71-abbc-53ba-9bd8-87e2500f8e65",
+     "legacyid": "zone-b",
+     "name": "Ceantar Láir",
+     "resourceinstanceid": "d793cffb-8aec-57af-9f9d-f3cb0da857b3"
+    },
+    "tiles": [
+     {
+      "data": {
+       "93d67672-dc92-5b7b-855d-5eacb8c2eaf1": [
+        {
+         "resourceId": "23819b3b-3328-5001-9aa6-5cfc0e103c04",
+         "ontologyProperty": "",
+         "inverseOntologyProperty": "",
+         "resourceXresourceId": "25e37cfd-33b5-5ba8-861d-dd9a82be8ee9"
+        }
+       ]
+      },
+      "nodegroup_id": "93d67672-dc92-5b7b-855d-5eacb8c2eaf1",
+      "parenttile_id": null,
+      "resourceinstance_id": "d793cffb-8aec-57af-9f9d-f3cb0da857b3",
+      "sortorder": 0,
+      "tileid": "37364be8-d892-5c91-8214-c436d1e9de94"
+     },
+     {
+      "data": {
+       "f3a2d94a-536e-5977-bde4-9106de0e62cc": {
+        "en": {
+         "direction": "ltr",
+         "value": "Central District"
+        },
+        "ga": {
+         "direction": "ltr",
+         "value": "Ceantar Láir"
+        }
+       }
+      },
+      "nodegroup_id": "f3a2d94a-536e-5977-bde4-9106de0e62cc",
+      "parenttile_id": null,
+      "resourceinstance_id": "d793cffb-8aec-57af-9f9d-f3cb0da857b3",
+      "sortorder": 0,
+      "tileid": "64d2df85-956b-5c8e-8aab-b4b23133909f"
+     },
+     {
+      "data": {
+       "773f3fe8-bc58-549c-b7a9-05bb2957fd67": 16220000
+      },
+      "nodegroup_id": "d0415b22-2747-5ded-8914-203fd3709034",
+      "parenttile_id": null,
+      "resourceinstance_id": "d793cffb-8aec-57af-9f9d-f3cb0da857b3",
+      "sortorder": 0,
+      "tileid": "ef87900d-aa81-5ca2-8e6e-cccc531f512a"
+     },
+     {
+      "data": {
+       "079cd3c9-4cf6-54d0-aac1-9c95624616be": [
+        {
+         "resourceId": "a8a3240d-9756-535f-a91d-77af1e9af54b",
+         "ontologyProperty": "",
+         "inverseOntologyProperty": "",
+         "resourceXresourceId": "6736889f-4f03-51d1-adc7-9f119c93c5f2"
+        }
+       ]
+      },
+      "nodegroup_id": "079cd3c9-4cf6-54d0-aac1-9c95624616be",
+      "parenttile_id": null,
+      "resourceinstance_id": "d793cffb-8aec-57af-9f9d-f3cb0da857b3",
+      "sortorder": 0,
+      "tileid": "90015d47-3f3f-515d-803a-8283197318e8"
+     },
+     {
+      "data": {
+       "0f4e0296-8e30-5e30-80d6-31fe17281ad0": {
+        "en": {
+         "direction": "ltr",
+         "value": "Central Chennai Zone"
+        }
+       }
+      },
+      "nodegroup_id": "0f4e0296-8e30-5e30-80d6-31fe17281ad0",
+      "parenttile_id": null,
+      "resourceinstance_id": "d793cffb-8aec-57af-9f9d-f3cb0da857b3",
+      "sortorder": 0,
+      "tileid": "247d347a-4ce8-52db-8930-2410dfe90c33"
+     },
+     {
+      "data": {
+       "aeb12fb1-1ff4-5bcc-a64a-7974d874bad5": {
+        "features": [
+         {
+          "geometry": {
+           "coordinates": [
+            [
+             [
+              80.242,
+              13.068
+             ],
+             [
+              80.298,
+              13.068
+             ],
+             [
+              80.298,
+              13.092
+             ],
+             [
+              80.242,
+              13.092
+             ],
+             [
+              80.242,
+              13.068
+             ]
+            ]
+           ],
+           "type": "Polygon"
+          },
+          "properties": {},
+          "type": "Feature"
+         }
+        ],
+        "type": "FeatureCollection"
+       }
+      },
+      "nodegroup_id": "aeb12fb1-1ff4-5bcc-a64a-7974d874bad5",
+      "parenttile_id": null,
+      "resourceinstance_id": "d793cffb-8aec-57af-9f9d-f3cb0da857b3",
+      "sortorder": 0,
+      "tileid": "56ba3a35-e483-5ae5-b9d2-5c5c8d64b15c"
+     },
+     {
+      "tileid": "9b87a2d0-aaef-5998-9c36-73f0bc2096bc",
+      "nodegroup_id": "16d7d3e7-736f-5a5f-87e2-57d5b8562494",
+      "data": {
+       "188eae98-f3ff-5ee6-b4dd-a148319fc66b": null
+      },
+      "parenttile_id": null,
+      "resourceinstance_id": "d793cffb-8aec-57af-9f9d-f3cb0da857b3",
+      "sortorder": 0
+     },
+     {
+      "data": {
+       "56929b52-5df8-5a61-9f22-b449c0622344": "2001-06"
+      },
+      "nodegroup_id": "56929b52-5df8-5a61-9f22-b449c0622344",
+      "parenttile_id": null,
+      "resourceinstance_id": "d793cffb-8aec-57af-9f9d-f3cb0da857b3",
+      "sortorder": 0,
+      "tileid": "f45563df-074c-5be0-8263-f8df3f9d17cb"
+     },
+     {
+      "data": {
+       "7dc72b8a-72f0-5a7e-bc36-45104a2f9b79": false
+      },
+      "nodegroup_id": "7dc72b8a-72f0-5a7e-bc36-45104a2f9b79",
+      "parenttile_id": null,
+      "resourceinstance_id": "d793cffb-8aec-57af-9f9d-f3cb0da857b3",
+      "sortorder": 0,
+      "tileid": "81cb5af1-bf36-5a23-947b-e3975759e18b"
+     },
+     {
+      "data": {
+       "11412fa9-5f8b-52a3-bb70-53e21f34ad61": {
+        "url": "https://records.example.org/site/14",
+        "url_label": "Heritage record"
+       }
+      },
+      "nodegroup_id": "11412fa9-5f8b-52a3-bb70-53e21f34ad61",
+      "parenttile_id": null,
+      "resourceinstance_id": "d793cffb-8aec-57af-9f9d-f3cb0da857b3",
+      "sortorder": 0,
+      "tileid": "4f6f13c3-e998-569c-9b4b-6659105f1f46"
+     },
+     {
+      "data": {
+       "15bc97aa-9bf2-5610-9d4f-fcbcffa8524b": [
+        {
+         "list_id": "2730d609-3a8d-49dc-bf51-6ac34e80294a",
+         "list_item_id": "53bfcf5e-8349-5305-8025-0ed9b15168ee",
+         "labels": [
+          {
+           "value": "Listed Building Grade I",
+           "language_id": "en",
+           "valuetype_id": "prefLabel"
+          }
+         ]
+        }
+       ]
+      },
+      "nodegroup_id": "15bc97aa-9bf2-5610-9d4f-fcbcffa8524b",
+      "parenttile_id": null,
+      "resourceinstance_id": "d793cffb-8aec-57af-9f9d-f3cb0da857b3",
+      "sortorder": 0,
+      "tileid": "ca2f407e-31b7-5494-bc5c-254e324c1d1b"
+     },
+     {
+      "data": {
+       "9f8d0bf7-ebc8-5555-9fad-4f38f59ebcba": [
+        {
+         "name": "site-plan.png",
+         "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABuCAIAAAAvT4++AAADMklEQVR42u3aP0gycRjA8afrz7kEWQgNXpC02RRREBg45lYRLQ01ODS9b1tuFTRES1tLQUMEORREYphxr1dB0KJQU1MFnm0VYg1R73C8h/jyBtm/0/f7mQ67+yH37dEDfzXmj0FB9VK4BQQGgUFgEBgEBoFBYAKDwCLSurTVurT1/jfBOp+3DhPMBIPAcKyat/6a9CFfKvhYuZ9DTDATXNbT3ev/Pqzz7eswwTxkgcAgMAgMAoPAIDCBQWAQGAQGgUFgEJjAIDAqEHuyqgF7spjgsrAHyvnrMME8ZIHAIDAIDAKDwCAwgUFgEBgEBoFBYBCYwCAwKhB7sqoBe7KY4LKwB8r56zDBPGSBwCAwCAwCg8AgMIFBYBAYBAaBQWAQmMAgMCoQe7KqAXuymOCysAfK+eswwTxk4b/9iAYTDAKDwCAwAAAAAADAa7q6uhKJhK7r+/v7mqb5/f7JyUnrT9PT029d7fb2llvqLOl02uv1isjw8PDm5uY7axHYcbLZbEdHh4jU19cHAgE70uzs7NPTUyKRcLvd6+vryWTSMIyenp6SnIuLi4eHh4ZhtLe329f6/f6jo6Ozs7OpqSn7zPn5+VQqlclkBgf57fILjY+Pm6a5uroaDAZLptA6WFlZ6e3tFZG2trZ0Ol187cPDw+joqIiMjY1tb2/blywvLwcCgebm5mw2a51ZKBSs2D6f7+rqitv+pdxu98TERCaTmZmZ+Tvw9fX1rz8uLi5qa2vtCwuFQkNDg4ioqprL5exLGhsbw+HwwsJCPp+3znx8fGxqarKO7+7uuOdfxOPx9PX12cfFkewD0zRdLpeIKIrS399ffHk+n7d6q6p6eXlpX7K3txcOh71e7/39vXWmfcD39Gf458+FLy8v0WhU0zQRaWlpKfnwVBRFUZTj42PrW3NgYCASiRSfUFdXFwqFRGRkZETXdfv17u7uaDTqcrlUVbVeeX5+JsP3CIVCJycnuq4nk8nOzs7iCYvFYru7u5qmxePxVCp1cHDg8/lKHrLW1tYMw9jZ2fF4PCJyenoaiUTm5ubOz883NjZubm6sxsVTywRXDFI5/SMaAAAAAACg0vwGENaAuDBcqFkAAAAASUVORK5CYII=",
+         "type": "image/png",
+         "accepted": true,
+         "selected": true,
+         "alt_text": "Site plan"
+        },
+        {
+         "name": "detail.png",
+         "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABuCAIAAAAvT4++AAADY0lEQVR42u2dO0tjQRSAxzFiQFCSOlqEdCkDWmnsUpgtLITYpbGIu42NaKl/YXdJYxlSpVs1QQxquIKQJoX+BR9gISmEkAhbBCTsYtyNecw5fl/lY5w7mY8zM86998zYZvK7Ab1YugDBgGBAMCAYEAwIBgQjGBAMCAYEA4IBwYBgBAOCQR4+9Z/w569v3Qt8/fJD8ccfU/nIzrtSP49sbYJ7VqtVsxLBffGq0rTF7khqJoLdEiA3lC12dYeyxa5uxyKH6P/t6y4DbB+rQvBQ7fZgYnA1I7ifDj4oYAiXQHCPXd/HflezwWmx21ttUtZcFru6HYu/mzTQobJduej9LKsgfGmbYMHde3A4K53uV3HcseCtymGuY9mL1mxXtGOnBUtZ3bjcTkv46g5iS1jobq0lfHUHMc9FKwfBCGZKk9xmYRHswhQoaxpmiGaIBgQDggHBgGBAMCAYwc7iwm6RrF02RwVLvPPqZpsZohmiAcGfZwoUd5vLXcGypmFnWytyiB5VGEm8S20JC93tJEeH5vA1ZNnRbVeAYBde/HLhBTjNEexyD7q/ShD/Ang7vAbU0QpSGcqYg0eSTUFHHhYxi6whO1aTZYc8WSO4BIL7EKlkupMq2JCrUr3gUa1veQFcc1+To0OzY7lZdjQcyjHQ4Vr6uRwaHtkZnAMFp65wbpJOr2oFf1AzJ58plM3ZhcAiCxAMCAYEAwAAAAAAAAD0xPPz8/n5+dnZ2eXlZTqdfqvYzs7O3z+MRqOZTKb99dPTE53pIq9ipqamyuXy2tpa92Lv1gOOCjbGxGIxz/MCgUAulzs9Pa1UKvPz88aYvb29Vqt1cnISjUY9z7u+vt7a2vrjzxEsQPDExMT9/f3BwcHCwoIxZm5urlardRbLZrOLi4vBYPD29hbB7vCvr4/6fL5ms5lIJCKRyOu4PT4+/vLy0v52e3s7lUolk8np6Wm6VV4Ex+Px4+Pju7s7v99vjLHWLi0tdRYrlUobGxuhUKherxPBwgQHAoGrq6vl5eVCobC+vm6MWVlZKRaL7d/W63Vr7ePj48zMTCQSaTQaCBb2b5Lneaurq8aY2dnZYrF4cXFRLpfD4XC72NHR0eHh4f7+/s3NTT6ff3h4mJyc7PRarVZ3d3fpTwAAAAAAAAAAAHiT36S9jWqY+rezAAAAAElFTkSuQmCC",
+         "type": "image/png",
+         "accepted": true,
+         "selected": true,
+         "alt_text": "Detail"
+        }
+       ]
+      },
+      "nodegroup_id": "9f8d0bf7-ebc8-5555-9fad-4f38f59ebcba",
+      "parenttile_id": null,
+      "resourceinstance_id": "d793cffb-8aec-57af-9f9d-f3cb0da857b3",
+      "sortorder": 0,
+      "tileid": "5bfb023f-f0e3-53c8-bb27-c8c69c1f8378"
+     }
+    ],
+    "tiles_loaded": true
+   },
+   {
+    "metadata": {},
+    "resourceinstance": {
+     "descriptors": {},
+     "graph_id": "64368e71-abbc-53ba-9bd8-87e2500f8e65",
+     "legacyid": "site-004",
+     "name": "Cnoc an Chaisil",
+     "resourceinstanceid": "dc11e420-bfba-5362-8836-1bd4aac9219e"
+    },
+    "tiles": [
+     {
+      "data": {
+       "aeb12fb1-1ff4-5bcc-a64a-7974d874bad5": {
+        "features": [
+         {
+          "geometry": {
+           "coordinates": [
+            [
+             [
+              80.2607,
+              13.104
+             ],
+             [
+              80.2793,
+              13.104
+             ],
+             [
+              80.2793,
+              13.116
+             ],
+             [
+              80.2607,
+              13.116
+             ],
+             [
+              80.2607,
+              13.104
+             ]
+            ]
+           ],
+           "type": "Polygon"
+          },
+          "properties": {},
+          "type": "Feature"
+         }
+        ],
+        "type": "FeatureCollection"
+       }
+      },
+      "nodegroup_id": "aeb12fb1-1ff4-5bcc-a64a-7974d874bad5",
+      "parenttile_id": null,
+      "resourceinstance_id": "dc11e420-bfba-5362-8836-1bd4aac9219e",
+      "sortorder": 0,
+      "tileid": "ce623d71-798d-553e-a181-91d6b196b3dc"
+     },
+     {
+      "data": {
+       "773f3fe8-bc58-549c-b7a9-05bb2957fd67": 2710000
+      },
+      "nodegroup_id": "d0415b22-2747-5ded-8914-203fd3709034",
+      "parenttile_id": null,
+      "resourceinstance_id": "dc11e420-bfba-5362-8836-1bd4aac9219e",
+      "sortorder": 0,
+      "tileid": "2c2ce770-f6c2-5f27-b62e-2501ac9a6c56"
+     },
+     {
+      "data": {
+       "0f4e0296-8e30-5e30-80d6-31fe17281ad0": {
+        "en": {
+         "direction": "ltr",
+         "value": "Mylapore"
+        }
+       }
+      },
+      "nodegroup_id": "0f4e0296-8e30-5e30-80d6-31fe17281ad0",
+      "parenttile_id": null,
+      "resourceinstance_id": "dc11e420-bfba-5362-8836-1bd4aac9219e",
+      "sortorder": 0,
+      "tileid": "112de837-a6c9-51d9-ba6e-93c9903e0c5e"
+     },
+     {
+      "data": {
+       "079cd3c9-4cf6-54d0-aac1-9c95624616be": [
+        {
+         "resourceId": "12b3c1e2-dda3-58ad-b437-79e9c2b9a722",
+         "ontologyProperty": "",
+         "inverseOntologyProperty": "",
+         "resourceXresourceId": "2ed9cfd7-1606-547b-9d17-7c17b6763e3f"
+        }
+       ]
+      },
+      "nodegroup_id": "079cd3c9-4cf6-54d0-aac1-9c95624616be",
+      "parenttile_id": null,
+      "resourceinstance_id": "dc11e420-bfba-5362-8836-1bd4aac9219e",
+      "sortorder": 0,
+      "tileid": "d9decc59-b7aa-5ca1-ac51-8a9572289928"
+     },
+     {
+      "data": {
+       "93d67672-dc92-5b7b-855d-5eacb8c2eaf1": [
+        {
+         "resourceId": "23819b3b-3328-5001-9aa6-5cfc0e103c04",
+         "ontologyProperty": "",
+         "inverseOntologyProperty": "",
+         "resourceXresourceId": "2b858044-d200-524d-a140-12095ad32a78"
+        }
+       ]
+      },
+      "nodegroup_id": "93d67672-dc92-5b7b-855d-5eacb8c2eaf1",
+      "parenttile_id": null,
+      "resourceinstance_id": "dc11e420-bfba-5362-8836-1bd4aac9219e",
+      "sortorder": 0,
+      "tileid": "f343e2f9-79a0-5db4-b7e6-08c38244ae99"
+     },
+     {
+      "data": {
+       "f3a2d94a-536e-5977-bde4-9106de0e62cc": {
+        "en": {
+         "direction": "ltr",
+         "value": "Cnoc an Chaisil"
+        }
+       }
+      },
+      "nodegroup_id": "f3a2d94a-536e-5977-bde4-9106de0e62cc",
+      "parenttile_id": null,
+      "resourceinstance_id": "dc11e420-bfba-5362-8836-1bd4aac9219e",
+      "sortorder": 0,
+      "tileid": "29d20c5d-b26a-534c-905e-7dcf38ff4d33"
+     },
+     {
+      "tileid": "efee02c9-5f76-527f-8ff9-6ac1ebebda91",
+      "nodegroup_id": "16d7d3e7-736f-5a5f-87e2-57d5b8562494",
+      "data": {
+       "188eae98-f3ff-5ee6-b4dd-a148319fc66b": null
+      },
+      "parenttile_id": null,
+      "resourceinstance_id": "dc11e420-bfba-5362-8836-1bd4aac9219e",
+      "sortorder": 0
+     },
+     {
+      "data": {
+       "56929b52-5df8-5a61-9f22-b449c0622344": "1975?"
+      },
+      "nodegroup_id": "56929b52-5df8-5a61-9f22-b449c0622344",
+      "parenttile_id": null,
+      "resourceinstance_id": "dc11e420-bfba-5362-8836-1bd4aac9219e",
+      "sortorder": 0,
+      "tileid": "645a898e-19fb-5bc9-8896-94d5f34b86f2"
+     },
+     {
+      "data": {
+       "7dc72b8a-72f0-5a7e-bc36-45104a2f9b79": true
+      },
+      "nodegroup_id": "7dc72b8a-72f0-5a7e-bc36-45104a2f9b79",
+      "parenttile_id": null,
+      "resourceinstance_id": "dc11e420-bfba-5362-8836-1bd4aac9219e",
+      "sortorder": 0,
+      "tileid": "0d00da44-65e0-54c1-85d7-9aad5834cc2e"
+     },
+     {
+      "data": {
+       "11412fa9-5f8b-52a3-bb70-53e21f34ad61": {
+        "url": "https://records.example.org/site/15",
+        "url_label": "Heritage record"
+       }
+      },
+      "nodegroup_id": "11412fa9-5f8b-52a3-bb70-53e21f34ad61",
+      "parenttile_id": null,
+      "resourceinstance_id": "dc11e420-bfba-5362-8836-1bd4aac9219e",
+      "sortorder": 0,
+      "tileid": "b26df62a-58e6-53ec-974b-41c5aad0c842"
+     },
+     {
+      "data": {
+       "15bc97aa-9bf2-5610-9d4f-fcbcffa8524b": [
+        {
+         "list_id": "2730d609-3a8d-49dc-bf51-6ac34e80294a",
+         "list_item_id": "513a85dd-477d-597d-a624-47274b860ba7",
+         "labels": [
+          {
+           "value": "Conservation Area",
+           "language_id": "en",
+           "valuetype_id": "prefLabel"
+          }
+         ]
+        }
+       ]
+      },
+      "nodegroup_id": "15bc97aa-9bf2-5610-9d4f-fcbcffa8524b",
+      "parenttile_id": null,
+      "resourceinstance_id": "dc11e420-bfba-5362-8836-1bd4aac9219e",
+      "sortorder": 0,
+      "tileid": "766d4b2b-b242-5799-8cc4-5a484c0cb590"
+     },
+     {
+      "data": {
+       "9f8d0bf7-ebc8-5555-9fad-4f38f59ebcba": [
+        {
+         "name": "photograph.png",
+         "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABuCAIAAAAvT4++AAAEGklEQVR42u2bP0hjSxjFT2bF2AgiiNHKNG7hn0ZTioKFYKEGIhaa0laws1WwCJYWlgaiPtAF4aIJinCTSXALS7XYTpSIgkWEaKLEuMXAfb4YdtWnkHycU93M9Tcj58vFBH66np+fAQD4PhTAO/Nr7wfZCmfV613eeyrZSmb/HfC73h0lJ5GtWFaxKdmsYlOy2W///DxhU4JZxaZks4pNyWYVm5LNKjYlm1VsSjar2JRsVrEp2axiU7JZxaZks4pNyWYVm5LNKjYlm1VsSjar2JRs1uU4WWxKJKvYlGyWTpZwlk6WcJZOlnCWTpZwlk6WcJZOlnCWTpZwlk6WcJZOlnCWTpZwlk6WcJZOlnCWThadLDZVzSydLOEsnSzhLJ0s4SydLDpZbKqaWTpZwlk6WcJZOlnCWTpZwlk6WcJZOlnCWTpZwlk6WcJZOlnCWTpZwlk6WcJZOlnCWTpZwlk6WXSy2FQ1s3SyhLN0soSzdLKEs3Sy6GSxqWpm6WQJZ+lkCWfpZAln6WQJZ+lkCWfpZAln6WQJZ+lkCWfpZAln6WQJZ+lkCWfpZAln6WQJZ+lk0cliU9XM0skSztLJEs7SyRLO0smik8WmqpmlkyWZ/c+A30u+/HmylckCUIb5AOlQZCuZZRiGYRiGYRiGYRjG5P7+Ph6P27adSqV8Ph+ATCbzV2pubu4rfpm3HM18sNOurq6jo6M3tvxFk+CAv7bTm5sbs7K4uJhIJI6Pj/1+PwCPxxONRrXW0WjU4/HMz88XCoX9/f2S9ebmZsuykslkJBIxW5ndVldXZ2ZmOjo6UqnUycnJ7Oysc2tpaSmZTGqtvV5v2aOZTxvw4ODgwcEBgFwuZ2bQ3t5+fn4OYH19PRgMAggGg2traw5Vsh6JRCYnJwGMjY3l83mzbS6XGxoaArCystLX19fY2Hh5eencmpiYADA1NbW9vV32aOZz/gYnEgnLstra2gDk8/mGhgZz9/b2FkA6nXa73QDcbnc6nXYGXLJ+cXFhXtbU1Nzd3ZkdstmsUgpAfX399PR0KBTKZrPO0bW1tQa/uroqezTzlvzpPxseHx8HBgb6+/tHRkbOzs7MivNYG1PA5XKVZUvWzbQAKKWcW4VCoVgsAtja2gKwvLxsXgIoFotPT0/m+uHhoezRzP8d8Os4A3Bi23YgEAAQCATi8bgZoVKqZP3w8HB0dBSA3+9//Z7o7e3d3Nysq6szT7l50IeHhwGMj4/btl32aObzP7i+XDHXra2tsVhMax2LxVpaWgDs7u7u7OyUrHu9Xq211joUCr38kGUuFhYWTk9PNzY2rq+vzYwzmUw4HNZaW5bV1NRU9mimghIOh7u7uwH4fD6tNb8USUtPT4/Wem9vz7btzs5ODphhGIZhGIZhGIZhmC/Ib++fWenbSTJHAAAAAElFTkSuQmCC",
+         "type": "image/png",
+         "accepted": true,
+         "selected": true,
+         "alt_text": "Photograph"
+        },
+        {
+         "name": "context.png",
+         "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABuCAIAAAAvT4++AAAEcUlEQVR42u2dv0sjQRTH36yRIKRQkCOKEUxhbeMPPEsFAxYKKWwWG23uKq0UbAT9DzwLsbCIhY2VyaKYxF3OwsYfYKWdGuWu0kaCRL1iuaA5Lxe8ZHbm7fdTxbiJO++zb3dndt4ofnz/QoAvBkIAwQCCAQQDCAYQDCAYQDAEAwgGEAwgGEAwgGAAwRAMIBhA8Fs+ff6GEHsbpYCcvf958BUiPUkAQ87eI5W9ik9AcnuQypIPd1GjWZXl2+BbzfLDImo6bRaaPQ9Fbe+iy++3fy7MHh7oQs7Ed9+msucNFzIrG3ylWZHGCvmlK+w1K9VAD4YqeV+YVTt8hYfFZ8xSWc3mCM+rCxloVrkJQpHy0TIxUtyx4nsu1KkP1i6VtdhhoVoBuBZR0+hYFGpW+CsbQe1OM4rO6FCzK6Xj/aBQfI0ORWKq762+0GIRFg/jq3svTmi0yo78Dom+nTctBcvMJzajbELHdbJqGn1mA6hC34XQqm6C5WMujSe+V7crxfUhpmCwlOF/uuH9fFqwWavyA578MMNEMFuMtEJn/pk8xK34rJILs6+mhgmuywl/YLya5eTOADHFtVWhZsbzdtkKrlAz++oK5oL/mcHsS+ICvlXrE80GS7UfOyeX/yAEa9MP9lVJHEaymN9aYywaY9F81fpBswG7lWyv74UZMzqYpzLmZDHXjFmVav1FnwrGvGi2glHZwFawgjHVUbMBu7y7UqgPZp7KqPBnvsNYo4P5nmOVHeZNwDpZzJvjjWDGT+hUa5qBEPDuSmG1WeaNxXrRzBtec8FY1d/bIBiwy/vCjP+6wjyVa3iKfrcx+L9JkiMjr3QFaktCIafLZMgxCrtexSeAxOWdymwr/IGMbhKAYAAAAAAAAAAAAAAZTE1NHR0d2badTCYjkUjlH5ydna36lqDKDA0NZTKZhoYGIorFYul0uvLP3t3dVX1LUGV2dnb6+vqKP66urtbX14fD4VQq5ThOKpUKh8OuoaWlJdu2T09Px8bGiGhhYaFQKOzu7jY1NSUSib29Pcdxenp6iGhra2t0dNT9NtM0i1si2h5wfX0dDAZL3tzY2DBNk4hM00wkEkT08PAwPT1NRNFo9PLy8nVerq2t9fb2ElF7e/vJyQkRtbW1HR8fd3d3W5aFDPaY29vbPwXncjn3zWAwmMvliCifzzc2Nrq/vb+/f63t6upq/zcXFxd1dXVENDMzc3Nz09HRAcFy+OsD//Pz866ursPDQyISQqyvr09MTAghSjZ7fHwsSnp5eXnz1YHA8PBwPp83DGNgYODp6YmIQqFQoVAIhUIIvRz++rhwZWVlcXHRzdfx8XH3RTabjcfjRBSPx/f394no+fn5nS81DMMwDg4O3KtyLBabm5sjos7OzsHBwZGRkeXlZfdYcbeEBm+Yn58/OzvLZrObm5vNzc1E1NraalmW4ziWZbW0tJScY4uvk8nk9vZ2JBKxLMu27XQ6HY1GiSiTyfT397tHz+TkZHFLhBoAAAAAAAAAAAAAAL/zC9Qxqy63F0ZBAAAAAElFTkSuQmCC",
+         "type": "image/png",
+         "accepted": true,
+         "selected": true,
+         "alt_text": "Context"
+        }
+       ]
+      },
+      "nodegroup_id": "9f8d0bf7-ebc8-5555-9fad-4f38f59ebcba",
+      "parenttile_id": null,
+      "resourceinstance_id": "dc11e420-bfba-5362-8836-1bd4aac9219e",
+      "sortorder": 0,
+      "tileid": "a6604bde-8842-5b35-962e-4222c25de812"
+     }
+    ],
+    "tiles_loaded": true
+   },
+   {
+    "metadata": {},
+    "resourceinstance": {
+     "descriptors": {},
+     "graph_id": "64368e71-abbc-53ba-9bd8-87e2500f8e65",
+     "legacyid": "site-010",
+     "name": "Trí Chuain",
+     "resourceinstanceid": "ef26478e-0a44-5eac-b160-94e0aeb880c7"
+    },
+    "tiles": [
+     {
+      "data": {
+       "0f4e0296-8e30-5e30-80d6-31fe17281ad0": {
+        "en": {
+         "direction": "ltr",
+         "value": "Triplicane"
+        }
+       }
+      },
+      "nodegroup_id": "0f4e0296-8e30-5e30-80d6-31fe17281ad0",
+      "parenttile_id": null,
+      "resourceinstance_id": "ef26478e-0a44-5eac-b160-94e0aeb880c7",
+      "sortorder": 0,
+      "tileid": "72e6608d-7ab1-5e62-9aaf-0966b96af38b"
+     },
+     {
+      "data": {
+       "f3a2d94a-536e-5977-bde4-9106de0e62cc": {
+        "en": {
+         "direction": "ltr",
+         "value": "Trí Chuain"
+        }
+       }
+      },
+      "nodegroup_id": "f3a2d94a-536e-5977-bde4-9106de0e62cc",
+      "parenttile_id": null,
+      "resourceinstance_id": "ef26478e-0a44-5eac-b160-94e0aeb880c7",
+      "sortorder": 0,
+      "tileid": "1eb12774-20ae-5604-aba6-603ed17640fa"
+     },
+     {
+      "data": {
+       "aeb12fb1-1ff4-5bcc-a64a-7974d874bad5": {
+        "features": [
+         {
+          "geometry": {
+           "coordinates": [
+            [
+             [
+              80.242,
+              13.104
+             ],
+             [
+              80.2607,
+              13.104
+             ],
+             [
+              80.2607,
+              13.116
+             ],
+             [
+              80.242,
+              13.116
+             ],
+             [
+              80.242,
+              13.104
+             ]
+            ]
+           ],
+           "type": "Polygon"
+          },
+          "properties": {},
+          "type": "Feature"
+         }
+        ],
+        "type": "FeatureCollection"
+       }
+      },
+      "nodegroup_id": "aeb12fb1-1ff4-5bcc-a64a-7974d874bad5",
+      "parenttile_id": null,
+      "resourceinstance_id": "ef26478e-0a44-5eac-b160-94e0aeb880c7",
+      "sortorder": 0,
+      "tileid": "2c46343b-3613-5571-b864-63a2c22f74ce"
+     },
+     {
+      "data": {
+       "079cd3c9-4cf6-54d0-aac1-9c95624616be": [
+        {
+         "resourceId": "12b3c1e2-dda3-58ad-b437-79e9c2b9a722",
+         "ontologyProperty": "",
+         "inverseOntologyProperty": "",
+         "resourceXresourceId": "60858886-2b50-57a9-9ea6-d3c811f445f3"
+        }
+       ]
+      },
+      "nodegroup_id": "079cd3c9-4cf6-54d0-aac1-9c95624616be",
+      "parenttile_id": null,
+      "resourceinstance_id": "ef26478e-0a44-5eac-b160-94e0aeb880c7",
+      "sortorder": 0,
+      "tileid": "8d02d887-e87c-5318-80eb-11b9dccce6a9"
+     },
+     {
+      "data": {
+       "773f3fe8-bc58-549c-b7a9-05bb2957fd67": 2710000
+      },
+      "nodegroup_id": "d0415b22-2747-5ded-8914-203fd3709034",
+      "parenttile_id": null,
+      "resourceinstance_id": "ef26478e-0a44-5eac-b160-94e0aeb880c7",
+      "sortorder": 0,
+      "tileid": "303662a6-150c-5c8f-b6c0-0a647133b402"
+     },
+     {
+      "data": {
+       "93d67672-dc92-5b7b-855d-5eacb8c2eaf1": [
+        {
+         "resourceId": "23819b3b-3328-5001-9aa6-5cfc0e103c04",
+         "ontologyProperty": "",
+         "inverseOntologyProperty": "",
+         "resourceXresourceId": "e1236969-8635-5885-ac58-f8e5f3571cb8"
+        }
+       ]
+      },
+      "nodegroup_id": "93d67672-dc92-5b7b-855d-5eacb8c2eaf1",
+      "parenttile_id": null,
+      "resourceinstance_id": "ef26478e-0a44-5eac-b160-94e0aeb880c7",
+      "sortorder": 0,
+      "tileid": "bcdc15cf-a179-5fce-8000-f84e1ca6f3da"
+     },
+     {
+      "tileid": "ab627596-6e8a-5031-b7d9-3c63ea6b2b63",
+      "nodegroup_id": "16d7d3e7-736f-5a5f-87e2-57d5b8562494",
+      "data": {
+       "188eae98-f3ff-5ee6-b4dd-a148319fc66b": null
+      },
+      "parenttile_id": null,
+      "resourceinstance_id": "ef26478e-0a44-5eac-b160-94e0aeb880c7",
+      "sortorder": 0
+     },
+     {
+      "data": {
+       "56929b52-5df8-5a61-9f22-b449c0622344": "1960/1969"
+      },
+      "nodegroup_id": "56929b52-5df8-5a61-9f22-b449c0622344",
+      "parenttile_id": null,
+      "resourceinstance_id": "ef26478e-0a44-5eac-b160-94e0aeb880c7",
+      "sortorder": 0,
+      "tileid": "b8a75670-cd5c-5195-aafa-f53aae77fb22"
+     },
+     {
+      "data": {
+       "7dc72b8a-72f0-5a7e-bc36-45104a2f9b79": false
+      },
+      "nodegroup_id": "7dc72b8a-72f0-5a7e-bc36-45104a2f9b79",
+      "parenttile_id": null,
+      "resourceinstance_id": "ef26478e-0a44-5eac-b160-94e0aeb880c7",
+      "sortorder": 0,
+      "tileid": "d3ec6ab9-aebf-5a0c-b697-2e27bbc5dd97"
+     },
+     {
+      "data": {
+       "11412fa9-5f8b-52a3-bb70-53e21f34ad61": {
+        "url": "https://records.example.org/site/16",
+        "url_label": "Heritage record"
+       }
+      },
+      "nodegroup_id": "11412fa9-5f8b-52a3-bb70-53e21f34ad61",
+      "parenttile_id": null,
+      "resourceinstance_id": "ef26478e-0a44-5eac-b160-94e0aeb880c7",
+      "sortorder": 0,
+      "tileid": "3ba3fc1c-2cba-55d2-82c9-70bf3bf53ad3"
+     },
+     {
+      "data": {
+       "15bc97aa-9bf2-5610-9d4f-fcbcffa8524b": [
+        {
+         "list_id": "2730d609-3a8d-49dc-bf51-6ac34e80294a",
+         "list_item_id": "7e633ade-4cd4-5955-854b-e6fe322ed2b0",
+         "labels": [
+          {
+           "value": "Registered Park",
+           "language_id": "en",
+           "valuetype_id": "prefLabel"
+          }
+         ]
+        }
+       ]
+      },
+      "nodegroup_id": "15bc97aa-9bf2-5610-9d4f-fcbcffa8524b",
+      "parenttile_id": null,
+      "resourceinstance_id": "ef26478e-0a44-5eac-b160-94e0aeb880c7",
+      "sortorder": 0,
+      "tileid": "f67409db-a691-5822-9a8e-eda81853b052"
+     },
+     {
+      "data": {
+       "9f8d0bf7-ebc8-5555-9fad-4f38f59ebcba": [
+        {
+         "name": "elevation.png",
+         "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABuCAIAAAAvT4++AAAC70lEQVR42u3bMUhicRzA8Z96oENJNVlag4tDtEVRVFtHjoKry4GDY05KLsWJtAbRUjdZg5tQPpFCfVRDLQq62GZouGlE1FI3/DkPuia70uz7meL1VPh//b0/PNWwvLYn6F9GloDAIDAIDAKDwCAwCExg9ItvLEFnMj9/vOXh3yO/mGAQGAQmMAgMAoPAIDAIDAKDwARGf+i5Dxs+y018JhgEBoFBYBCYwCAwCAwCg8AgMAgMAhMYnx+/Teoh7/FRKRPMJRoEBoFBYBAYBAaBCYy+8aY7WXxJnQkGgUFgEBgEJjAIDAKDwPgwX+I7WV/5jhsTzCUaBAaBQWAQGAQGgQkMAoPAIDAIDAKDwAQGgUFgEBgExv9jWF7bYxWYYBAYBAaBAQAAAAAA3sX9/X3uj2AwKCLNZrOzpwqFQiIyOTkZCARY2F7xb86OA3f8QLxRJ7cqh4eH4/H48fGxruszMzMiUigU7Ha7iJjN5kqlMjU1dXp6WiqVVldXRWR9fX1gYCCTybRL22y2VCql63oqlbLZbOp4NBrN5/PFYtHj8RCmmxO8u7s7OzsrIhMTE4VCQUQikYi69q6srGxtbe3s7CwuLo6MjNTr9RdPpf7Y39/3+Xwi4vP54vG42g7Uu8HpdFarVRb/o/fgubm5dp7r6+v28aurK5PJ5HK50um0iGxvby8sLAwODvr9/s3Nzbu7u1cD12o1s9msJr5Wq4nIw8PD0NCQOqfVarH43Zzgm5sbi8UiIkajcWlpSf3r8vLSarWen58bDIZ0Ou33+x0Ox+3t7auB6/X6i8DtM9mwu78Hn52dqW3S7XaHw2F1MJlMhkKhi4uL5+fn6enpRCJhsVhURfVWMBr/vlY2m/V6vSLi9XpzuZyIPD09EaObl+hYLKbGNBwOj4+Pa5qWz+dPTk6cTqc62eVyPT4+zs/Pi8jGxka5XD44OGg0Gqrx0dHR4eFhezrHxsY0TdN1XdO00dHRF1PLBAMAAAAAAABfzm9w4itnuKz4TAAAAABJRU5ErkJggg==",
+         "type": "image/png",
+         "accepted": true,
+         "selected": true,
+         "alt_text": "Elevation"
+        },
+        {
+         "name": "aerial-view.png",
+         "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABuCAIAAAAvT4++AAAEm0lEQVR42u2dy0tyTRzHxzHSEqXaBF0hguB1UYso6GK1yQItlII2tXgoqE1URBREUPt43tNGAt/XTRTUqlWGtTh5WSSRQgb5B3TZSRsRkp6FIMKpfAovM+P3s7KOZ87M7zPzOxfPmaP657/fBIgLRQggGEAwgGAAwQCCAQQDCIZgAMEAggEEAwgGEAwgGIIBBAMIBhAMCkmZwG2L/Fr6+y8b//8XgoUy+vW6wvguK3GvWcvk3XQZvIptukxgr99SkrVYTk2rOLrxPauDHIa+kNuC4CwRz2usi7XdEhL8WYgLHF9GqiGa4A/DWsSYslYfjgWzHEqONDMqWBlBBsPHRSUp7P4YZa0Kc2rOt2Be7PLimK0Uze8FYWZrThGjfAxldsYxhV2xHVP2I8WvYwhm9+BTmHZR1qLA+++vrCVqynJ0kKi5FyxqcmanjRQdX+y2UAxfsVtK0eXFbhFufBccCIbg/O+WRH2qILNdxdoNYwRjBAMIBhAMIBhAMIBgAMEQXCIXAfINCxdzMIIxggEE5zabiZefS1SwqL8xMNVSii4vdltoyXbtEmkjRccXuxWUtQ7Ou2PW7uNnYgSXwh0dSNEiDGI84S9yombzISt2n2zgyzGzj9AxN8sOX3N0sF9h5vbBXExdw1F35OMJfzYdc5FsMNOdaHXjRjCbocRclYU7ucRss4IIzrobxnzRIggmmPFdeMHfPaLO7TsbuFPLq+BinTvhrStFO13Oq2m8N0lM03jzGdOmf+Ab7y7k3ndpghvfIRgAAAAAAAAAAABACGZnZxOJRG1tbdZvGo3GhYWFDxfFYrEfrAVygurrxaenp9Fo9P7+3uVy/XgbsVisqqoKsS4KX12qrKys1Ol0TqfTYrEQQqqrqw8ODi4uLq6urrq6utLyXC7X4uJieqQajUafz3d3d7e8vKwsMxQK1dfXE0I0Gk00GqWUptZSFv7w8NDc3EwIOT8/lySJEDI4OHh0dARnOcNms62urhJCbm5uysvLnU5nd3c3IaSpqSkUCqW+E4/HzWZzZip2OBz9/f01NTWPj4/KFL25uZnKySMjI3t7e+mlysIlSZqenqaUejweWZYJIVtbWzMzM/DyLb76uXB8fLyjo2NiYqKurm5gYMBsNre2tqYW6XQ6tVqdTCaTyaTH48lca21tbWpqymKxGAwGZZknJyeSJDkcDqvVmjkclYW73W673R4Oh29vb9vb2/V6vclk2t/fh7PcoFarA4FAOvqSJD09PWm1WkIIpdRkMilHZ+qz2+2em5traGh4fX398CArGAwaDIZAIKBSqdJLlYVXVFSEQqH5+fmxsbHt7W2r1er1euElZ/vg3t7ecDic+uz1eoeHh/1+v81mI4SMjo5ubGx8tmJnZ+fx8bFWq9VoNJ8duK2vr19fX7+/v6f/qSw8Ho8/Pz/b7Xa/3+/z+VZWVlKJGuSG3d3dycnJ9J+yLA8NDZ2dncmyfHl52dLS8tkI3tnZiUQih4eHLy8vKcfBYDCzQ7S1tSUSiZ6ensy1GhsblYUvLS1FIhFCiF6vf3t76+vrgxcAAAAAAAAAAAAAAMTkD+ZzMTb5I6asAAAAAElFTkSuQmCC",
+         "type": "image/png",
+         "accepted": true,
+         "selected": true,
+         "alt_text": "Aerial view"
+        }
+       ]
+      },
+      "nodegroup_id": "9f8d0bf7-ebc8-5555-9fad-4f38f59ebcba",
+      "parenttile_id": null,
+      "resourceinstance_id": "ef26478e-0a44-5eac-b160-94e0aeb880c7",
+      "sortorder": 0,
+      "tileid": "b410df08-f12e-51c4-a87d-fd75013abd72"
+     }
+    ],
+    "tiles_loaded": true
+   },
+   {
+    "metadata": {},
+    "resourceinstance": {
+     "descriptors": {},
+     "graph_id": "64368e71-abbc-53ba-9bd8-87e2500f8e65",
+     "legacyid": "site-007",
+     "name": "Cluain Mór",
+     "resourceinstanceid": "f023bf21-51ea-530c-b4b3-4be17dfebe8b"
+    },
+    "tiles": [
+     {
+      "data": {
+       "0f4e0296-8e30-5e30-80d6-31fe17281ad0": {
+        "en": {
+         "direction": "ltr",
+         "value": "Guindy"
+        }
+       }
+      },
+      "nodegroup_id": "0f4e0296-8e30-5e30-80d6-31fe17281ad0",
+      "parenttile_id": null,
+      "resourceinstance_id": "f023bf21-51ea-530c-b4b3-4be17dfebe8b",
+      "sortorder": 0,
+      "tileid": "119e537b-ec6f-5fc8-9b2a-22f99c91b750"
+     },
+     {
+      "data": {
+       "93d67672-dc92-5b7b-855d-5eacb8c2eaf1": [
+        {
+         "resourceId": "23819b3b-3328-5001-9aa6-5cfc0e103c04",
+         "ontologyProperty": "",
+         "inverseOntologyProperty": "",
+         "resourceXresourceId": "4d62ae4b-c949-5e68-a254-98abd67702cc"
+        }
+       ]
+      },
+      "nodegroup_id": "93d67672-dc92-5b7b-855d-5eacb8c2eaf1",
+      "parenttile_id": null,
+      "resourceinstance_id": "f023bf21-51ea-530c-b4b3-4be17dfebe8b",
+      "sortorder": 0,
+      "tileid": "5cc26a5d-889d-519b-ab01-03654d924834"
+     },
+     {
+      "data": {
+       "773f3fe8-bc58-549c-b7a9-05bb2957fd67": 4030000
+      },
+      "nodegroup_id": "d0415b22-2747-5ded-8914-203fd3709034",
+      "parenttile_id": null,
+      "resourceinstance_id": "f023bf21-51ea-530c-b4b3-4be17dfebe8b",
+      "sortorder": 0,
+      "tileid": "2f61c219-2c7b-5f71-9550-be5e56f4482f"
+     },
+     {
+      "data": {
+       "079cd3c9-4cf6-54d0-aac1-9c95624616be": [
+        {
+         "resourceId": "d793cffb-8aec-57af-9f9d-f3cb0da857b3",
+         "ontologyProperty": "",
+         "inverseOntologyProperty": "",
+         "resourceXresourceId": "92c24ed0-07ab-5891-943b-2356f5e5ea43"
+        }
+       ]
+      },
+      "nodegroup_id": "079cd3c9-4cf6-54d0-aac1-9c95624616be",
+      "parenttile_id": null,
+      "resourceinstance_id": "f023bf21-51ea-530c-b4b3-4be17dfebe8b",
+      "sortorder": 0,
+      "tileid": "a8eb3eaf-085a-58c1-a893-fad37a3d9346"
+     },
+     {
+      "data": {
+       "aeb12fb1-1ff4-5bcc-a64a-7974d874bad5": {
+        "features": [
+         {
+          "geometry": {
+           "coordinates": [
+            [
+             [
+              80.27,
+              13.068
+             ],
+             [
+              80.298,
+              13.068
+             ],
+             [
+              80.298,
+              13.08
+             ],
+             [
+              80.27,
+              13.08
+             ],
+             [
+              80.27,
+              13.068
+             ]
+            ]
+           ],
+           "type": "Polygon"
+          },
+          "properties": {},
+          "type": "Feature"
+         }
+        ],
+        "type": "FeatureCollection"
+       }
+      },
+      "nodegroup_id": "aeb12fb1-1ff4-5bcc-a64a-7974d874bad5",
+      "parenttile_id": null,
+      "resourceinstance_id": "f023bf21-51ea-530c-b4b3-4be17dfebe8b",
+      "sortorder": 0,
+      "tileid": "40227ba5-4afb-501a-bd93-54fc0ad3d07d"
+     },
+     {
+      "data": {
+       "f3a2d94a-536e-5977-bde4-9106de0e62cc": {
+        "en": {
+         "direction": "ltr",
+         "value": "Cluain Mór"
+        }
+       }
+      },
+      "nodegroup_id": "f3a2d94a-536e-5977-bde4-9106de0e62cc",
+      "parenttile_id": null,
+      "resourceinstance_id": "f023bf21-51ea-530c-b4b3-4be17dfebe8b",
+      "sortorder": 0,
+      "tileid": "78a57cba-ac8d-5a2b-bd77-8ad39c4167e4"
+     },
+     {
+      "tileid": "e231abf4-60c7-57c8-9064-1459639b8be0",
+      "nodegroup_id": "16d7d3e7-736f-5a5f-87e2-57d5b8562494",
+      "data": {
+       "188eae98-f3ff-5ee6-b4dd-a148319fc66b": null
+      },
+      "parenttile_id": null,
+      "resourceinstance_id": "f023bf21-51ea-530c-b4b3-4be17dfebe8b",
+      "sortorder": 0
+     },
+     {
+      "data": {
+       "56929b52-5df8-5a61-9f22-b449c0622344": "2010-05-12"
+      },
+      "nodegroup_id": "56929b52-5df8-5a61-9f22-b449c0622344",
+      "parenttile_id": null,
+      "resourceinstance_id": "f023bf21-51ea-530c-b4b3-4be17dfebe8b",
+      "sortorder": 0,
+      "tileid": "a28fa71d-513b-5695-a40a-1ef283d2112d"
+     },
+     {
+      "data": {
+       "7dc72b8a-72f0-5a7e-bc36-45104a2f9b79": true
+      },
+      "nodegroup_id": "7dc72b8a-72f0-5a7e-bc36-45104a2f9b79",
+      "parenttile_id": null,
+      "resourceinstance_id": "f023bf21-51ea-530c-b4b3-4be17dfebe8b",
+      "sortorder": 0,
+      "tileid": "3c7a7ee6-88b8-55c7-a514-d454a5eb5a6b"
+     },
+     {
+      "data": {
+       "11412fa9-5f8b-52a3-bb70-53e21f34ad61": {
+        "url": "https://records.example.org/site/17",
+        "url_label": "Heritage record"
+       }
+      },
+      "nodegroup_id": "11412fa9-5f8b-52a3-bb70-53e21f34ad61",
+      "parenttile_id": null,
+      "resourceinstance_id": "f023bf21-51ea-530c-b4b3-4be17dfebe8b",
+      "sortorder": 0,
+      "tileid": "7bce8eaf-a8bd-5949-b984-4d9e7c5288a5"
+     },
+     {
+      "data": {
+       "15bc97aa-9bf2-5610-9d4f-fcbcffa8524b": [
+        {
+         "list_id": "2730d609-3a8d-49dc-bf51-6ac34e80294a",
+         "list_item_id": "388293d0-bb7d-5468-91e5-9baa4088b7de",
+         "labels": [
+          {
+           "value": "Listed Building Grade II",
+           "language_id": "en",
+           "valuetype_id": "prefLabel"
+          }
+         ]
+        }
+       ]
+      },
+      "nodegroup_id": "15bc97aa-9bf2-5610-9d4f-fcbcffa8524b",
+      "parenttile_id": null,
+      "resourceinstance_id": "f023bf21-51ea-530c-b4b3-4be17dfebe8b",
+      "sortorder": 0,
+      "tileid": "5a166171-10da-5917-9020-3c9e7d2539b2"
+     },
+     {
+      "data": {
+       "9f8d0bf7-ebc8-5555-9fad-4f38f59ebcba": [
+        {
+         "name": "detail.png",
+         "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABuCAIAAAAvT4++AAADY0lEQVR42u2dO0tjQRSAxzFiQFCSOlqEdCkDWmnsUpgtLITYpbGIu42NaKl/YXdJYxlSpVs1QQxquIKQJoX+BR9gISmEkAhbBCTsYtyNecw5fl/lY5w7mY8zM86998zYZvK7Ab1YugDBgGBAMCAYEAwIBgQjGBAMCAYEA4IBwYBgBAOCQR4+9Z/w569v3Qt8/fJD8ccfU/nIzrtSP49sbYJ7VqtVsxLBffGq0rTF7khqJoLdEiA3lC12dYeyxa5uxyKH6P/t6y4DbB+rQvBQ7fZgYnA1I7ifDj4oYAiXQHCPXd/HflezwWmx21ttUtZcFru6HYu/mzTQobJduej9LKsgfGmbYMHde3A4K53uV3HcseCtymGuY9mL1mxXtGOnBUtZ3bjcTkv46g5iS1jobq0lfHUHMc9FKwfBCGZKk9xmYRHswhQoaxpmiGaIBgQDggHBgGBAMCAYwc7iwm6RrF02RwVLvPPqZpsZohmiAcGfZwoUd5vLXcGypmFnWytyiB5VGEm8S20JC93tJEeH5vA1ZNnRbVeAYBde/HLhBTjNEexyD7q/ShD/Ang7vAbU0QpSGcqYg0eSTUFHHhYxi6whO1aTZYc8WSO4BIL7EKlkupMq2JCrUr3gUa1veQFcc1+To0OzY7lZdjQcyjHQ4Vr6uRwaHtkZnAMFp65wbpJOr2oFf1AzJ58plM3ZhcAiCxAMCAYEAwAAAAAAAAD0xPPz8/n5+dnZ2eXlZTqdfqvYzs7O3z+MRqOZTKb99dPTE53pIq9ipqamyuXy2tpa92Lv1gOOCjbGxGIxz/MCgUAulzs9Pa1UKvPz88aYvb29Vqt1cnISjUY9z7u+vt7a2vrjzxEsQPDExMT9/f3BwcHCwoIxZm5urlardRbLZrOLi4vBYPD29hbB7vCvr4/6fL5ms5lIJCKRyOu4PT4+/vLy0v52e3s7lUolk8np6Wm6VV4Ex+Px4+Pju7s7v99vjLHWLi0tdRYrlUobGxuhUKherxPBwgQHAoGrq6vl5eVCobC+vm6MWVlZKRaL7d/W63Vr7ePj48zMTCQSaTQaCBb2b5Lneaurq8aY2dnZYrF4cXFRLpfD4XC72NHR0eHh4f7+/s3NTT6ff3h4mJyc7PRarVZ3d3fpTwAAAAAAAAAAAHiT36S9jWqY+rezAAAAAElFTkSuQmCC",
+         "type": "image/png",
+         "accepted": true,
+         "selected": true,
+         "alt_text": "Detail"
+        },
+        {
+         "name": "site-plan.png",
+         "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABuCAIAAAAvT4++AAADMklEQVR42u3aP0gycRjA8afrz7kEWQgNXpC02RRREBg45lYRLQ01ODS9b1tuFTRES1tLQUMEORREYphxr1dB0KJQU1MFnm0VYg1R73C8h/jyBtm/0/f7mQ67+yH37dEDfzXmj0FB9VK4BQQGgUFgEBgEBoFBYAKDwCLSurTVurT1/jfBOp+3DhPMBIPAcKyat/6a9CFfKvhYuZ9DTDATXNbT3ev/Pqzz7eswwTxkgcAgMAgMAoPAIDCBQWAQGAQGgUFgEJjAIDAqEHuyqgF7spjgsrAHyvnrMME8ZIHAIDAIDAKDwCAwgUFgEBgEBoFBYBCYwCAwKhB7sqoBe7KY4LKwB8r56zDBPGSBwCAwCAwCg8AgMIFBYBAYBAaBQWAQmMAgMCoQe7KqAXuymOCysAfK+eswwTxk4b/9iAYTDAKDwCAwAAAAAADAa7q6uhKJhK7r+/v7mqb5/f7JyUnrT9PT029d7fb2llvqLOl02uv1isjw8PDm5uY7axHYcbLZbEdHh4jU19cHAgE70uzs7NPTUyKRcLvd6+vryWTSMIyenp6SnIuLi4eHh4ZhtLe329f6/f6jo6Ozs7OpqSn7zPn5+VQqlclkBgf57fILjY+Pm6a5uroaDAZLptA6WFlZ6e3tFZG2trZ0Ol187cPDw+joqIiMjY1tb2/blywvLwcCgebm5mw2a51ZKBSs2D6f7+rqitv+pdxu98TERCaTmZmZ+Tvw9fX1rz8uLi5qa2vtCwuFQkNDg4ioqprL5exLGhsbw+HwwsJCPp+3znx8fGxqarKO7+7uuOdfxOPx9PX12cfFkewD0zRdLpeIKIrS399ffHk+n7d6q6p6eXlpX7K3txcOh71e7/39vXWmfcD39Gf458+FLy8v0WhU0zQRaWlpKfnwVBRFUZTj42PrW3NgYCASiRSfUFdXFwqFRGRkZETXdfv17u7uaDTqcrlUVbVeeX5+JsP3CIVCJycnuq4nk8nOzs7iCYvFYru7u5qmxePxVCp1cHDg8/lKHrLW1tYMw9jZ2fF4PCJyenoaiUTm5ubOz883NjZubm6sxsVTywRXDFI5/SMaAAAAAACg0vwGENaAuDBcqFkAAAAASUVORK5CYII=",
+         "type": "image/png",
+         "accepted": true,
+         "selected": true,
+         "alt_text": "Site plan"
+        }
+       ]
+      },
+      "nodegroup_id": "9f8d0bf7-ebc8-5555-9fad-4f38f59ebcba",
+      "parenttile_id": null,
+      "resourceinstance_id": "f023bf21-51ea-530c-b4b3-4be17dfebe8b",
+      "sortorder": 0,
+      "tileid": "5d8efe5b-7151-5038-96e8-6b1080d73d11"
+     }
+    ],
+    "tiles_loaded": true
+   }
+  ]
+ }
+}

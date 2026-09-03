@@ -1,0 +1,749 @@
+@import 'tailwindcss';
+@import 'fumadocs-ui/css/neutral.css';
+@import 'fumadocs-ui/css/preset.css';
+
+/* ------------------------------------------------------------------ *
+ * Rós Madair theme — paper & ink
+ *
+ * Structurally identical to the Alizarin docs theme; only the token
+ * values in :root / .dark below diverge. The `--az-*` names are kept
+ * verbatim as a SHARED theme namespace so the ~550 structural lines
+ * that follow stay byte-for-byte in sync with alizarin-docs and can be
+ * lifted into a common package later. Do not rename to `--rm-*`.
+ *
+ * Rós palette (rose madder): crimson #e32636, teal #27c7bd,
+ * rose-black #1a1017, parchment #faf5f0, dusty rose #b5838d.
+ * fumadocs variable names verified against
+ * node_modules/fumadocs-ui/css/neutral.css (v15.2.13).
+ * ------------------------------------------------------------------ */
+
+:root {
+  /* fumadocs theme overrides — light */
+  --color-fd-background: #faf5f0;
+  --color-fd-foreground: #241a1d;
+  --color-fd-muted: #f2e8e2;
+  --color-fd-muted-foreground: #6f5b60;
+  --color-fd-popover: #fffaf6;
+  --color-fd-popover-foreground: #241a1d;
+  --color-fd-card: #fffaf6;
+  --color-fd-card-foreground: #241a1d;
+  --color-fd-border: #e4d5d1;
+  --color-fd-primary: #e32636;
+  --color-fd-primary-foreground: #fff6f2;
+  --color-fd-secondary: #f2e8e2;
+  --color-fd-secondary-foreground: #241a1d;
+  --color-fd-accent: rgba(36, 26, 29, 0.05);
+  --color-fd-accent-foreground: #e32636;
+  --color-fd-ring: #27c7bd;
+
+  /* Rós palette — light */
+  --az-red: #e32636;
+  --az-teal: #1fa89f;
+  --az-link: #1fa89f;
+  --az-bg: #faf5f0;
+  --az-surface: #fffaf6;
+  --az-fg: #241a1d;
+  --az-muted: #6f5b60;
+  --az-line: #e4d5d1;
+  --az-code-bg: #1a1017;
+  --az-code-fg: #faf5f0;
+  --az-code-key: #7fe0d8;
+  --az-code-str: #f0b7bd;
+  --az-code-com: #9a8a8e;
+  --az-chip: rgba(36, 26, 29, 0.05);
+  --az-ink-hand: #b5838d;
+
+  /* theme-switched texture handles; base URLs injected in layout.tsx */
+  --az-bar: var(--az-bar-light);
+  --az-disc: var(--az-disc-light);
+}
+
+.dark {
+  /* fumadocs theme overrides — dark */
+  --color-fd-background: #1a1017;
+  --color-fd-foreground: #f0e6e4;
+  --color-fd-muted: #241820;
+  --color-fd-muted-foreground: #b5838d;
+  --color-fd-popover: #241820;
+  --color-fd-popover-foreground: #f0e6e4;
+  --color-fd-card: #241820;
+  --color-fd-card-foreground: #f0e6e4;
+  --color-fd-border: #3a2830;
+  --color-fd-primary: #f05561;
+  --color-fd-primary-foreground: #1a1017;
+  --color-fd-secondary: #2c1e26;
+  --color-fd-secondary-foreground: #f0e6e4;
+  --color-fd-accent: rgba(255, 255, 255, 0.05);
+  --color-fd-accent-foreground: #f05561;
+  --color-fd-ring: #27c7bd;
+
+  /* Rós palette — dark */
+  --az-red: #f05561;
+  --az-teal: #27c7bd;
+  --az-link: #27c7bd;
+  --az-bg: #1a1017;
+  --az-surface: #241820;
+  --az-fg: #f0e6e4;
+  --az-muted: #b5838d;
+  --az-line: #3a2830;
+  --az-code-bg: #120a10;
+  --az-code-fg: #f0e6e4;
+  --az-chip: rgba(255, 255, 255, 0.05);
+  --az-ink-hand: #b5838d;
+
+  --az-bar: var(--az-bar-dark);
+  --az-disc: var(--az-disc-dark);
+}
+
+/* ---- Type & ground -------------------------------------------------- */
+
+body {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-variation-settings: 'YOPQ' 300;
+  background-color: var(--color-fd-background);
+  background-image: var(--az-grain);
+  background-size: 320px 320px;
+}
+
+.az-display {
+  font-family: var(--font-display), var(--font-body), sans-serif;
+}
+.az-hand {
+  font-family: var(--font-hand), cursive;
+}
+
+/* ---- Docs prose ----------------------------------------------------- */
+
+/* Prose links are teal; headings & active chrome stay red (fd-primary). */
+#nd-page .prose a {
+  color: var(--az-link);
+}
+
+/* MDX headings in the wordmark treatment. */
+#nd-page .prose h1 {
+  font-family: var(--font-display), var(--font-body), sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  text-transform: lowercase;
+  color: var(--az-red);
+}
+#nd-page .prose h2 {
+  font-family: var(--font-display), var(--font-body), sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* Callout — Alizarin red left rule and red icon (all types). */
+.az-callout {
+  border-inline-start-width: 3px;
+  border-inline-start-color: var(--az-red);
+}
+.az-callout > svg:first-child {
+  fill: var(--az-red);
+  color: var(--az-red);
+}
+
+/* ---- Docs page header (DocsTitle) ----------------------------------- */
+
+.az-doc-title {
+  font-family: var(--font-display), var(--font-body), sans-serif;
+  font-weight: 700;
+  font-size: clamp(42px, 6vw, 66px);
+  line-height: 0.9;
+  letter-spacing: -0.035em;
+  text-transform: lowercase;
+  color: var(--az-red);
+  margin: 0;
+}
+
+/* The painted teal bar under the H1. The gap matters — descenders in
+   words like "quickstart" hit it. */
+.az-title-bar {
+  width: 176px;
+  height: 20px;
+  margin: 8px 0 22px;
+  background-image: var(--az-bar);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+/* ---- Sidebar -------------------------------------------------------- */
+
+/* Active item: red left rule in addition to the fd accent chip. */
+#nd-sidebar a[data-active='true'] {
+  box-shadow: inset 2px 0 0 var(--az-red);
+  font-weight: 600;
+}
+
+/* ---- Live-example card (app/alizarin*.tsx) -------------------------- */
+
+.alizarin-example {
+  border: 1px solid var(--az-line);
+  background: var(--az-surface);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 40px;
+}
+
+.alizarin-example-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--az-line);
+  font-size: 12.5px;
+  color: var(--az-muted);
+}
+
+.alizarin-example-head .filename {
+  font-family: ui-monospace, SFMono-Regular, monospace;
+}
+
+.alizarin-example-live {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.alizarin-example-live .dot {
+  display: block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--az-link);
+}
+
+/* Stacked: code on top, run/output below — full width so API names
+   and console output never get squeezed into a narrow column. */
+.alizarin-example-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.alizarin-code {
+  min-width: 0;
+  width: auto;
+}
+
+.alizarin-code pre {
+  margin: 0;
+  border-radius: 0;
+}
+
+.alizarin-run-box {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border-top: 1px solid var(--az-line);
+}
+
+.alizarin-run-box button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 18px;
+  flex: none;
+  white-space: nowrap;
+  border: 0;
+  border-radius: 500px;
+  background: var(--az-link);
+  color: #f6f4eb;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.alizarin-scratchspace {
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--az-fg);
+  background: var(--az-chip);
+  padding: 12px;
+  min-height: 150px;
+}
+
+.alizarin-scratchspace table {
+  border-collapse: collapse;
+  width: 100%;
+}
+.alizarin-scratchspace th,
+.alizarin-scratchspace td {
+  text-align: left;
+  padding: 3px 16px 3px 0;
+  border-bottom: 1px solid var(--az-line);
+  vertical-align: top;
+}
+.alizarin-scratchspace th {
+  color: var(--az-muted);
+  font-weight: 600;
+}
+
+.alizarin-error {
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--az-red);
+  background: var(--az-chip);
+  padding: 12px;
+}
+
+/* Editable SQL box — the code panel becomes a textarea on the code ground. */
+.rm-editor {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 16px;
+  border: 0;
+  resize: vertical;
+  background: var(--az-code-bg);
+  color: var(--az-code-fg);
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  font-size: 12.5px;
+  line-height: 1.6;
+  tab-size: 2;
+  white-space: pre;
+  overflow-wrap: normal;
+  overflow-x: auto;
+}
+.rm-editor:focus {
+  outline: 2px solid var(--az-teal);
+  outline-offset: -2px;
+}
+
+.rm-editor-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.rm-editor-reset {
+  height: 36px;
+  padding: 0 14px;
+  border: 1px solid var(--az-line);
+  border-radius: 500px;
+  background: var(--az-surface);
+  color: var(--az-fg);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.rm-editor-reset:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.rm-editor-hint {
+  font-size: 12px;
+  color: var(--az-muted);
+}
+
+/* Concept picker (alizarin → RM → alizarin roundtrip) */
+.rm-picker-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.rm-picker-row label {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--az-muted);
+}
+.rm-picker-select {
+  height: 36px;
+  min-width: 260px;
+  padding: 0 12px;
+  border: 1px solid var(--az-line);
+  border-radius: 8px;
+  background: var(--az-surface);
+  color: var(--az-fg);
+  font: inherit;
+  font-size: 14px;
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  white-space: pre;
+}
+.rm-sql-preview {
+  margin: 0;
+  padding: 14px 16px;
+  background: var(--az-code-bg);
+  color: var(--az-code-fg);
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  font-size: 12.5px;
+  line-height: 1.6;
+  overflow-x: auto;
+}
+
+/* ================================================================== *
+ * Landing page (app/(home)/page.tsx)
+ * Responsive behaviour is driven by custom properties swapped at three
+ * breakpoints, per the design. The disc's left edge is DERIVED from the
+ * content width so the feature row can never overlap the terracotta —
+ * do not replace --disc-left with a fixed percentage.
+ * ================================================================== */
+
+.az-landing {
+  --pad: 56px;
+  --hero-pt: 44px;
+  --wm: 128px;
+  --bar-w: 258px;
+  --bar-h: 27px;
+  --tag: 21px;
+  --tag-wrap: nowrap;
+  --sub: 32px;
+  --sub-max: 410px;
+  --content-w: 600px;
+  --disc-pos: absolute;
+  --disc-top: 50%;
+  --disc-tr: translateY(-50%);
+  --disc-pct: 792px;
+  /* the disc can never enter the content column: it starts after the
+     widest text block */
+  --disc-left: max(calc(var(--pad) + var(--feat-max) + 28px), var(--disc-pct));
+  --disc-w: 1020px;
+  --disc-h: 1020px;
+  --disc-mb: 0px;
+  --disc-fit: 100% 100%;
+  --ann: flex;
+  --ann-b: block;
+  --feat-cols: repeat(3, 212px);
+  --feat-gap: 32px;
+  --feat-max: 700px;
+  --feat-pt: 48px;
+  --bind-cols: repeat(4, minmax(0, 1fr));
+  --footer-cols: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr));
+}
+
+@media (max-width: 1300px) {
+  .az-landing {
+    --ann: none;
+    --ann-b: none;
+    --disc-pct: 58%;
+    --feat-cols: repeat(3, minmax(0, 1fr));
+    --feat-max: 700px;
+  }
+}
+@media (max-width: 1024px) {
+  .az-landing {
+    --pad: 36px;
+    --wm: 104px;
+    --sub: 28px;
+    --disc-pct: 56%;
+    --disc-w: 840px;
+    --disc-h: 840px;
+    --feat-cols: repeat(2, minmax(0, 1fr));
+    --feat-max: 500px;
+    --bind-cols: repeat(2, minmax(0, 1fr));
+    --footer-cols: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 760px) {
+  .az-landing {
+    --pad: 22px;
+    --hero-pt: 0px;
+    --wm: 76px;
+    --bar-w: 148px;
+    --bar-h: 18px;
+    --tag: 16px;
+    --tag-wrap: normal;
+    --sub: 24px;
+    --sub-max: none;
+    --content-w: 100%;
+    --disc-pos: relative;
+    --disc-top: auto;
+    --disc-left: auto;
+    --disc-tr: none;
+    --disc-w: calc(100% + var(--pad) * 2);
+    --disc-h: 272px;
+    --disc-mb: 26px;
+    --disc-fit: cover;
+    --disc-mx: calc(-1 * var(--pad));
+    --feat-cols: minmax(0, 1fr);
+    --feat-gap: 18px;
+    --feat-max: none;
+    --feat-pt: 32px;
+    --bind-cols: minmax(0, 1fr);
+    --footer-cols: minmax(0, 1fr);
+  }
+}
+
+.az-hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: var(--hero-pt) var(--pad) 0;
+}
+.az-hero-mottle {
+  position: absolute;
+  inset: 0;
+  background-image: var(--az-mottle);
+}
+.az-hero-mottle-1 {
+  background-size: 700px 700px;
+  opacity: 0.9;
+}
+.az-hero-mottle-2 {
+  background-size: 260px 260px;
+  opacity: 0.5;
+}
+.az-disc {
+  position: var(--disc-pos);
+  top: var(--disc-top);
+  left: var(--disc-left);
+  width: var(--disc-w);
+  height: var(--disc-h);
+  margin: 0 var(--disc-mx, 0px) var(--disc-mb);
+  transform: var(--disc-tr);
+  background-image: var(--az-disc);
+  background-size: var(--disc-fit);
+  background-position: center;
+  background-repeat: no-repeat;
+  flex: none;
+}
+.az-hero-content {
+  position: relative;
+  width: var(--content-w);
+  max-width: 100%;
+}
+.az-wordmark {
+  font-weight: 700;
+  font-size: var(--wm);
+  line-height: 0.78;
+  letter-spacing: -0.035em;
+  color: var(--az-red);
+}
+.az-lockup {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: -12px 0 32px;
+}
+.az-lockup .az-bar {
+  display: block;
+  flex: none;
+  width: var(--bar-w);
+  height: var(--bar-h);
+  background-image: var(--az-bar);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+.az-tagline {
+  flex: none;
+  max-width: 100%;
+  white-space: var(--tag-wrap);
+  font-weight: 700;
+  font-size: var(--tag);
+  line-height: 1.15;
+  color: var(--az-teal);
+}
+.az-subhead {
+  font-size: var(--sub);
+  line-height: 1.22;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin: 0 0 28px;
+  max-width: var(--sub-max);
+  text-wrap: pretty;
+}
+.az-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.az-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 42px;
+  padding: 0 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14.5px;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.az-btn:hover {
+  text-decoration: none;
+}
+.az-btn-primary {
+  background: var(--az-link);
+  color: #f3ebdf;
+}
+.az-btn-secondary {
+  background: var(--az-surface);
+  border: 1px solid var(--az-line);
+  color: var(--az-fg);
+}
+.az-ann {
+  position: absolute;
+  font-family: var(--font-hand), cursive;
+  color: var(--az-ink-hand);
+}
+.az-ann-1 {
+  display: var(--ann-b);
+  top: 46px;
+  left: 644px;
+  width: 142px;
+  font-size: 20px;
+  line-height: 1.5;
+}
+.az-ann-1 .rule {
+  width: 96px;
+  height: 1px;
+  margin-top: 7px;
+  background: var(--az-line);
+}
+.az-ann-2 {
+  top: 296px;
+  left: 636px;
+  display: var(--ann);
+  align-items: flex-start;
+  gap: 8px;
+  width: 215px;
+}
+.az-ann-2 span {
+  width: 118px;
+  flex: none;
+  font-size: 20px;
+  line-height: 1.4;
+}
+.az-features {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--feat-cols);
+  gap: var(--feat-gap);
+  max-width: var(--feat-max);
+  padding: var(--feat-pt) 0 18px;
+}
+.az-feature {
+  display: flex;
+  gap: 14px;
+}
+.az-feature h3 {
+  font-weight: 700;
+  font-size: 14.5px;
+  margin: 0 0 3px;
+}
+.az-feature p {
+  color: var(--az-muted);
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.az-bindings {
+  padding: 56px var(--pad);
+  background: var(--az-surface);
+  border-top: 1px solid var(--az-line);
+}
+.az-bindings-head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+.az-bindings-head h2 {
+  margin: 0;
+  font-family: var(--font-display), var(--font-body), sans-serif;
+  font-size: 30px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.az-install {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 14px;
+  background: var(--az-code-bg);
+  color: var(--az-code-fg);
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  font-size: 13px;
+}
+.az-install .prompt {
+  color: var(--az-teal);
+}
+.az-bind-grid {
+  display: grid;
+  grid-template-columns: var(--bind-cols);
+  gap: 16px;
+}
+.az-bind-card {
+  padding: 20px;
+  border: 1px solid var(--az-line);
+  color: var(--az-fg);
+  text-decoration: none;
+}
+.az-bind-card:hover {
+  text-decoration: none;
+  border-color: var(--az-red);
+}
+.az-bind-card .title {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.az-bind-card .desc {
+  font-size: 13.5px;
+  color: var(--az-muted);
+}
+
+.az-footer {
+  display: grid;
+  grid-template-columns: var(--footer-cols);
+  gap: 40px;
+  padding: 48px var(--pad) 56px;
+  background: var(--az-surface);
+  color: var(--az-fg);
+}
+.az-footer a {
+  color: var(--az-muted);
+}
+.az-footer a:hover {
+  color: var(--az-link);
+}
+.az-footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  font-size: 17px;
+  margin-bottom: 14px;
+}
+.az-footer-brand .dot {
+  display: block;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--az-red);
+}
+.az-footer-blurb {
+  margin: 0 0 10px;
+  font-size: 14px;
+  color: var(--az-muted);
+  max-width: 340px;
+}
+.az-footer-license {
+  margin: 0;
+  font-size: 13px;
+  color: var(--az-muted);
+}
+.az-footer-col {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  font-size: 14px;
+}
+.az-footer-col .heading {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--az-muted);
+  font-weight: 600;
+}

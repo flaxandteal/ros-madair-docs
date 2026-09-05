@@ -1,0 +1,48 @@
+---
+title: Aonach Mór — worked examples
+description: Run the query IR live over a coastal-city resilience corpus — concept hierarchy, same-tile correlation, exact spatial with a sound negation guard, reverse-traversal cascades and a live overlay — on a 10-asset slice or the full 60,000-asset city, range-fetched from the CDN.
+---
+
+import AonachDemo from '@/app/aonach-demo.tsx';
+
+Aonach Mór is a fictional city-resilience exemplar on real coastal geography. One
+signed snapshot of its asset–hazard graph is queried three ways — to **underwrite**
+the city, to **harden** it, and, when the surge comes, to **save** it. Every query
+below runs the **real query IR** in your browser (as DuckDB SQL over the tile-row
+Parquet, the same IR the Rust backend compiles), and every result is computed live,
+not canned.
+
+<Callout title="Two corpora, one schema">
+Use the **corpus** toggle. *Sample* is a hand-built 10-asset slice — small enough to
+read, with the traps spelled out. *Full city* is 60,000 assets (2.8&nbsp;MB, 44 row
+groups) served remotely: duckdb-wasm range-fetches only the row groups a query's
+zone-map admits, so a filtered search over the whole city touches a handful of HTTP
+ranges, never the file. That is the point — **a too-big-to-download corpus, searched
+where it sits.**
+</Callout>
+
+<AonachDemo />
+
+## What each tab shows
+
+- **Concept · Range · List** — `gem ⊑ MUR` walks the GEM taxonomy as a single
+  DFS-interval range (all unreinforced masonry, no enumeration); Listed and the age
+  band are exact filters; roles are list membership. `All[…]` intersects them.
+- **OnTile vs All** — “built by Lanyon between 1990–2000” must mean *one* retrofit
+  event carried all three facts. `OnTile` binds them to a single tile; `All` only
+  needs each met *somewhere*, so it keeps the **paper retrofits** — a CR job that
+  wasn't accredited plus an accredited job that wasn't CR. On the full corpus that
+  gap is thousands of assets.
+- **Spatial + Not** — footprints over a two-cell flood extent. The coarse (union-box)
+  step admits a superset; the per-cell exact step trims it. There is *no spatial
+  extension in the browser*, so this is the on-device path — and negating a coarse
+  superset is **refused**, because a flooded shelter must never be reported dry.
+- **cited_by cascade** — the edge table read backwards: pick a substation, see every
+  asset that depends on it.
+- **Base ⊕ overlay** — live damage arrives as a separate layer, composed at query
+  time; the signed base is never mutated.
+
+<Callout type="info">
+Every label is fictional and every instance synthesised from aggregate
+distributions (real GEM taxonomy, real ward names). Storm Bealtaine never happened.
+</Callout>

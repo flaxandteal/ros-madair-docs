@@ -1,4 +1,4 @@
 {
   "title": "Documentation",
-  "pages": ["index", "installation", "quickstart", "how-it-works", "live-query", "tile-store", "roundtrip", "layers"]
+  "pages": ["index", "installation", "quickstart", "how-it-works", "live-query", "tile-store", "roundtrip", "layers", "verification"]
 }

@@ -1,0 +1,66 @@
+---
+title: Verification
+description: Every snapshot is signed; a reader recomputes its id from the files on disk and checks the attestation before trusting a layer — Verified, Unsigned, or tampered (Failed).
+---
+
+import SignatureVerification from '@/app/signature-verification.tsx';
+
+A Rós Madair snapshot is a set of static files on a CDN — anyone can copy, mirror,
+or edit them. So the emitter **signs** each snapshot, and a reader **verifies** it
+before trusting a layer. Because everything is content-addressed, a reader does
+not need to trust the transport: it recomputes the identity from the bytes it
+actually received and checks that identity against a signature.
+
+## The `snapshot_id` is a hash of the content
+
+`emit` derives a `snapshot_id` from the artifacts: it hashes each file, then
+hashes those hashes together with the (id-excluded) manifest —
+`ros_madair_format::snapshot_id`. Change one byte of one Parquet file and the id
+moves. The id is written into `manifest.json`, and `emit sign` writes an
+`attestations.json` beside it: an Ed25519 signature over that id, carrying the
+publisher's public key.
+
+```bash
+ros-madair-emit sign  <snapshot_dir> <key_path>   # writes attestations.json
+ros-madair-emit verify <snapshot_dir>             # verified / unsigned / tampered
+```
+
+## Three outcomes, enforced at open
+
+`ros-madair-format`'s `verify` module — shared by the emit CLI and
+`ros-madair-duck`'s read path — runs two checks in order and returns one of three
+verdicts (`HeadTrust`):
+
+1. **Integrity.** Re-hash every file the manifest lists and re-derive the id. If a
+   file is missing or a byte changed, the recomputed id no longer matches the
+   signed one → **Failed** ("altered").
+2. **Authenticity.** With the content proven self-consistent, check the Ed25519
+   attestation over that id → **Verified**. No `attestations.json` at all →
+   **Unsigned** (nobody vouched for it — distinct from a tamper, so a UI can word
+   them differently).
+
+`DuckReader::open_layers` runs this gate on every layer and **refuses to open a
+`Failed` one**; `Unsigned` and unsigned local builds still open. So a tampered
+mirror cannot be silently queried, and the sign→verify loop is closed end to end.
+
+## Try it
+
+The demo below is that gate, running **in your browser** over three layers — a
+published base, an unsigned on-device overlay, and a CDN mirror that was tampered
+in transit. It mirrors `format::verify` exactly: it recomputes each layer's
+`snapshot_id` with WebCrypto SHA-256 and checks an Ed25519 signature (a publisher
+key generated in this session). Flip a layer's state and watch the verdict — and
+the overall `open_layers` decision — update live:
+
+- **Tamper an artifact** — a byte changes, the recomputed id drifts off the signed
+  id → **Failed**.
+- **Remove signature** — no attestation → **Unsigned**.
+- **Re-sign / Reset** — publish (or un-publish) the current bytes honestly.
+
+<SignatureVerification />
+
+The native reader (`ros-madair-duck`) and the emit CLI run the identical check on
+real snapshots; this page runs the same algorithm on synthetic layers so you can
+poke at it. The exact same `snapshot_id` derivation lives in one place —
+`ros-madair-format` — so a signed id and a recomputed id cannot drift between the
+writer and the reader.

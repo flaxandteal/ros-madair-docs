@@ -116,6 +116,8 @@ async function createTiles(conn, table) {
 async function main() {
   mkdirSync(OUT, { recursive: true });
   mkdirSync(join(OUT, 'overlay'), { recursive: true });
+  // publish the committed basemap (seed) into public/data for the client to fetch
+  writeFileSync(join(OUT, 'aonach_basemap.json'), readFileSync(join(dirname(fileURLToPath(import.meta.url)), 'seed', 'basemap.json'), 'utf8'));
   const conn = await (await DuckDBInstance.create(':memory:')).connect();
 
   // ---- tiles ----
@@ -185,117 +187,109 @@ async function main() {
   writeFileSync(join(OUT, 'aonach_meta.json'), JSON.stringify({ graph: GRAPH, buildings: B.length, subs: SUBS.length, full }, null, 0));
 }
 
-// City-scale synthesis, written CHUNKED: the corpus is partitioned into geo cells
-// (the top Morton bits), each its own Parquet file under any host's per-file cap,
-// plus a MANIFEST summarising every chunk's geo zone. A query reads the manifest
-// (KB), prunes to the chunks it needs, and range-fetches only their row groups — so
-// total corpus size is unbounded while each file stays small (the RM manifest+chunk
-// design). Same schema as the sample, so every worked example runs unchanged.
-//   Size via AONACH_ROWS (default modest, so a build here is quick). For a genuine
-//   ~1 GB set AONACH_ROWS≈20000000 and run once (heavier box / CI). Idempotent:
-//   skips if the manifest exists unless AONACH_REGEN=1.
+// ---------------------------------------------------------------------------
+// Full corpus — realism pass: real footprints + zoning + correlated heavy tiles
+// ---------------------------------------------------------------------------
+// Reads scripts/seed/footprints.csv (real OSM centroids + levels + ward + zone) and
+// the LLM-authored skeleton.json (per-zone conditional attribute distributions). Each
+// building's typology/attributes are SAMPLED from its zone's distributions, so the
+// joints are realistic (URM in low-income/coastal, steel in the industrial belt, RC
+// high-rise + listed heritage in the core, retrofits skewed to money). Heavy nested
+// tiles; real WGS84 coords; Morton-clustered; geo-partitioned into chunks + a manifest
+// carrying each chunk's geo zone and dominant land-use. AONACH_REPLICAS clones each
+// footprint with jitter to push toward GB. Idempotent (AONACH_REGEN=1).
 async function genFull(conn) {
-  const N = Number(process.env.AONACH_ROWS || 1_000_000);
-  const CHUNKS = 8, SHIFT = 9; // 12-bit Morton >> 9 → top 3 bits → 8 geo-contiguous chunks
   const chunkDir = join(OUT, 'tiles_aonach_full');
   const manifestPath = join(OUT, 'aonach_full_manifest.json');
   if (existsSync(manifestPath) && !process.env.AONACH_REGEN) {
-    console.log('full corpus present — skipping (set AONACH_REGEN=1 to regenerate)');
+    console.log('full corpus present — skipping (AONACH_REGEN=1 to regenerate)');
     return JSON.parse(readFileSync(manifestPath, 'utf8'));
   }
-  rmSync(chunkDir, { recursive: true, force: true });
-  mkdirSync(chunkDir, { recursive: true });
-  await conn.run(`SET memory_limit='1GB'; SET preserve_insertion_order=false; SET temp_directory='${join(OUT, '_tmp')}';`);
+  const REPLICAS = Math.max(1, Number(process.env.AONACH_REPLICAS || 1));
+  const CHUNKS = 8, SHIFT = 9;
+  const seedDir = join(dirname(fileURLToPath(import.meta.url)), 'seed');
+  const skel = JSON.parse(readFileSync(join(seedDir, 'skeleton.json'), 'utf8'));
+  const lines = readFileSync(join(seedDir, 'footprints.csv'), 'utf8').trim().split('\n');
+  lines.shift();
+  const foot = lines.map((l) => { const m = l.match(/^([^,]+),([^,]+),([^,]+),"([^"]*)",(.+)$/); return { lng: +m[1], lat: +m[2], levels: +m[3], ward: m[4], zone: m[5] }; });
 
-  const gems = ['CR/LFM', 'CR/LFINF', 'CR/LWAL', 'CR/LPB', 'MUR+ADO', 'MUR+CLBRS', 'MUR+STDRE', 'S/LFM', 'W/LWAL'];
-  const wards = ['Baile Thoir', 'Baile an Iarthair', 'Baile na Cíoraí', 'Abhainn Chaol', 'Abhainn Rua',
-    'Abhainn Thuaidh', 'Ceannkarai', 'Kesarnagar', 'Muthugaran', 'Tharainagar', 'Vellaimedu', 'Aranmedu',
-    'Trá Bealtaine', 'An tArd', 'Cé an Rí', 'Ceantar Theas', 'Cuan Thoir', 'Machaire Fada'];
-  const lit = (a) => `(${JSON.stringify(a).replace(/"/g, "'")})`;
-  const role1 = `CASE (hash(i*13)%14) WHEN 0 THEN 'Shelter' WHEN 1 THEN 'Hospital' WHEN 2 THEN 'School' WHEN 3 THEN 'Fire station' WHEN 4 THEN 'Muster point' WHEN 5 THEN 'Shelter' ELSE NULL END`;
-  await conn.run(`CREATE OR REPLACE TABLE bldgs AS
-    WITH base AS (
-      SELECT i,
-        ${lit(gems)}[((hash(i*2654435761)%9)+1)::INT] AS gem,
-        (['Listed','Non-listed','Non-listed','Non-listed','Non-listed','Candidate'])[((hash(i*40503)%6)+1)::INT] AS heritage,
-        CAST(1850 + (hash(i*97)%171) AS BIGINT) AS yr,
-        ${role1} AS role1,
-        ${lit(wards)}[((hash(i*19)%${wards.length})+1)::INT] AS ward,
-        CAST(hash(i*31)%100 AS DOUBLE) AS gx, CAST(hash(i*57)%60 AS DOUBLE) AS gy,
-        LEAST(63, ((hash(i*31)%100)*64/100)::INT) AS gx6, LEAST(63, ((hash(i*57)%60)*64/60)::INT) AS gy6,
-        'sub-'|| CAST(hash(i*71)%80 AS INT) AS sub
-      FROM range(${N}) t(i)),
-    r AS (
-      SELECT *, CASE WHEN role1 IS NOT NULL AND hash(i*23)%18=0
-                     THEN (CASE WHEN role1='Shelter' THEN 'Hospital' ELSE 'Shelter' END) END AS role2
-      FROM base)
-    SELECT 'bldg-f'||i AS resource_id, ward||' Asset '||i AS descriptor_name, 'aonach' AS graph_id,
-      'profile' AS nodegroup_id, 'bldg-f'||i||'-profile' AS tileid, NULL AS parenttile_id, 0 AS sortorder,
-      gem AS concept_id,
-      '["'||gem||'","'||heritage||'"'||coalesce(',"'||role1||'"','')||coalesce(',"'||role2||'"','')||']' AS concept_ids,
-      yr AS q_ordered, NULL::BOOLEAN AS acc,
-      gx AS geo_min_lng, gy AS geo_min_lat, gx+1.2 AS geo_max_lng, gy+1.0 AS geo_max_lat,
-      '{"gem":"'||gem||'","heritage":"'||heritage||'","year":'||yr||',"ward":"'||ward||'","served_by":"'||sub||'"}' AS data,
-      ${MORTON} AS cluster_key, (${MORTON} >> ${SHIFT})::INT AS chunk, sub
-    FROM r;`);
-  // ~30% carry one retrofit event; the two-event "paper retrofit" trap on a disjoint
-  // 10% slice (OnTile excludes, All keeps). Both inherit their building's chunk.
-  await conn.run(`CREATE OR REPLACE TABLE bldgs_retro AS
-    SELECT resource_id, descriptor_name, 'aonach' AS graph_id, 'retrofit' AS nodegroup_id,
-      resource_id||'-retro-0' AS tileid, resource_id||'-profile' AS parenttile_id, 0 AS sortorder,
-      CASE WHEN hash(resource_id||'m')%2=0 THEN 'CR' ELSE 'MUR' END AS concept_id,
-      '["'||(CASE WHEN hash(resource_id||'m')%2=0 THEN 'CR' ELSE 'MUR' END)||'"]' AS concept_ids,
-      CAST(1970 + (hash(resource_id||'y')%50) AS BIGINT) AS q_ordered, (hash(resource_id||'a')%2=0) AS acc,
-      NULL::DOUBLE AS geo_min_lng, NULL::DOUBLE AS geo_min_lat, NULL::DOUBLE AS geo_max_lng, NULL::DOUBLE AS geo_max_lat, '{}' AS data, NULL::UBIGINT AS cluster_key, chunk
-    FROM bldgs WHERE hash(resource_id||'r')%10 < 3;`);
-  await conn.run(`CREATE OR REPLACE TABLE bldgs_trap AS
-    SELECT resource_id, descriptor_name, 'aonach' AS graph_id, 'retrofit' AS nodegroup_id,
-      resource_id||'-retro-'||ev AS tileid, resource_id||'-profile' AS parenttile_id, ev AS sortorder,
-      CASE WHEN ev=0 THEN 'CR' ELSE 'MUR' END AS concept_id,
-      CASE WHEN ev=0 THEN '["CR"]' ELSE '["MUR"]' END AS concept_ids,
-      (CASE WHEN ev=0 THEN 1994 ELSE 1996 END)::BIGINT AS q_ordered, (ev=1) AS acc,
-      NULL::DOUBLE AS geo_min_lng, NULL::DOUBLE AS geo_min_lat, NULL::DOUBLE AS geo_max_lng, NULL::DOUBLE AS geo_max_lat, '{}' AS data, NULL::UBIGINT AS cluster_key, chunk
-    FROM bldgs, (SELECT 0 AS ev UNION ALL SELECT 1) WHERE hash(resource_id||'r')%10 = 7;`);
-  await conn.run(`CREATE OR REPLACE TABLE all_tiles AS
-    SELECT ${TILE_COLS.join(', ')}, chunk FROM bldgs
-    UNION ALL SELECT ${TILE_COLS.join(', ')}, chunk FROM bldgs_retro
-    UNION ALL SELECT ${TILE_COLS.join(', ')}, chunk FROM bldgs_trap;`);
+  let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+  for (const b of foot) { x0 = Math.min(x0, b.lng); y0 = Math.min(y0, b.lat); x1 = Math.max(x1, b.lng); y1 = Math.max(y1, b.lat); }
+  const spread = (v) => { v &= 63; let r = 0; for (let i = 0; i < 6; i++) r |= ((v >> i) & 1) << (2 * i); return r; };
+  const morton = (lng, lat) => { const gx = Math.min(63, Math.floor(((lng - x0) / (x1 - x0)) * 64)); const gy = Math.min(63, Math.floor(((lat - y0) / (y1 - y0)) * 64)); return spread(gx) | (spread(gy) << 1); };
+  const rng = (seed) => { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; };
+  const pick = (weights, r) => { const es = Object.entries(weights); let s = es.reduce((a, [, w]) => a + w, 0) * r(); for (const [k, w] of es) { s -= w; if (s <= 0) return k; } return es[es.length - 1][0]; };
+  const hstr = (s) => { let x = 0; for (let i = 0; i < s.length; i++) x = (Math.imul(x, 31) + s.charCodeAt(i)) | 0; return x >>> 0; };
 
-  // one Parquet per geo chunk + a manifest of each chunk's geo zone (the file-level zone-map)
+  const tiles = [], edges = [], damage = [];
+  const retro = (rid, ev, method, year, acc, ck, chunk) => ({ resource_id: rid, descriptor_name: null, graph_id: GRAPH, nodegroup_id: 'retrofit', tileid: `${rid}-r${ev}`, parenttile_id: `${rid}-p`, sortorder: ev, concept_id: method, concept_ids: `["${method}"]`, q_ordered: year, acc, geo_min_lng: null, geo_min_lat: null, geo_max_lng: null, geo_max_lat: null, data: '{}', cluster_key: null, chunk });
+  let idx = 0;
+  for (const b of foot) {
+    for (let rep = 0; rep < REPLICAS; rep++) {
+      idx++;
+      const rid = `am-${idx}`;
+      const jl = rep === 0 ? b.lng : b.lng + ((hstr(rid + 'x') % 1000) / 1e6 - 5e-4);
+      const jt = rep === 0 ? b.lat : b.lat + ((hstr(rid + 'y') % 1000) / 1e6 - 5e-4);
+      const z = skel.zones[b.zone] || skel.zones.residential_mixed;
+      const r = rng(hstr(rid));
+      const gem = pick(z.gem, r);
+      const ageBand = pick(z.age_band, r);
+      const [ya, yb] = skel.age_years[ageBand];
+      const year = ya + Math.floor(r() * (yb - ya + 1));
+      const heritage = pick(z.heritage, r);
+      const roles = [];
+      const role = pick(z.roles, r); if (role !== '_none') roles.push(role);
+      if (roles.length && r() < 0.08) { const r2 = pick(z.roles, r); if (r2 !== '_none' && r2 !== roles[0]) roles.push(r2); }
+      const surge = z.surge_exposure;
+      const storeys = z.storeys[0] + Math.floor(r() * (z.storeys[1] - z.storeys[0] + 1));
+      const ck = morton(jl, jt), chunk = ck >> SHIFT;
+      const concept_ids = JSON.stringify([gem, heritage, ...roles, `zone:${b.zone}`, `surge:${surge}`]);
+      const d = 8e-5;
+      const data = JSON.stringify({
+        identity: { resource_id: rid, ward: b.ward, zone: b.zone, zone_label: z.label },
+        structure: { gem_taxonomy: gem, gem_label: skel.gem_labels[gem] || gem, storeys, height_m: +(storeys * 3.2).toFixed(1), year_built: year, age_band: ageBand },
+        heritage: { status: heritage },
+        service_roles: roles,
+        hazard: { surge_exposure: surge, seismic_vulnerability: gem.startsWith('MUR') ? 'high' : gem.startsWith('CR') ? 'moderate' : 'low' },
+        geometry: { centroid: [+jl.toFixed(6), +jt.toFixed(6)], source: 'OSM footprint' },
+        provenance: { source: 'real footprint + zone-conditioned synthesis', confidence: 'demonstration' },
+        descriptors: { en: `${z.label} building in ${b.ward}`, ga: `Foirgneamh i ${b.ward}` },
+      });
+      tiles.push({ resource_id: rid, descriptor_name: `${b.ward} · ${skel.gem_labels[gem] || gem}`, graph_id: GRAPH, nodegroup_id: 'profile', tileid: `${rid}-p`, parenttile_id: null, sortorder: 0, concept_id: gem, concept_ids, q_ordered: year, acc: null, geo_min_lng: +(jl - d).toFixed(6), geo_min_lat: +(jt - d).toFixed(6), geo_max_lng: +(jl + d).toFixed(6), geo_max_lat: +(jt + d).toFixed(6), data, cluster_key: ck, chunk });
+      edges.push({ src_resource: rid, src_node: 'served_by', src_nodegroup: 'profile', src_tile: `${rid}-p`, target_resource: `sub-${hstr(b.ward) % 80}` });
+      if (r() < z.retrofit_rate) {
+        if (r() < 0.35) { tiles.push(retro(rid, 0, 'CR', 1994, false, ck, chunk)); tiles.push(retro(rid, 1, 'MUR', 1996, true, ck, chunk)); }
+        else { const my = 1990 + Math.floor(r() * 20); tiles.push(retro(rid, 0, r() < 0.6 ? 'CR' : 'MUR', my, r() < 0.7, ck, chunk)); }
+      }
+      if (roles.includes('Hospital') && r() < 0.25) damage.push({ resource_id: rid, descriptor_name: `${b.ward} hospital`, graph_id: GRAPH, nodegroup_id: 'damage', tileid: `${rid}-dmg`, parenttile_id: null, sortorder: 0, concept_id: null, concept_ids: '["damaged"]', q_ordered: null, acc: null, geo_min_lng: null, geo_min_lat: null, geo_max_lng: null, geo_max_lat: null, data: '{"damage":"structural — reported","reported":"now"}', cluster_key: null, chunk });
+    }
+  }
+
+  rmSync(chunkDir, { recursive: true, force: true }); mkdirSync(chunkDir, { recursive: true });
+  await conn.run(`SET memory_limit='1GB'; SET preserve_insertion_order=false;`);
+  const cols = "{resource_id:'VARCHAR',descriptor_name:'VARCHAR',graph_id:'VARCHAR',nodegroup_id:'VARCHAR',tileid:'VARCHAR',parenttile_id:'VARCHAR',sortorder:'INTEGER',concept_id:'VARCHAR',concept_ids:'VARCHAR',q_ordered:'BIGINT',acc:'BOOLEAN',geo_min_lng:'DOUBLE',geo_min_lat:'DOUBLE',geo_max_lng:'DOUBLE',geo_max_lat:'DOUBLE',data:'VARCHAR',cluster_key:'UBIGINT',chunk:'INTEGER'}";
+  const loadJson = async (name, arr, colspec) => { const tmp = join(OUT, `_${name}.ndjson`); writeFileSync(tmp, arr.map((o) => JSON.stringify(o)).join('\n')); await conn.run(`CREATE OR REPLACE TABLE ${name} AS SELECT * FROM read_json('${tmp}', columns=${colspec}, format='newline_delimited');`); rmSync(tmp, { force: true }); };
+  await loadJson('all_tiles', tiles, cols);
+  await loadJson('ov', damage, cols);
+  await loadJson('eg', edges, "{src_resource:'VARCHAR',src_node:'VARCHAR',src_nodegroup:'VARCHAR',src_tile:'VARCHAR',target_resource:'VARCHAR'}");
+
   const files = [];
   for (let c = 0; c < CHUNKS; c++) {
-    const rel = `tiles_aonach_full/chunk-${c}.parquet`;
-    const abs = join(OUT, rel);
-    await conn.run(`COPY (SELECT ${TILE_COLS.join(', ')} FROM all_tiles WHERE chunk=${c} ORDER BY (geo_min_lng IS NULL), cluster_key)
-      TO '${abs}' (FORMAT PARQUET, ROW_GROUP_SIZE 2048);`);
-    const z = (await conn.runAndReadAll(`SELECT
-        min(CASE WHEN path_in_schema='geo_min_lng' THEN stats_min::DOUBLE END) w,
-        max(CASE WHEN path_in_schema='geo_max_lng' THEN stats_max::DOUBLE END) e,
-        min(CASE WHEN path_in_schema='geo_min_lat' THEN stats_min::DOUBLE END) s,
-        max(CASE WHEN path_in_schema='geo_max_lat' THEN stats_max::DOUBLE END) n,
-        (max(row_group_id)+1) rgs FROM parquet_metadata('${abs}') WHERE path_in_schema LIKE 'geo_%'`)).getRowObjects()[0];
-    const buildings = Number(Object.values((await conn.runAndReadAll(`SELECT count(*) FROM read_parquet('${abs}') WHERE nodegroup_id='profile'`)).getRowObjects()[0])[0]);
-    files.push({ file: rel, bytes: statSync(abs).size, row_groups: z.rgs == null ? 0 : Number(z.rgs),
-      geo: z.w == null ? null : { w: +z.w, e: +z.e, s: +z.s, n: +z.n }, buildings });
+    const rel = `tiles_aonach_full/chunk-${c}.parquet`, abs = join(OUT, rel);
+    await conn.run(`COPY (SELECT ${TILE_COLS.join(', ')} FROM all_tiles WHERE chunk=${c} ORDER BY (geo_min_lng IS NULL), cluster_key) TO '${abs}' (FORMAT PARQUET, ROW_GROUP_SIZE 4096);`);
+    const z = (await conn.runAndReadAll(`SELECT min(CASE WHEN path_in_schema='geo_min_lng' THEN stats_min::DOUBLE END) w, max(CASE WHEN path_in_schema='geo_max_lng' THEN stats_max::DOUBLE END) e, min(CASE WHEN path_in_schema='geo_min_lat' THEN stats_min::DOUBLE END) s, max(CASE WHEN path_in_schema='geo_max_lat' THEN stats_max::DOUBLE END) n, (max(row_group_id)+1) rgs FROM parquet_metadata('${abs}') WHERE path_in_schema LIKE 'geo_%'`)).getRowObjects()[0];
+    const bcount = Number(Object.values((await conn.runAndReadAll(`SELECT count(*) FROM read_parquet('${abs}') WHERE nodegroup_id='profile'`)).getRowObjects()[0])[0]);
+    const zmix = (await conn.runAndReadAll(`SELECT regexp_extract(concept_ids, 'zone:([a-z_]+)', 1) z, count(*) n FROM read_parquet('${abs}') WHERE nodegroup_id='profile' GROUP BY 1 ORDER BY n DESC LIMIT 1`)).getRowObjects()[0];
+    files.push({ file: rel, bytes: statSync(abs).size, row_groups: z.rgs == null ? 0 : Number(z.rgs), geo: z.w == null ? null : { w: +z.w, e: +z.e, s: +z.s, n: +z.n }, buildings: bcount, zone: zmix ? zmix.z : null });
   }
-  // edges + overlay stay single files (small at this scale)
-  await conn.run(`COPY (SELECT resource_id AS src_resource, 'served_by' AS src_node, 'profile' AS src_nodegroup,
-      resource_id||'-profile' AS src_tile, sub AS target_resource FROM bldgs ORDER BY src_node, target_resource)
-    TO '${join(OUT, 'edges_aonach_full.parquet')}' (FORMAT PARQUET, ROW_GROUP_SIZE 8192);`);
-  await conn.run(`COPY (SELECT resource_id, descriptor_name, 'aonach' AS graph_id, 'damage' AS nodegroup_id,
-      resource_id||'-damage' AS tileid, NULL AS parenttile_id, 0 AS sortorder, NULL AS concept_id,
-      '["damaged"]' AS concept_ids, NULL::BIGINT AS q_ordered, NULL::BOOLEAN AS acc,
-      NULL::DOUBLE AS geo_min_lng, NULL::DOUBLE AS geo_min_lat, NULL::DOUBLE AS geo_max_lng, NULL::DOUBLE AS geo_max_lat, '{"damage":"reported","reported":"now"}' AS data, NULL::UBIGINT AS cluster_key
-      FROM bldgs WHERE concept_ids LIKE '%"Hospital"%' AND hash(resource_id||'d')%4=0)
-    TO '${join(OUT, 'overlay', 'tiles_aonach_full.parquet')}' (FORMAT PARQUET);`);
+  await conn.run(`COPY (SELECT * FROM eg ORDER BY src_node, target_resource) TO '${join(OUT, 'edges_aonach_full.parquet')}' (FORMAT PARQUET, ROW_GROUP_SIZE 8192);`);
+  await conn.run(`COPY (SELECT ${TILE_COLS.join(', ')} FROM ov) TO '${join(OUT, 'overlay', 'tiles_aonach_full.parquet')}' (FORMAT PARQUET);`);
 
   const total = files.reduce((a, f) => a + f.bytes, 0);
   const buildings = files.reduce((a, f) => a + f.buildings, 0);
-  const manifest = { graph: GRAPH, partition: 'geo (Morton cell)', chunks: files.length, buildings,
-    total_bytes: total, row_group_size: 2048, edges: 'edges_aonach_full.parquet',
-    overlay: 'overlay/tiles_aonach_full.parquet', files };
+  const manifest = { graph: GRAPH, partition: 'geo (Morton cell)', chunks: files.length, buildings, total_bytes: total, row_group_size: 4096, edges: 'edges_aonach_full.parquet', overlay: 'overlay/tiles_aonach_full.parquet', files };
   writeFileSync(manifestPath, JSON.stringify(manifest));
-  console.log(`aonach_full_manifest.json  ${files.length} chunks / ${buildings} buildings / ${(total / 1e6).toFixed(1)} MB total`);
+  console.log(`aonach_full_manifest.json  ${files.length} chunks / ${buildings} buildings / ${(total / 1e6).toFixed(1)} MB · zones: ${files.map((f) => f.zone).join(',')}`);
   return { buildings, chunks: files.length, total_bytes: total };
 }
 

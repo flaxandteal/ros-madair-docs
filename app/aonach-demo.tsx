@@ -21,8 +21,32 @@ type SetKey = keyof typeof SETS;
 type Chunk = { file: string; bytes: number; row_groups: number; buildings: number; geo: { w: number; e: number; s: number; n: number } | null };
 type Manifest = { chunks: number; buildings: number; total_bytes: number; files: Chunk[] };
 
-const FLOOD: [number, number, number, number][] = [[12, 40, 12, 12], [32, 40, 12, 12]]; // x,y,w,h cells
-const EXTENT: [number, number, number, number] = [12, 40, 44, 52]; // x0,y0,x1,y1 union box
+// sample lives in a schematic 0–100 × 0–60 grid; full lives in real WGS84.
+const FLOOD: [number, number, number, number][] = [[12, 40, 12, 12], [32, 40, 12, 12]]; // sample cells x,y,w,h
+type Basemap = { bbox: [number, number, number, number]; coast: [number, number][][]; wards: { name: string; bbox: [number, number, number, number]; zone: string }[] };
+const ZONE_COLORS: Record<string, string> = {
+  commercial_core: '#5b8fb0', residential_affluent: '#7fbf7f', residential_mixed: '#b9c46a',
+  low_income_informal: '#d98b5f', coastal: '#4fb0c6', industrial: '#9a7bb5', institutional: '#c98fb0',
+};
+const ZONE_LABEL: Record<string, string> = {
+  commercial_core: 'Commercial core', residential_affluent: 'Residential (affluent)', residential_mixed: 'Residential (mixed)',
+  low_income_informal: 'Low-income / informal', coastal: 'Coastal fringe', industrial: 'Industrial belt', institutional: 'Institutional',
+};
+// coordinate extent to draw a set in
+function viewBox(set: SetKey, basemap: Basemap | null): [number, number, number, number] {
+  if (set === 'full' && basemap) { const [w, s, e, n] = basemap.bbox; const px = (e - w) * 0.04, py = (n - s) * 0.04; return [w - px, s - py, e + px, n + py]; }
+  return [0, 0, 100, 60];
+}
+// flood extent for a set: sample cells, or a real coastal strip (east, near the coast) for full
+function floodCells(set: SetKey, basemap: Basemap | null): [number, number, number, number][] {
+  if (set === 'full' && basemap) { const [w, s, e, n] = basemap.bbox; const cw = e - w, ch = n - s; return [[e - cw * 0.28, s, cw * 0.28, ch * 0.62], [e - cw * 0.5, s, cw * 0.22, ch * 0.3]]; }
+  return FLOOD;
+}
+function floodExtent(cells: [number, number, number, number][]): [number, number, number, number] {
+  let x0 = 1e18, y0 = 1e18, x1 = -1e18, y1 = -1e18;
+  for (const [x, y, w, h] of cells) { x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x + w); y1 = Math.max(y1, y + h); }
+  return [x0, y0, x1, y1];
+}
 
 // ── duckdb-wasm plumbing ──────────────────────────────────────────────────────
 const registered = new Set<string>();
@@ -81,11 +105,12 @@ function Fetch({ t }: { t: TilesRef }) {
   if (!t.total) return null;
   return <p className="am-note">Fetched <b>{t.chunks} of {t.nChunks}</b> chunks — {mb(t.bytes)} of {mb(t.total)} ({Math.round((100 * t.bytes) / t.total)}%). The rest were pruned from the manifest, never requested.</p>;
 }
-type TabProps = { set: SetKey; manifest: Manifest | null };
+type TabProps = { set: SetKey; manifest: Manifest | null; basemap: Basemap | null };
 
 // ── tab: concept / range / list filter ───────────────────────────────────────
 function FilterTab({ set, manifest }: TabProps) {
-  const [f, setF] = React.useState({ mur: true, listed: false, pre: false, shelter: false, hospital: false });
+  const [f, setF] = React.useState({ mur: true, listed: false, pre: false, shelter: false, hospital: false, noretrofit: false });
+  const [zone, setZone] = React.useState('');
   const [res, setRes] = React.useState<{ n: number; total: number; sample: Record<string, unknown>[]; t: TilesRef } | null>(null);
   const [ir, setIr] = React.useState('');
   React.useEffect(() => {
@@ -101,6 +126,8 @@ function FilterTab({ set, manifest }: TabProps) {
       if (f.pre) { parts.push(`SELECT DISTINCT resource_id FROM ${T} WHERE nodegroup_id='profile' AND q_ordered<=1970`); irp.push('Range{ year ≤ 1970 }'); }
       if (f.shelter) { parts.push(`SELECT DISTINCT resource_id FROM ${T} WHERE nodegroup_id='profile' AND concept_ids LIKE '%"Shelter"%'`); irp.push('Concept{ roles ∋ "Shelter" }'); }
       if (f.hospital) { parts.push(`SELECT DISTINCT resource_id FROM ${T} WHERE nodegroup_id='profile' AND concept_ids LIKE '%"Hospital"%'`); irp.push('Concept{ roles ∋ "Hospital" }'); }
+      if (f.noretrofit) { parts.push(`SELECT DISTINCT resource_id FROM ${T} WHERE nodegroup_id='profile' EXCEPT SELECT DISTINCT resource_id FROM ${T} WHERE nodegroup_id='retrofit'`); irp.push('Not( has a retrofit )'); }
+      if (zone) { parts.push(`SELECT DISTINCT resource_id FROM ${T} WHERE nodegroup_id='profile' AND concept_ids LIKE '%"zone:${zone}"%'`); irp.push(`Concept{ zone is "${zone}" }`); }
       if (live) setIr(parts.length ? `All[ ${irp.join(',\n     ')} ]` : '# select one or more conditions');
       const total = await one(`SELECT count(*) FROM ${T} WHERE nodegroup_id='profile'`);
       if (!parts.length) { if (live) setRes({ n: 0, total, sample: [], t }); return; }
@@ -111,12 +138,14 @@ function FilterTab({ set, manifest }: TabProps) {
     })();
     return () => { live = false; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [set, manifest, f.mur, f.listed, f.pre, f.shelter, f.hospital]);
+  }, [set, manifest, f.mur, f.listed, f.pre, f.shelter, f.hospital, f.noretrofit, zone]);
   const chk = (k: keyof typeof f, label: string) => (<label className="am-chk"><input type="checkbox" checked={f[k]} onChange={(e) => setF({ ...f, [k]: e.target.checked })} /> {label}</label>);
   return (
     <div>
-      <p>Tick conditions to build an <code>All[…]</code> query — GEM walks the concept hierarchy (one DFS range), roles test list membership, year is an ordered range.</p>
-      <div className="am-controls">{chk('mur', 'unreinforced masonry (gem ⊑ MUR)')}{chk('listed', 'Listed')}{chk('pre', 'built ≤ 1970')}{chk('shelter', 'role ∋ Shelter')}{chk('hospital', 'role ∋ Hospital')}</div>
+      <p>Tick conditions to build an <code>All[…]</code> query — GEM walks the concept hierarchy (one DFS range), roles test list membership, year is an ordered range, zone tests land-use. Try <em>masonry + no retrofit + a low-income or coastal zone</em> — the vulnerability hotspot.</p>
+      <div className="am-controls">{chk('mur', 'unreinforced masonry (gem ⊑ MUR)')}{chk('listed', 'Listed')}{chk('pre', 'built ≤ 1970')}{chk('shelter', 'role ∋ Shelter')}{chk('hospital', 'role ∋ Hospital')}{chk('noretrofit', 'no retrofit')}
+        <select className="am-sel" value={zone} onChange={(e) => setZone(e.target.value)}><option value="">any zone</option>{Object.keys(ZONE_LABEL).map((z) => <option key={z} value={z}>{ZONE_LABEL[z]}</option>)}</select>
+      </div>
       <IR>{ir}</IR>
       <Count n={res ? res.n : null} of={res?.total} unit="assets match" />
       {res && <Fetch t={res.t} />}
@@ -165,20 +194,22 @@ function OnTileTab({ set, manifest }: TabProps) {
 }
 
 // ── tab: spatial ──────────────────────────────────────────────────────────────
-function SpatialTab({ set, manifest }: TabProps) {
+function SpatialTab({ set, manifest, basemap }: TabProps) {
   const [exact, setExact] = React.useState(true);
   const [spatial, setSpatial] = React.useState(true);
   const [q, setQ] = React.useState<'flood' | 'dry' | null>(null);
   const [out, setOut] = React.useState<{ n: number; refused: boolean; coarse: boolean; t: TilesRef } | null>(null);
-  const missUnion = `(geo_min_lng>${EXTENT[2]} OR geo_max_lng<${EXTENT[0]} OR geo_min_lat>${EXTENT[3]} OR geo_max_lat<${EXTENT[1]})`;
-  const hitCell = (c: number[]) => `NOT (geo_min_lng>${c[0] + c[2]} OR geo_max_lng<${c[0]} OR geo_min_lat>${c[1] + c[3]} OR geo_max_lat<${c[1]})`;
-  const exactHit = FLOOD.map(hitCell).join(' OR ');
   React.useEffect(() => {
     let live = true;
     (async () => {
       if (!q) { setOut(null); return; }
       setOut(null);
-      const t = tilesRef(set, manifest, EXTENT); await registerTiles(set, t); const T = t.sql;
+      const cells = floodCells(set, basemap);
+      const ext = floodExtent(cells);
+      const missUnion = `(geo_min_lng>${ext[2]} OR geo_max_lng<${ext[0]} OR geo_min_lat>${ext[3]} OR geo_max_lat<${ext[1]})`;
+      const hitCell = (c: number[]) => `NOT (geo_min_lng>${c[0] + c[2]} OR geo_max_lng<${c[0]} OR geo_min_lat>${c[1] + c[3]} OR geo_max_lat<${c[1]})`;
+      const exactHit = cells.map(hitCell).join(' OR ');
+      const t = tilesRef(set, manifest, ext); await registerTiles(set, t); const T = t.sql;
       const eff = spatial ? exact : false;
       if (q === 'flood') {
         const where = eff ? `(${exactHit})` : `NOT ${missUnion}`;
@@ -192,7 +223,7 @@ function SpatialTab({ set, manifest }: TabProps) {
     })();
     return () => { live = false; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [set, manifest, q, exact, spatial]);
+  }, [set, manifest, basemap, q, exact, spatial]);
   const seg = (label: string, on: boolean, click: () => void, danger = false) => (<button className={danger ? 'am-danger' : ''} aria-pressed={on} onClick={click}>{label}</button>);
   return (
     <div>
@@ -215,10 +246,15 @@ function SpatialTab({ set, manifest }: TabProps) {
 }
 
 // ── tab: zone map ─────────────────────────────────────────────────────────────
-function ZonesTab({ set, manifest }: TabProps) {
+function ZonesTab({ set, manifest, basemap }: TabProps) {
   const [pts, setPts] = React.useState<Record<string, unknown>[]>([]);
-  const [box, setBox] = React.useState<[number, number, number, number]>([12, 40, 28, 12]); // x,y,w,h
+  const vb = React.useMemo(() => viewBox(set, basemap), [set, basemap]);
+  const [box, setBox] = React.useState<[number, number, number, number]>([12, 40, 28, 12]); // x,y,w,h in coords
   const canvas = React.useRef<HTMLCanvasElement>(null);
+  React.useEffect(() => { // reset the query box into the current view
+    if (set === 'full' && basemap) { const [w, s, e, n] = vb; setBox([w + (e - w) * 0.55, s + (n - s) * 0.05, (e - w) * 0.42, (n - s) * 0.55]); }
+    else setBox([12, 40, 28, 12]);
+  }, [set, basemap, vb]);
   React.useEffect(() => {
     let live = true;
     (async () => {
@@ -231,31 +267,38 @@ function ZonesTab({ set, manifest }: TabProps) {
   const bx = React.useMemo<[number, number, number, number]>(() => [box[0], box[1], box[0] + box[2], box[1] + box[3]], [box]);
   const chunks = React.useMemo(() => (set === 'full' && manifest ? manifest.files.filter((f) => f.geo) : []), [set, manifest]);
   const hitChunks = React.useMemo(() => chunks.filter((f) => f.geo && !(f.geo.w > bx[2] || f.geo.e < bx[0] || f.geo.s > bx[3] || f.geo.n < bx[1])), [chunks, bx]);
+  const zonesPresent = React.useMemo(() => (set === 'full' && basemap ? [...new Set(basemap.wards.map((w) => w.zone))] : []), [set, basemap]);
 
   React.useEffect(() => {
     const cv = canvas.current; if (!cv) return; const cx = cv.getContext('2d'); if (!cx) return;
-    const W = cv.width, H = cv.height;
-    const tx = (x: number) => 10 + (x / 100) * (W - 20), ty = (y: number) => 8 + (y / 60) * (H - 16);
+    const W = cv.width, H = cv.height, pad = 10;
+    const [vw, vs, ve, vn] = vb;
+    const tx = (x: number) => pad + ((x - vw) / (ve - vw)) * (W - 2 * pad);
+    const ty = (y: number) => H - pad - ((y - vs) / (vn - vs)) * (H - 2 * pad); // lat increases upward
     const css = (v: string) => getComputedStyle(document.documentElement).getPropertyValue(v).trim() || '#888';
-    const rect = (x0: number, y0: number, x1: number, y1: number, fill?: string, stroke?: string) => {
-      const x = tx(x0), y = ty(y0), w = tx(x1) - tx(x0), h = ty(y1) - ty(y0);
-      if (fill) { cx.fillStyle = fill; cx.fillRect(x, y, w, h); }
-      if (stroke) { cx.strokeStyle = stroke; cx.lineWidth = 1; cx.strokeRect(x, y, w, h); }
-    };
+    const strokeRect = (x0: number, y0: number, x1: number, y1: number, color: string, lw = 1) => { cx.strokeStyle = color; cx.lineWidth = lw; cx.strokeRect(tx(x0), ty(y1), tx(x1) - tx(x0), ty(y0) - ty(y1)); };
     cx.clearRect(0, 0, W, H);
-    if (set === 'full') {
+    if (set === 'full' && basemap) {
+      cx.globalAlpha = 0.55;
+      basemap.wards.forEach((wd) => { const [x0, y0, x1, y1] = wd.bbox; cx.fillStyle = ZONE_COLORS[wd.zone] || '#888'; cx.fillRect(tx(x0), ty(y1), tx(x1) - tx(x0), ty(y0) - ty(y1)); });
+      cx.globalAlpha = 1;
+      cx.strokeStyle = css('--am-flood'); cx.lineWidth = 1.5; cx.beginPath();
+      basemap.coast.forEach((line) => line.forEach(([x, y], i) => (i ? cx.lineTo(tx(x), ty(y)) : cx.moveTo(tx(x), ty(y)))));
+      cx.stroke();
       const hitSet = new Set(hitChunks.map((f) => f.file));
-      chunks.forEach((f) => { if (!f.geo) return; const on = hitSet.has(f.file); cx.globalAlpha = on ? 0.5 : 0.1; rect(f.geo.w, f.geo.s, f.geo.e, f.geo.n, on ? css('--am-accent') : css('--am-asset')); cx.globalAlpha = 1; rect(f.geo.w, f.geo.s, f.geo.e, f.geo.n, undefined, on ? css('--am-accent') : css('--am-asset')); });
+      chunks.forEach((f) => { if (!f.geo) return; const on = hitSet.has(f.file); strokeRect(f.geo.w, f.geo.s, f.geo.e, f.geo.n, on ? css('--am-accent') : 'rgba(130,130,130,0.55)', on ? 2.5 : 1); });
     } else {
-      pts.forEach((p) => { const inb = !((p.w as number) > bx[2] || (p.e as number) < bx[0] || (p.s as number) > bx[3] || (p.n as number) < bx[1]); rect(p.w as number, p.s as number, p.e as number, p.n as number, inb ? css('--am-hit') : css('--am-asset')); });
+      pts.forEach((p) => { const inb = !((p.w as number) > bx[2] || (p.e as number) < bx[0] || (p.s as number) > bx[3] || (p.n as number) < bx[1]); cx.fillStyle = inb ? css('--am-hit') : css('--am-asset'); cx.fillRect(tx(p.w as number), ty(p.n as number), tx(p.e as number) - tx(p.w as number), ty(p.s as number) - ty(p.n as number)); });
     }
-    cx.strokeStyle = css('--am-flood'); cx.lineWidth = 2; cx.setLineDash([5, 3]); rect(bx[0], bx[1], bx[2], bx[3], undefined, css('--am-flood')); cx.setLineDash([]);
-  }, [pts, box, set, chunks, hitChunks, bx]);
+    cx.setLineDash([5, 3]); strokeRect(bx[0], bx[1], bx[2], bx[3], css('--am-flood'), 2); cx.setLineDash([]);
+  }, [pts, box, set, chunks, hitChunks, bx, vb, basemap]);
 
   const onClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const cv = canvas.current; if (!cv) return; const r = cv.getBoundingClientRect();
-    const x = ((e.clientX - r.left) / r.width) * 100, y = ((e.clientY - r.top) / r.height) * 60;
-    setBox([Math.max(0, Math.min(72, x - 14)), Math.max(0, Math.min(48, y - 6)), 28, 12]);
+    const [vw, vs, ve, vn] = vb;
+    const fx = (e.clientX - r.left) / r.width, fy = 1 - (e.clientY - r.top) / r.height;
+    const x = vw + fx * (ve - vw), y = vs + fy * (vn - vs), bw = (ve - vw) * 0.28, bh = (vn - vs) * 0.3;
+    setBox([x - bw / 2, y - bh / 2, bw, bh]);
   };
   const fetched = hitChunks.reduce((a, f) => a + f.bytes, 0);
   const total = manifest?.total_bytes ?? 0;
@@ -263,13 +306,16 @@ function ZonesTab({ set, manifest }: TabProps) {
     <div>
       <p className="am-q">Where is the data — and what does a query actually fetch?</p>
       <p>{set === 'full'
-        ? 'Each rectangle is a chunk’s geo zone, read from the manifest (KB) — no coordinates downloaded. Click to move the query box: the lit chunks are the only files a spatial query fetches; the dim ones are pruned from the manifest, never requested. Within a fetched chunk, its own footer prunes row groups again.'
-        : 'The 10 sample assets, plotted directly (small enough to fetch). Click to move the query box. On the full city this becomes a map of chunk zones from the manifest, not downloaded points.'}</p>
-      <canvas ref={canvas} width={640} height={320} className="am-canvas" onClick={onClick} style={{ cursor: 'crosshair' }} />
+        ? 'The real city — wards coloured by land-use zone (from the KB basemap), the coastline, and the geo chunks overlaid. Click to move the query box: the lit chunks are the only files a spatial query fetches; the rest are pruned from the manifest, never requested. Within a fetched chunk its footer prunes row groups again.'
+        : 'The 10 sample assets, plotted on the schematic grid. Click to move the query box. On the full city this becomes the real map — wards by zone, coast, and the chunks a query fetches.'}</p>
+      <canvas ref={canvas} width={640} height={340} className="am-canvas" onClick={onClick} style={{ cursor: 'crosshair' }} />
+      {set === 'full' && zonesPresent.length > 0 && (
+        <div className="am-legend">{zonesPresent.map((z) => <span key={z}><i style={{ background: ZONE_COLORS[z] || '#888' }} />{ZONE_LABEL[z] || z}</span>)}</div>
+      )}
       {set === 'full' && manifest && (
         <>
           <div className="am-count"><b>{hitChunks.length}</b> of {chunks.length} chunks fetched — {mb(fetched)} of {mb(total)} ({total ? Math.round((100 * fetched) / total) : 0}%)</div>
-          <p className="am-note">Only the manifest (KB) + the lit chunks are requested — the rest of the corpus is never touched. Add chunks (finer partitions) or grow the corpus to GBs and the query still fetches only the handful it overlaps: cost is O(query), not O(corpus). A concept filter can’t prune <em>geo</em> chunks, so it scans the skinny <code>concept_id</code> column across them — the clustering tradeoff.</p>
+          <p className="am-note">Only the manifest (KB) + the lit chunks are requested — the rest of the corpus is never touched. The zone colours are the socioeconomic / industrial pattern (unreinforced masonry and the retrofit gap track the low-income &amp; coastal zones). Grow the corpus to GBs and a query still fetches only the chunks it overlaps: cost is O(query), not O(corpus).</p>
         </>
       )}
     </div>
@@ -362,9 +408,11 @@ export default function AonachDemo() {
   const [set, setSet] = React.useState<SetKey>('sample');
   const [tab, setTab] = React.useState<(typeof TABS)[number]['k']>('filter');
   const [manifest, setManifest] = React.useState<Manifest | null>(null);
+  const [basemap, setBasemap] = React.useState<Basemap | null>(null);
   React.useEffect(() => {
     let live = true;
     fetch(dataUrl('aonach_full_manifest.json')).then((r) => r.json()).then((m: Manifest) => { if (live) setManifest(m); }).catch(() => {});
+    fetch(dataUrl('aonach_basemap.json')).then((r) => r.json()).then((b: Basemap) => { if (live) setBasemap(b); }).catch(() => {});
     return () => { live = false; };
   }, []);
   const Active = TABS.find((t) => t.k === tab)!.C;
@@ -383,7 +431,7 @@ export default function AonachDemo() {
         <span className="am-corpus-note">{corpusNote}</span>
       </div>
       <div className="am-tabs">{TABS.map((t) => <button key={t.k} aria-current={tab === t.k} onClick={() => setTab(t.k)}>{t.label}</button>)}</div>
-      <div className="am-body"><Active set={set} manifest={manifest} /></div>
+      <div className="am-body"><Active set={set} manifest={manifest} basemap={basemap} /></div>
     </div>
   );
 }
@@ -420,5 +468,9 @@ const AM_CSS = `
 .am-banner.am-err{border:1px solid var(--am-err);color:var(--am-err);}
 .am-banner.am-warn{border:1px dashed var(--am-warn);color:var(--am-warn);}
 .am-canvas{width:100%;max-width:640px;height:auto;border:1px solid var(--color-fd-border,#0002);border-radius:5px;margin-top:.6rem;background:var(--color-fd-card,transparent);}
+.am-legend{display:flex;flex-wrap:wrap;gap:.35rem .8rem;font-size:.72rem;margin:.5rem 0;opacity:.9;}
+.am-legend span{display:inline-flex;align-items:center;gap:.3rem;}
+.am-legend i{width:.8rem;height:.8rem;border-radius:2px;display:inline-block;}
+.am-sel{font-size:.82rem;border:1px solid var(--color-fd-border,#0002);border-radius:5px;padding:.3rem .45rem;background:transparent;color:inherit;}
 .am table{font-size:.82rem;margin:.5rem 0;}
 `;

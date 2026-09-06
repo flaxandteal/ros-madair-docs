@@ -14,7 +14,7 @@
 // never happened. See example/aonach_mor in the sandbox for the real vocab this
 // mirrors (GEM Building Taxonomy, ServiceRole, HazardType, HeritageStatus).
 
-import { mkdirSync, writeFileSync, existsSync, readFileSync, rmSync, statSync, readdirSync } from 'node:fs';
+import { mkdirSync, writeFileSync, existsSync, readFileSync, rmSync, statSync, readdirSync, appendFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { DuckDBInstance } from '@duckdb/node-api';
@@ -221,7 +221,14 @@ async function genFull(conn) {
   const pick = (weights, r) => { const es = Object.entries(weights); let s = es.reduce((a, [, w]) => a + w, 0) * r(); for (const [k, w] of es) { s -= w; if (s <= 0) return k; } return es[es.length - 1][0]; };
   const hstr = (s) => { let x = 0; for (let i = 0; i < s.length; i++) x = (Math.imul(x, 31) + s.charCodeAt(i)) | 0; return x >>> 0; };
 
-  const tiles = [], edges = [], damage = [];
+  // stream NDJSON to disk so a large REPLICAS never accumulates rows in memory
+  const tf = join(OUT, '_tiles.ndjson'), ef = join(OUT, '_edges.ndjson'), df = join(OUT, '_dmg.ndjson');
+  writeFileSync(tf, ''); writeFileSync(ef, ''); writeFileSync(df, '');
+  const bufT = [], bufE = [], bufD = [];
+  const flush = (buf, file) => { if (buf.length) { appendFileSync(file, buf.join('\n') + '\n'); buf.length = 0; } };
+  const emitT = (o) => { bufT.push(JSON.stringify(o)); if (bufT.length >= 20000) flush(bufT, tf); };
+  const emitE = (o) => { bufE.push(JSON.stringify(o)); if (bufE.length >= 20000) flush(bufE, ef); };
+  const emitD = (o) => { bufD.push(JSON.stringify(o)); if (bufD.length >= 5000) flush(bufD, df); };
   const retro = (rid, ev, method, year, acc, ck, chunk) => ({ resource_id: rid, descriptor_name: null, graph_id: GRAPH, nodegroup_id: 'retrofit', tileid: `${rid}-r${ev}`, parenttile_id: `${rid}-p`, sortorder: ev, concept_id: method, concept_ids: `["${method}"]`, q_ordered: year, acc, geo_min_lng: null, geo_min_lat: null, geo_max_lng: null, geo_max_lat: null, data: '{}', cluster_key: null, chunk });
   let idx = 0;
   for (const b of foot) {
@@ -255,23 +262,25 @@ async function genFull(conn) {
         provenance: { source: 'real footprint + zone-conditioned synthesis', confidence: 'demonstration' },
         descriptors: { en: `${z.label} building in ${b.ward}`, ga: `Foirgneamh i ${b.ward}` },
       });
-      tiles.push({ resource_id: rid, descriptor_name: `${b.ward} · ${skel.gem_labels[gem] || gem}`, graph_id: GRAPH, nodegroup_id: 'profile', tileid: `${rid}-p`, parenttile_id: null, sortorder: 0, concept_id: gem, concept_ids, q_ordered: year, acc: null, geo_min_lng: +(jl - d).toFixed(6), geo_min_lat: +(jt - d).toFixed(6), geo_max_lng: +(jl + d).toFixed(6), geo_max_lat: +(jt + d).toFixed(6), data, cluster_key: ck, chunk });
-      edges.push({ src_resource: rid, src_node: 'served_by', src_nodegroup: 'profile', src_tile: `${rid}-p`, target_resource: `sub-${hstr(b.ward) % 80}` });
+      emitT({ resource_id: rid, descriptor_name: `${b.ward} · ${skel.gem_labels[gem] || gem}`, graph_id: GRAPH, nodegroup_id: 'profile', tileid: `${rid}-p`, parenttile_id: null, sortorder: 0, concept_id: gem, concept_ids, q_ordered: year, acc: null, geo_min_lng: +(jl - d).toFixed(6), geo_min_lat: +(jt - d).toFixed(6), geo_max_lng: +(jl + d).toFixed(6), geo_max_lat: +(jt + d).toFixed(6), data, cluster_key: ck, chunk });
+      emitE({ src_resource: rid, src_node: 'served_by', src_nodegroup: 'profile', src_tile: `${rid}-p`, target_resource: `sub-${hstr(b.ward) % 80}` });
       if (r() < z.retrofit_rate) {
-        if (r() < 0.35) { tiles.push(retro(rid, 0, 'CR', 1994, false, ck, chunk)); tiles.push(retro(rid, 1, 'MUR', 1996, true, ck, chunk)); }
-        else { const my = 1990 + Math.floor(r() * 20); tiles.push(retro(rid, 0, r() < 0.6 ? 'CR' : 'MUR', my, r() < 0.7, ck, chunk)); }
+        if (r() < 0.35) { emitT(retro(rid, 0, 'CR', 1994, false, ck, chunk)); emitT(retro(rid, 1, 'MUR', 1996, true, ck, chunk)); }
+        else { const my = 1990 + Math.floor(r() * 20); emitT(retro(rid, 0, r() < 0.6 ? 'CR' : 'MUR', my, r() < 0.7, ck, chunk)); }
       }
-      if (roles.includes('Hospital') && r() < 0.25) damage.push({ resource_id: rid, descriptor_name: `${b.ward} hospital`, graph_id: GRAPH, nodegroup_id: 'damage', tileid: `${rid}-dmg`, parenttile_id: null, sortorder: 0, concept_id: null, concept_ids: '["damaged"]', q_ordered: null, acc: null, geo_min_lng: null, geo_min_lat: null, geo_max_lng: null, geo_max_lat: null, data: '{"damage":"structural — reported","reported":"now"}', cluster_key: null, chunk });
+      if (roles.includes('Hospital') && r() < 0.25) emitD({ resource_id: rid, descriptor_name: `${b.ward} hospital`, graph_id: GRAPH, nodegroup_id: 'damage', tileid: `${rid}-dmg`, parenttile_id: null, sortorder: 0, concept_id: null, concept_ids: '["damaged"]', q_ordered: null, acc: null, geo_min_lng: null, geo_min_lat: null, geo_max_lng: null, geo_max_lat: null, data: '{"damage":"structural — reported","reported":"now"}', cluster_key: null, chunk });
     }
   }
 
+  flush(bufT, tf); flush(bufE, ef); flush(bufD, df);
+
   rmSync(chunkDir, { recursive: true, force: true }); mkdirSync(chunkDir, { recursive: true });
-  await conn.run(`SET memory_limit='1GB'; SET preserve_insertion_order=false;`);
+  await conn.run(`SET memory_limit='2GB'; SET preserve_insertion_order=false; SET temp_directory='${join(OUT, '_tmp')}';`);
   const cols = "{resource_id:'VARCHAR',descriptor_name:'VARCHAR',graph_id:'VARCHAR',nodegroup_id:'VARCHAR',tileid:'VARCHAR',parenttile_id:'VARCHAR',sortorder:'INTEGER',concept_id:'VARCHAR',concept_ids:'VARCHAR',q_ordered:'BIGINT',acc:'BOOLEAN',geo_min_lng:'DOUBLE',geo_min_lat:'DOUBLE',geo_max_lng:'DOUBLE',geo_max_lat:'DOUBLE',data:'VARCHAR',cluster_key:'UBIGINT',chunk:'INTEGER'}";
-  const loadJson = async (name, arr, colspec) => { const tmp = join(OUT, `_${name}.ndjson`); writeFileSync(tmp, arr.map((o) => JSON.stringify(o)).join('\n')); await conn.run(`CREATE OR REPLACE TABLE ${name} AS SELECT * FROM read_json('${tmp}', columns=${colspec}, format='newline_delimited');`); rmSync(tmp, { force: true }); };
-  await loadJson('all_tiles', tiles, cols);
-  await loadJson('ov', damage, cols);
-  await loadJson('eg', edges, "{src_resource:'VARCHAR',src_node:'VARCHAR',src_nodegroup:'VARCHAR',src_tile:'VARCHAR',target_resource:'VARCHAR'}");
+  const loadFile = async (name, file, colspec) => { await conn.run(`CREATE OR REPLACE TABLE ${name} AS SELECT * FROM read_json('${file}', columns=${colspec}, format='newline_delimited');`); rmSync(file, { force: true }); };
+  await loadFile('all_tiles', tf, cols);
+  await loadFile('ov', df, cols);
+  await loadFile('eg', ef, "{src_resource:'VARCHAR',src_node:'VARCHAR',src_nodegroup:'VARCHAR',src_tile:'VARCHAR',target_resource:'VARCHAR'}");
 
   const files = [];
   for (let c = 0; c < CHUNKS; c++) {

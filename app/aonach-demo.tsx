@@ -302,10 +302,83 @@ function OverlayTab({ set }: { set: SetKey }) {
   );
 }
 
+// ── tab: zone map (clustering from the footer, no coords downloaded) ──────────
+type Zone = { rg: number; w: number; e: number; s: number; n: number };
+function ZonesTab({ set }: { set: SetKey }) {
+  const [zones, setZones] = React.useState<Zone[]>([]);
+  const [pts, setPts] = React.useState<Record<string, unknown>[]>([]);
+  const [box, setBox] = React.useState<[number, number, number, number]>([12, 40, 28, 12]); // x,y,w,h — the flood extent
+  const canvas = React.useRef<HTMLCanvasElement>(null);
+  const T = SETS[set].tiles;
+  React.useEffect(() => {
+    let live = true;
+    (async () => {
+      if (set === 'full') {
+        const z = await rows(`SELECT row_group_id AS rg,
+            min(CASE WHEN path_in_schema='geo_min_lng' THEN stats_min::DOUBLE END) AS w,
+            max(CASE WHEN path_in_schema='geo_max_lng' THEN stats_max::DOUBLE END) AS e,
+            min(CASE WHEN path_in_schema='geo_min_lat' THEN stats_min::DOUBLE END) AS s,
+            max(CASE WHEN path_in_schema='geo_max_lat' THEN stats_max::DOUBLE END) AS n
+          FROM parquet_metadata('${T}') WHERE path_in_schema LIKE 'geo_%' GROUP BY 1`);
+        if (live) setZones(z.filter((r) => r.w != null).map((r) => ({ rg: Number(r.rg), w: +(r.w as number), e: +(r.e as number), s: +(r.s as number), n: +(r.n as number) })));
+      } else {
+        if (live) setPts(await rows(`SELECT descriptor_name, geo_min_lng AS w, geo_min_lat AS s, geo_max_lng AS e, geo_max_lat AS n FROM read_parquet('${T}') WHERE nodegroup_id='profile'`));
+      }
+    })();
+    return () => { live = false; };
+  }, [set, T]);
+
+  const bx = React.useMemo<[number, number, number, number]>(() => [box[0], box[1], box[0] + box[2], box[1] + box[3]], [box]); // x0,y0,x1,y1
+  const hit = React.useMemo(() => zones.filter((z) => !(z.w > bx[2] || z.e < bx[0] || z.s > bx[3] || z.n < bx[1])), [zones, bx]);
+
+  React.useEffect(() => {
+    const cv = canvas.current; if (!cv) return; const cx = cv.getContext('2d'); if (!cx) return;
+    const W = cv.width, H = cv.height;
+    const tx = (x: number) => 10 + (x / 100) * (W - 20), ty = (y: number) => 8 + (y / 60) * (H - 16);
+    const css = (v: string) => getComputedStyle(document.documentElement).getPropertyValue(v).trim() || '#888';
+    const rect = (x0: number, y0: number, x1: number, y1: number, fill?: string, stroke?: string) => {
+      const x = tx(x0), y = ty(y0), w = tx(x1) - tx(x0), h = ty(y1) - ty(y0);
+      if (fill) { cx.fillStyle = fill; cx.fillRect(x, y, w, h); }
+      if (stroke) { cx.strokeStyle = stroke; cx.lineWidth = 1; cx.strokeRect(x, y, w, h); }
+    };
+    cx.clearRect(0, 0, W, H);
+    if (set === 'full') {
+      const hitSet = new Set(hit.map((z) => z.rg));
+      zones.forEach((z) => { const on = hitSet.has(z.rg); cx.globalAlpha = on ? 0.5 : 0.12; rect(z.w, z.s, z.e, z.n, on ? css('--am-accent') : css('--am-asset')); cx.globalAlpha = 1; rect(z.w, z.s, z.e, z.n, undefined, on ? css('--am-accent') : css('--am-asset')); });
+    } else {
+      pts.forEach((p) => { const inb = !((p.w as number) > bx[2] || (p.e as number) < bx[0] || (p.s as number) > bx[3] || (p.n as number) < bx[1]); rect(p.w as number, p.s as number, p.e as number, p.n as number, inb ? css('--am-hit') : css('--am-asset')); });
+    }
+    cx.strokeStyle = css('--am-flood'); cx.lineWidth = 2; cx.setLineDash([5, 3]); rect(bx[0], bx[1], bx[2], bx[3], undefined, css('--am-flood')); cx.setLineDash([]);
+  }, [zones, pts, box, set, hit, bx]);
+
+  const onClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const cv = canvas.current; if (!cv) return; const r = cv.getBoundingClientRect();
+    const x = ((e.clientX - r.left) / r.width) * 100, y = ((e.clientY - r.top) / r.height) * 60;
+    setBox([Math.max(0, Math.min(72, x - 14)), Math.max(0, Math.min(48, y - 6)), 28, 12]);
+  };
+
+  return (
+    <div>
+      <p className="am-q">Where is the data — and what does a query actually fetch?</p>
+      <p>{set === 'full'
+        ? 'Each rectangle is a row-group zone, read from the Parquet footer only — the min/max of its geo columns. No coordinates are downloaded. Click the map to move the query box: the lit zones are the only row groups a spatial query fetches; the dim ones are pruned from the footer, never touched.'
+        : 'The 10 sample assets, plotted directly (small enough to fetch). Click to move the query box — assets inside turn green. On the full city this becomes a zone map read from the footer, not 60,000 downloaded points.'}</p>
+      <canvas ref={canvas} width={640} height={320} className="am-canvas" onClick={onClick} style={{ cursor: 'crosshair' }} />
+      {set === 'full' && zones.length > 0 && (
+        <>
+          <div className="am-count"><b>{hit.length}</b> of {zones.length} geo zones fetched — {Math.round((100 * hit.length) / zones.length)}% of the file, the rest pruned from the footer (~KB)</div>
+          <p className="am-note">Only the footer (a few KB) plus the lit row groups are pulled over HTTP range — never the 2.8&nbsp;MB file. A concept filter can’t prune these <em>geo</em> zones (categorical), so it scans the skinny <code>concept_id</code> column across them instead — the clustering tradeoff, and why clustering is an index-time choice.</p>
+        </>
+      )}
+    </div>
+  );
+}
+
 const TABS = [
   { k: 'filter', label: 'Concept · Range · List', C: FilterTab },
   { k: 'ontile', label: 'OnTile vs All', C: OnTileTab },
   { k: 'spatial', label: 'Spatial + Not', C: SpatialTab },
+  { k: 'zones', label: 'Zone map', C: ZonesTab },
   { k: 'cascade', label: 'cited_by cascade', C: CascadeTab },
   { k: 'overlay', label: 'Base ⊕ overlay', C: OverlayTab },
 ] as const;

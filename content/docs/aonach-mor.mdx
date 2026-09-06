@@ -37,6 +37,14 @@ where it sits.**
   step admits a superset; the per-cell exact step trims it. There is *no spatial
   extension in the browser*, so this is the on-device path — and negating a coarse
   superset is **refused**, because a flooded shelter must never be reported dry.
+- **Zone map** — the point of the whole exercise. On the full city it draws the
+  **row-group zones read from the Parquet footer alone** (their geo min/max) — *no
+  coordinates are downloaded*. Click to move the query box: the lit zones are the only
+  row groups a spatial query fetches; the rest are pruned from the footer, never
+  touched. The corpus is Morton-clustered, so a spatial query hits a handful of zones
+  — a concept filter can't prune *geo* zones and scans the skinny `concept_id` column
+  instead, which is why clustering is an index-time choice (and why you rarely need a
+  second sorted copy).
 - **cited_by cascade** — the edge table read backwards: pick a substation, see every
   asset that depends on it.
 - **Base ⊕ overlay** — live damage arrives as a separate layer, composed at query

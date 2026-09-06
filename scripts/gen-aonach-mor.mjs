@@ -92,19 +92,25 @@ const DAMAGE = [
 ];
 
 const TILE_COLS = ['resource_id', 'descriptor_name', 'graph_id', 'nodegroup_id', 'tileid', 'parenttile_id',
-  'sortorder', 'concept_id', 'concept_ids', 'q_ordered', 'acc', 'geo_min_lng', 'geo_min_lat', 'geo_max_lng', 'geo_max_lat', 'data'];
+  'sortorder', 'concept_id', 'concept_ids', 'q_ordered', 'acc', 'geo_min_lng', 'geo_min_lat', 'geo_max_lng', 'geo_max_lat', 'data', 'cluster_key'];
 
 function tileRow(o) {
   return `(${sql(o.resource_id)},${sql(o.descriptor_name)},${sql(GRAPH)},${sql(o.nodegroup_id)},${sql(o.tileid)},${sql(o.parenttile_id)},` +
     `${num(o.sortorder ?? 0)},${sql(o.concept_id)},${sql(o.concept_ids)},${num(o.q_ordered)},${bool(o.acc)},` +
-    `${num(o.geo?.[0])},${num(o.geo?.[1])},${num(o.geo?.[2])},${num(o.geo?.[3])},${sql(o.data)})`;
+    `${num(o.geo?.[0])},${num(o.geo?.[1])},${num(o.geo?.[2])},${num(o.geo?.[3])},${sql(o.data)},${num(o.cluster_key)})`;
 }
+
+// Morton (Z-order) key over 6-bit-quantised geo cells — the RM locality thesis: a
+// row group of consecutive keys is a compact 2D region, so a spatial query's
+// zone-map prunes to a handful of row groups.
+const spread6 = (v) => `((${v}&1)|((${v}&2)<<1)|((${v}&4)<<2)|((${v}&8)<<3)|((${v}&16)<<4)|((${v}&32)<<5))`;
+const MORTON = `(${spread6('gx6')} | (${spread6('gy6')}<<1))`;
 
 async function createTiles(conn, table) {
   await conn.run(`CREATE OR REPLACE TABLE ${table} (
     resource_id VARCHAR, descriptor_name VARCHAR, graph_id VARCHAR, nodegroup_id VARCHAR,
     tileid VARCHAR, parenttile_id VARCHAR, sortorder INTEGER, concept_id VARCHAR, concept_ids VARCHAR,
-    q_ordered BIGINT, acc BOOLEAN, geo_min_lng DOUBLE, geo_min_lat DOUBLE, geo_max_lng DOUBLE, geo_max_lat DOUBLE, data VARCHAR);`);
+    q_ordered BIGINT, acc BOOLEAN, geo_min_lng DOUBLE, geo_min_lat DOUBLE, geo_max_lng DOUBLE, geo_max_lat DOUBLE, data VARCHAR, cluster_key UBIGINT);`);
 }
 
 async function main() {
@@ -203,6 +209,7 @@ async function genFull(conn) {
         ${role1} AS role1,
         ${lit(wards)}[((hash(i*19)%${wards.length})+1)::INT] AS ward,
         CAST(hash(i*31)%100 AS DOUBLE) AS gx, CAST(hash(i*57)%60 AS DOUBLE) AS gy,
+        LEAST(63, ((hash(i*31)%100)*64/100)::INT) AS gx6, LEAST(63, ((hash(i*57)%60)*64/60)::INT) AS gy6,
         'sub-'|| CAST(hash(i*71)%80 AS INT) AS sub
       FROM range(${N}) t(i)),
     r AS (
@@ -215,7 +222,8 @@ async function genFull(conn) {
       '["'||gem||'","'||heritage||'"'||coalesce(',"'||role1||'"','')||coalesce(',"'||role2||'"','')||']' AS concept_ids,
       yr AS q_ordered, NULL::BOOLEAN AS acc,
       gx AS geo_min_lng, gy AS geo_min_lat, gx+1.2 AS geo_max_lng, gy+1.0 AS geo_max_lat,
-      '{"gem":"'||gem||'","heritage":"'||heritage||'","year":'||yr||',"ward":"'||ward||'","served_by":"'||sub||'"}' AS data, sub
+      '{"gem":"'||gem||'","heritage":"'||heritage||'","year":'||yr||',"ward":"'||ward||'","served_by":"'||sub||'"}' AS data,
+      ${MORTON} AS cluster_key, sub
     FROM r;`);
   // ~30% carry one retrofit event (half CR-standard, half accredited, spread over years) — the OnTile axis
   await conn.run(`CREATE OR REPLACE TABLE bldgs_retro AS
@@ -224,7 +232,7 @@ async function genFull(conn) {
       CASE WHEN hash(resource_id||'m')%2=0 THEN 'CR' ELSE 'MUR' END AS concept_id,
       '["'||(CASE WHEN hash(resource_id||'m')%2=0 THEN 'CR' ELSE 'MUR' END)||'"]' AS concept_ids,
       CAST(1970 + (hash(resource_id||'y')%50) AS BIGINT) AS q_ordered, (hash(resource_id||'a')%2=0) AS acc,
-      NULL::DOUBLE AS geo_min_lng, NULL::DOUBLE AS geo_min_lat, NULL::DOUBLE AS geo_max_lng, NULL::DOUBLE AS geo_max_lat, '{}' AS data
+      NULL::DOUBLE AS geo_min_lng, NULL::DOUBLE AS geo_min_lat, NULL::DOUBLE AS geo_max_lng, NULL::DOUBLE AS geo_max_lat, '{}' AS data, NULL::UBIGINT AS cluster_key
     FROM bldgs WHERE hash(resource_id||'r')%10 < 3;`);
   // TWO-event "paper retrofit" population (a disjoint 10% slice): event 0 is CR in
   // window but NOT accredited; event 1 is accredited but only masonry repair. No
@@ -236,12 +244,13 @@ async function genFull(conn) {
       CASE WHEN ev=0 THEN 'CR' ELSE 'MUR' END AS concept_id,
       CASE WHEN ev=0 THEN '["CR"]' ELSE '["MUR"]' END AS concept_ids,
       (CASE WHEN ev=0 THEN 1994 ELSE 1996 END)::BIGINT AS q_ordered, (ev=1) AS acc,
-      NULL::DOUBLE AS geo_min_lng, NULL::DOUBLE AS geo_min_lat, NULL::DOUBLE AS geo_max_lng, NULL::DOUBLE AS geo_max_lat, '{}' AS data
+      NULL::DOUBLE AS geo_min_lng, NULL::DOUBLE AS geo_min_lat, NULL::DOUBLE AS geo_max_lng, NULL::DOUBLE AS geo_max_lat, '{}' AS data, NULL::UBIGINT AS cluster_key
     FROM bldgs, (SELECT 0 AS ev UNION ALL SELECT 1) WHERE hash(resource_id||'r')%10 = 7;`);
-  await conn.run(`COPY (SELECT ${TILE_COLS.join(', ')} FROM bldgs
+  await conn.run(`COPY (SELECT ${TILE_COLS.join(', ')} FROM (
+      SELECT ${TILE_COLS.join(', ')} FROM bldgs
       UNION ALL SELECT ${TILE_COLS.join(', ')} FROM bldgs_retro
       UNION ALL SELECT ${TILE_COLS.join(', ')} FROM bldgs_trap
-    ORDER BY nodegroup_id, concept_id, geo_min_lng) TO '${join(OUT, 'tiles_aonach_full.parquet')}' (FORMAT PARQUET, ROW_GROUP_SIZE 2048);`);
+    ) u ORDER BY (geo_min_lng IS NULL), cluster_key) TO '${join(OUT, 'tiles_aonach_full.parquet')}' (FORMAT PARQUET, ROW_GROUP_SIZE 2048);`);
   await conn.run(`COPY (SELECT resource_id AS src_resource, 'served_by' AS src_node, 'profile' AS src_nodegroup,
       resource_id||'-profile' AS src_tile, sub AS target_resource FROM bldgs ORDER BY src_node, target_resource)
     TO '${join(OUT, 'edges_aonach_full.parquet')}' (FORMAT PARQUET, ROW_GROUP_SIZE 8192);`);
@@ -249,7 +258,7 @@ async function genFull(conn) {
   await conn.run(`COPY (SELECT resource_id, descriptor_name, 'aonach' AS graph_id, 'damage' AS nodegroup_id,
       resource_id||'-damage' AS tileid, NULL AS parenttile_id, 0 AS sortorder, NULL AS concept_id,
       '["damaged"]' AS concept_ids, NULL::BIGINT AS q_ordered, NULL::BOOLEAN AS acc,
-      NULL::DOUBLE AS geo_min_lng, NULL::DOUBLE AS geo_min_lat, NULL::DOUBLE AS geo_max_lng, NULL::DOUBLE AS geo_max_lat, '{"damage":"reported","reported":"now"}' AS data
+      NULL::DOUBLE AS geo_min_lng, NULL::DOUBLE AS geo_min_lat, NULL::DOUBLE AS geo_max_lng, NULL::DOUBLE AS geo_max_lat, '{"damage":"reported","reported":"now"}' AS data, NULL::UBIGINT AS cluster_key
       FROM bldgs WHERE concept_ids LIKE '%"Hospital"%' AND hash(resource_id||'d')%4=0)
     TO '${join(OUT, 'overlay', 'tiles_aonach_full.parquet')}' (FORMAT PARQUET);`);
   const meta = (await conn.runAndReadAll(

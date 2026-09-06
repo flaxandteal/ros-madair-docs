@@ -14,11 +14,13 @@ not canned.
 
 <Callout title="Two corpora, one schema">
 Use the **corpus** toggle. *Sample* is a hand-built 10-asset slice — small enough to
-read, with the traps spelled out. *Full city* is 60,000 assets (2.8&nbsp;MB, 44 row
-groups) served remotely: duckdb-wasm range-fetches only the row groups a query's
-zone-map admits, so a filtered search over the whole city touches a handful of HTTP
-ranges, never the file. That is the point — **a too-big-to-download corpus, searched
-where it sits.**
+read, with the traps spelled out. *Full city* is a **chunked** corpus: geo-partitioned
+Parquet files plus a manifest (the file-level zone-map). A query reads the manifest
+(KB), prunes to the chunks it needs, registers only those, and range-fetches their
+row groups — so a filtered search touches a handful of HTTP ranges, never the corpus.
+Total size is therefore unbounded (each file stays under any host cap); the demo
+default is modest so the docs build stays quick, and it scales to GBs by adding
+chunks. That is the point — **a too-big-to-download corpus, searched where it sits.**
 </Callout>
 
 <AonachDemo />
@@ -37,14 +39,16 @@ where it sits.**
   step admits a superset; the per-cell exact step trims it. There is *no spatial
   extension in the browser*, so this is the on-device path — and negating a coarse
   superset is **refused**, because a flooded shelter must never be reported dry.
-- **Zone map** — the point of the whole exercise. On the full city it draws the
-  **row-group zones read from the Parquet footer alone** (their geo min/max) — *no
-  coordinates are downloaded*. Click to move the query box: the lit zones are the only
-  row groups a spatial query fetches; the rest are pruned from the footer, never
-  touched. The corpus is Morton-clustered, so a spatial query hits a handful of zones
-  — a concept filter can't prune *geo* zones and scans the skinny `concept_id` column
-  instead, which is why clustering is an index-time choice (and why you rarely need a
-  second sorted copy).
+- **Zone map** — the point of the whole exercise. On the full city it draws each
+  **chunk's geo zone from the manifest** (KB) — *no coordinates are downloaded*. Click
+  to move the query box: the lit chunks are the only files a spatial query fetches; the
+  rest are pruned from the manifest, never requested. Within a fetched chunk, its own
+  footer prunes row groups again — two tiers of pruning. The chunks are Morton-clustered,
+  so a spatial query hits a handful — a concept filter can't prune *geo* chunks and
+  scans the skinny `concept_id` column across them, which is why clustering is an
+  index-time choice (and why you rarely need a second sorted copy). Grow the corpus to
+  GBs and the query still fetches only the chunks it overlaps: **cost is O(query), not
+  O(corpus).**
 - **cited_by cascade** — the edge table read backwards: pick a substation, see every
   asset that depends on it.
 - **Base ⊕ overlay** — live damage arrives as a separate layer, composed at query

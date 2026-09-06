@@ -289,7 +289,11 @@ async function genFull(conn) {
     const z = (await conn.runAndReadAll(`SELECT min(CASE WHEN path_in_schema='geo_min_lng' THEN stats_min::DOUBLE END) w, max(CASE WHEN path_in_schema='geo_max_lng' THEN stats_max::DOUBLE END) e, min(CASE WHEN path_in_schema='geo_min_lat' THEN stats_min::DOUBLE END) s, max(CASE WHEN path_in_schema='geo_max_lat' THEN stats_max::DOUBLE END) n, (max(row_group_id)+1) rgs FROM parquet_metadata('${abs}') WHERE path_in_schema LIKE 'geo_%'`)).getRowObjects()[0];
     const bcount = Number(Object.values((await conn.runAndReadAll(`SELECT count(*) FROM read_parquet('${abs}') WHERE nodegroup_id='profile'`)).getRowObjects()[0])[0]);
     const zmix = (await conn.runAndReadAll(`SELECT regexp_extract(concept_ids, 'zone:([a-z_]+)', 1) z, count(*) n FROM read_parquet('${abs}') WHERE nodegroup_id='profile' GROUP BY 1 ORDER BY n DESC LIMIT 1`)).getRowObjects()[0];
-    files.push({ file: rel, bytes: statSync(abs).size, row_groups: z.rgs == null ? 0 : Number(z.rgs), geo: z.w == null ? null : { w: +z.w, e: +z.e, s: +z.s, n: +z.n }, buildings: bcount, zone: zmix ? zmix.z : null });
+    // per-column compressed bytes (summed over row groups) — lets the reader account
+    // projected-column fetch, not whole-file: a concept scan pulls concept_id, not `data`.
+    const cb = (await conn.runAndReadAll(`SELECT path_in_schema col, sum(total_compressed_size)::BIGINT b FROM parquet_metadata('${abs}') GROUP BY 1`)).getRowObjects();
+    const col_bytes = {}; for (const r of cb) col_bytes[r.col] = Number(r.b);
+    files.push({ file: rel, bytes: statSync(abs).size, row_groups: z.rgs == null ? 0 : Number(z.rgs), geo: z.w == null ? null : { w: +z.w, e: +z.e, s: +z.s, n: +z.n }, buildings: bcount, zone: zmix ? zmix.z : null, col_bytes });
   }
   await conn.run(`COPY (SELECT * FROM eg ORDER BY src_node, target_resource) TO '${join(OUT, 'edges_aonach_full.parquet')}' (FORMAT PARQUET, ROW_GROUP_SIZE 8192);`);
   await conn.run(`COPY (SELECT ${TILE_COLS.join(', ')} FROM ov) TO '${join(OUT, 'overlay', 'tiles_aonach_full.parquet')}' (FORMAT PARQUET);`);

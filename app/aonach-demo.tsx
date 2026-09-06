@@ -18,7 +18,7 @@ const SETS = {
   full: { label: 'full city — chunked', note: 'Geo-partitioned chunks + a manifest; a query fetches only the chunks it needs.' },
 } as const;
 type SetKey = keyof typeof SETS;
-type Chunk = { file: string; bytes: number; row_groups: number; buildings: number; geo: { w: number; e: number; s: number; n: number } | null };
+type Chunk = { file: string; bytes: number; row_groups: number; buildings: number; geo: { w: number; e: number; s: number; n: number } | null; col_bytes?: Record<string, number> };
 type Manifest = { chunks: number; buildings: number; total_bytes: number; files: Chunk[] };
 
 // sample lives in a schematic 0–100 × 0–60 grid; full lives in real WGS84.
@@ -95,15 +95,35 @@ const edgesRef = async (set: SetKey) => { await reg(FILES[set].edges, FILES[set]
 const ovRef = async (set: SetKey) => { await reg(FILES[set].ov, FILES[set].ovUrl); return `read_parquet('${FILES[set].ov}')`; };
 const mb = (b: number) => (b >= 1e6 ? `${(b / 1e6).toFixed(1)} MB` : `${(b / 1e3).toFixed(0)} KB`);
 
+// Projected-column fetch: a query reads only the columns it references (plus each
+// file's footer, always read to prune) — not the whole file. `data` (the fat
+// hydration JSON) dominates a chunk, so a concept/geo scan that never touches it
+// moves a fraction of the bytes. Column sets below match each tab's SQL.
+const COLS = {
+  filter: ['resource_id', 'nodegroup_id', 'descriptor_name', 'concept_id', 'concept_ids', 'q_ordered'],
+  spatial: ['resource_id', 'nodegroup_id', 'concept_ids', 'geo_min_lng', 'geo_min_lat', 'geo_max_lng', 'geo_max_lat'],
+};
+function projBytes(files: Chunk[], cols: string[]): number {
+  return files.reduce((a, f) => {
+    if (!f.col_bytes) return a + f.bytes; // no per-column stats (sample) → whole file
+    const dataBytes = Object.values(f.col_bytes).reduce((x, y) => x + y, 0);
+    const meta = Math.max(0, f.bytes - dataBytes); // footer + row-group headers, always read
+    const proj = cols.reduce((x, c) => x + (f.col_bytes![c] || 0), 0);
+    return a + meta + proj;
+  }, 0);
+}
+
 // ── shared UI bits ────────────────────────────────────────────────────────────
 function IR({ children }: { children: React.ReactNode }) { return <pre className="am-ir">{children}</pre>; }
 function Count({ n, of, unit }: { n: number | null; of?: number; unit: string }) {
   if (n === null) return <div className="am-count am-muted">running…</div>;
   return <div className="am-count"><b>{n.toLocaleString()}</b>{of != null ? ` of ${of.toLocaleString()}` : ''} {unit}</div>;
 }
-function Fetch({ t }: { t: TilesRef }) {
+function Fetch({ t, cols }: { t: TilesRef; cols?: string[] }) {
   if (!t.total) return null;
-  return <p className="am-note">Fetched <b>{t.chunks} of {t.nChunks}</b> chunks — {mb(t.bytes)} of {mb(t.total)} ({Math.round((100 * t.bytes) / t.total)}%). The rest were pruned from the manifest, never requested.</p>;
+  const bytes = cols ? projBytes(t.files, cols) : t.bytes;
+  const colNote = cols ? <> — only the <b>{cols.length} projected columns</b>, not the full rows</> : null;
+  return <p className="am-note">Fetched <b>{t.chunks} of {t.nChunks}</b> chunks — {mb(bytes)} of {mb(t.total)} ({(100 * bytes / t.total).toFixed(bytes / t.total < 0.1 ? 1 : 0)}%){colNote}. Row groups are pruned within each chunk, and unread columns (the fat <code>data</code> JSON) are never fetched.</p>;
 }
 type TabProps = { set: SetKey; manifest: Manifest | null; basemap: Basemap | null };
 
@@ -148,7 +168,7 @@ function FilterTab({ set, manifest }: TabProps) {
       </div>
       <IR>{ir}</IR>
       <Count n={res ? res.n : null} of={res?.total} unit="assets match" />
-      {res && <Fetch t={res.t} />}
+      {res && <Fetch t={res.t} cols={COLS.filter} />}
       {res && res.sample.length > 0 && (
         <table><thead><tr><th>Asset</th><th>GEM</th><th>Concepts</th><th>Built</th></tr></thead>
           <tbody>{res.sample.map((r, i) => <tr key={i}><td>{String(r.descriptor_name)}</td><td><code>{String(r.gem)}</code></td><td><code>{String(r.concept_ids)}</code></td><td>{String(r.year)}</td></tr>)}</tbody></table>
@@ -240,7 +260,7 @@ function SpatialTab({ set, manifest, basemap }: TabProps) {
       {out && !out.refused && out.coarse && <div className="am-banner am-warn">Coarse: a superset — assets inside the extent’s bounding box but between the flood cells are wrongly included.</div>}
       {q && <IR>{q === 'flood' ? 'Bbox{ footprint ∩ flood_extent }' : 'All[ roles ∋ "Shelter", Not(Bbox{ ∩ flood_extent }) ]'}</IR>}
       {out && !out.refused && <Count n={out.n} unit={q === 'flood' ? 'facilities intersect the flood extent' : 'dry shelters'} />}
-      {out && <Fetch t={out.t} />}
+      {out && <Fetch t={out.t} cols={COLS.spatial} />}
     </div>
   );
 }
@@ -300,7 +320,7 @@ function ZonesTab({ set, manifest, basemap }: TabProps) {
     const x = vw + fx * (ve - vw), y = vs + fy * (vn - vs), bw = (ve - vw) * 0.28, bh = (vn - vs) * 0.3;
     setBox([x - bw / 2, y - bh / 2, bw, bh]);
   };
-  const fetched = hitChunks.reduce((a, f) => a + f.bytes, 0);
+  const fetched = projBytes(hitChunks, COLS.spatial); // a spatial query reads geo + concept_ids, not `data`
   const total = manifest?.total_bytes ?? 0;
   return (
     <div>
@@ -314,7 +334,7 @@ function ZonesTab({ set, manifest, basemap }: TabProps) {
       )}
       {set === 'full' && manifest && (
         <>
-          <div className="am-count"><b>{hitChunks.length}</b> of {chunks.length} chunks fetched — {mb(fetched)} of {mb(total)} ({total ? Math.round((100 * fetched) / total) : 0}%)</div>
+          <div className="am-count"><b>{hitChunks.length}</b> of {chunks.length} chunks fetched — {mb(fetched)} of {mb(total)} ({total ? (100 * fetched / total).toFixed(fetched / total < 0.1 ? 1 : 0) : 0}% — projected columns only)</div>
           <p className="am-note">Only the manifest (KB) + the lit chunks are requested — the rest of the corpus is never touched. The zone colours are the socioeconomic / industrial pattern (unreinforced masonry and the retrofit gap track the low-income &amp; coastal zones). Grow the corpus to GBs and a query still fetches only the chunks it overlaps: cost is O(query), not O(corpus).</p>
         </>
       )}

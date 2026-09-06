@@ -314,13 +314,11 @@ function ZonesTab({ set }: { set: SetKey }) {
     let live = true;
     (async () => {
       if (set === 'full') {
-        const z = await rows(`SELECT row_group_id AS rg,
-            min(CASE WHEN path_in_schema='geo_min_lng' THEN stats_min::DOUBLE END) AS w,
-            max(CASE WHEN path_in_schema='geo_max_lng' THEN stats_max::DOUBLE END) AS e,
-            min(CASE WHEN path_in_schema='geo_min_lat' THEN stats_min::DOUBLE END) AS s,
-            max(CASE WHEN path_in_schema='geo_max_lat' THEN stats_max::DOUBLE END) AS n
-          FROM parquet_metadata('${T}') WHERE path_in_schema LIKE 'geo_%' GROUP BY 1`);
-        if (live) setZones(z.filter((r) => r.w != null).map((r) => ({ rg: Number(r.rg), w: +(r.w as number), e: +(r.e as number), s: +(r.s as number), n: +(r.n as number) })));
+        // The zones are precomputed from the footer into a tiny sidecar (a few KB),
+        // so the map needs neither the coords nor a range-capable server.
+        const resp = await fetch(dataUrl('zones_aonach_full.json'));
+        const z = (await resp.json()) as Zone[];
+        if (live) setZones(z);
       } else {
         if (live) setPts(await rows(`SELECT descriptor_name, geo_min_lng AS w, geo_min_lat AS s, geo_max_lng AS e, geo_max_lat AS n FROM read_parquet('${T}') WHERE nodegroup_id='profile'`));
       }
@@ -405,6 +403,8 @@ export default function AonachDemo() {
 }
 
 const AM_CSS = `
+:root{--am-accent:#0d7d84;--am-flood:#2a4a7a;--am-hit:#2f7d4f;--am-asset:#7f97a3;}
+@media (prefers-color-scheme:dark){:root{--am-accent:#3fb8be;--am-flood:#6d94d4;--am-hit:#57b97e;--am-asset:#5b7480;}}
 .am{--am-accent:#0d7d84;--am-flood:#2a4a7a;--am-hit:#2f7d4f;--am-asset:#8aa;--am-err:#b1521d;--am-warn:#8f3f13;
   border:1px solid var(--color-fd-border,#0002);border-radius:8px;padding:1rem 1.1rem;margin:1.2rem 0;font-size:.92rem;}
 @media (prefers-color-scheme:dark){.am{--am-accent:#3fb8be;--am-flood:#6d94d4;--am-hit:#57b97e;--am-asset:#567;}}

@@ -267,7 +267,20 @@ async function genFull(conn) {
             (SELECT num_row_groups FROM parquet_file_metadata('${join(OUT, 'tiles_aonach_full.parquet')}')) AS row_groups`,
   )).getRowObjects()[0];
   console.log(`tiles_aonach_full.parquet  ${meta.tiles} tiles / ${meta.buildings} buildings / ${meta.row_groups} row groups`);
-  return { buildings: Number(meta.buildings), tiles: Number(meta.tiles), row_groups: Number(meta.row_groups) };
+  // Precompute the row-group geo zones (from the footer) into a tiny sidecar, so the
+  // browser draws the zone map from a few-KB JSON — no coords, and no reliance on
+  // parquet_metadata introspection inside duckdb-wasm.
+  const zones = (await conn.runAndReadAll(`SELECT row_group_id AS rg,
+      min(CASE WHEN path_in_schema='geo_min_lng' THEN stats_min::DOUBLE END) AS w,
+      max(CASE WHEN path_in_schema='geo_max_lng' THEN stats_max::DOUBLE END) AS e,
+      min(CASE WHEN path_in_schema='geo_min_lat' THEN stats_min::DOUBLE END) AS s,
+      max(CASE WHEN path_in_schema='geo_max_lat' THEN stats_max::DOUBLE END) AS n
+    FROM parquet_metadata('${join(OUT, 'tiles_aonach_full.parquet')}') WHERE path_in_schema LIKE 'geo_%' GROUP BY 1`))
+    .getRowObjects().filter((r) => r.w != null)
+    .map((r) => ({ rg: Number(r.rg), w: +r.w, e: +r.e, s: +r.s, n: +r.n }));
+  writeFileSync(join(OUT, 'zones_aonach_full.json'), JSON.stringify(zones));
+  console.log(`zones_aonach_full.json  ${zones.length} geo zones (footer-derived sidecar)`);
+  return { buildings: Number(meta.buildings), tiles: Number(meta.tiles), row_groups: Number(meta.row_groups), zones: zones.length };
 }
 
 main().catch((e) => { console.error(e); process.exit(1); });

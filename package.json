@@ -13,7 +13,8 @@
     "dev": "next dev",
     "start": "next start",
     "postinstall": "fumadocs-mdx",
-    "gen-aonach": "node scripts/gen-aonach-mor.mjs"
+    "gen-aonach": "node scripts/gen-aonach-mor.mjs",
+    "perf": "node scripts/perf-suite.mjs"
   },
   "dependencies": {
     "@alizarin/clm": "^2.0.0-beta.7",

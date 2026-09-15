@@ -144,9 +144,12 @@ async function main() {
       concept_id: b.gem, q_ordered: b.year, geo,
       data: JSON.stringify({ gem: b.gem, heritage: b.heritage, roles: b.roles, year: b.year, footprint: b.fp, served_by: b.sub }),
     });
-    // secondary / multi-valued concepts melt into the concept store (node-scoped, exact)
-    concepts.push({ resource_id: b.id, tile_id: profileTile, nodegroup_id: 'profile', node_id: 'heritage', concept_id: b.heritage });
-    for (const r of b.roles) concepts.push({ resource_id: b.id, tile_id: profileTile, nodegroup_id: 'profile', node_id: 'role', concept_id: r });
+    // Melt every profile concept node into the store (its own node/concept-sorted axis,
+    // so gem ⊑ MUR prunes to the gem block instead of scanning geo-clustered tiles). The
+    // pairs list stands in for the real emitter walking a tile's concept/reference-typed
+    // nodes by datatype — one node → one column-free (node_id, concept_id) row, no hardcoding.
+    const profilePairs = [['gem', b.gem], ['heritage', b.heritage], ...b.roles.map((r) => ['role', r])];
+    for (const [node_id, cid] of profilePairs) concepts.push({ resource_id: b.id, tile_id: profileTile, nodegroup_id: 'profile', node_id, concept_id: cid });
     // served_by edge (building → substation)
     edges.push({ src_resource: b.id, src_node: 'served_by', src_nodegroup: 'profile', src_tile: profileTile, target_resource: b.sub });
     // retrofit tiles (n-cardinality): method class (primary concept) + year + accredited, all on one tile
@@ -283,12 +286,11 @@ async function genFull(conn) {
         descriptors: { en: `${z.label} building in ${b.ward}`, ga: `Foirgneamh i ${b.ward}` },
       });
       emitT({ resource_id: rid, descriptor_name: `${b.ward} · ${skel.gem_labels[gem] || gem}`, graph_id: GRAPH, nodegroup_id: 'profile', tileid: `${rid}-p`, parenttile_id: null, sortorder: 0, concept_id: gem, q_ordered: year, acc: null, geo_min_lng: +(jl - d).toFixed(6), geo_min_lat: +(jt - d).toFixed(6), geo_max_lng: +(jl + d).toFixed(6), geo_max_lat: +(jt + d).toFixed(6), data, cluster_key: ck, chunk });
-      // secondary / multi-valued concepts → melted store (gem stays the tile's primary concept_id)
+      // Melt every profile concept node generically (this pairs list stands in for the
+      // real emitter walking the tile's concept/reference nodes by datatype — no per-node code)
       const tp = `${rid}-p`;
-      emitC({ resource_id: rid, tile_id: tp, nodegroup_id: 'profile', node_id: 'heritage', concept_id: heritage });
-      for (const rl of roles) emitC({ resource_id: rid, tile_id: tp, nodegroup_id: 'profile', node_id: 'role', concept_id: rl });
-      emitC({ resource_id: rid, tile_id: tp, nodegroup_id: 'profile', node_id: 'zone', concept_id: b.zone });
-      emitC({ resource_id: rid, tile_id: tp, nodegroup_id: 'profile', node_id: 'surge', concept_id: surge });
+      const profilePairs = [['gem', gem], ['heritage', heritage], ...roles.map((rl) => ['role', rl]), ['zone', b.zone], ['surge', surge]];
+      for (const [node_id, cid] of profilePairs) emitC({ resource_id: rid, tile_id: tp, nodegroup_id: 'profile', node_id, concept_id: cid });
       emitE({ src_resource: rid, src_node: 'served_by', src_nodegroup: 'profile', src_tile: `${rid}-p`, target_resource: `sub-${hstr(b.ward) % 80}` });
       if (r() < z.retrofit_rate) {
         if (r() < 0.35) { emitT(retro(rid, 0, 'CR', 1994, false, ck, chunk)); emitT(retro(rid, 1, 'MUR', 1996, true, ck, chunk)); }
@@ -312,7 +314,7 @@ async function genFull(conn) {
   const files = [];
   for (let c = 0; c < CHUNKS; c++) {
     const rel = `tiles_aonach_full/chunk-${c}.parquet`, abs = join(OUT, rel);
-    await conn.run(`COPY (SELECT ${TILE_COLS.join(', ')} FROM all_tiles WHERE chunk=${c} ORDER BY (geo_min_lng IS NULL), cluster_key) TO '${abs}' (FORMAT PARQUET, ROW_GROUP_SIZE 4096);`);
+    await conn.run(`COPY (SELECT ${TILE_COLS.join(', ')} FROM all_tiles WHERE chunk=${c} ORDER BY (geo_min_lng IS NULL), cluster_key) TO '${abs}' (FORMAT PARQUET, ROW_GROUP_SIZE 16384);`);
     const z = (await conn.runAndReadAll(`SELECT min(CASE WHEN path_in_schema='geo_min_lng' THEN stats_min::DOUBLE END) w, max(CASE WHEN path_in_schema='geo_max_lng' THEN stats_max::DOUBLE END) e, min(CASE WHEN path_in_schema='geo_min_lat' THEN stats_min::DOUBLE END) s, max(CASE WHEN path_in_schema='geo_max_lat' THEN stats_max::DOUBLE END) n, (max(row_group_id)+1) rgs FROM parquet_metadata('${abs}') WHERE path_in_schema LIKE 'geo_%'`)).getRowObjects()[0];
     const bcount = Number(Object.values((await conn.runAndReadAll(`SELECT count(*) FROM read_parquet('${abs}') WHERE nodegroup_id='profile'`)).getRowObjects()[0])[0]);
     const zmix = (await conn.runAndReadAll(`SELECT regexp_extract(data, '"zone":"([a-z_]+)"', 1) z, count(*) n FROM read_parquet('${abs}') WHERE nodegroup_id='profile' GROUP BY 1 ORDER BY n DESC LIMIT 1`)).getRowObjects()[0];
@@ -326,7 +328,7 @@ async function genFull(conn) {
   await conn.run(`COPY (SELECT ${TILE_COLS.join(', ')} FROM ov) TO '${join(OUT, 'overlay', 'tiles_aonach_full.parquet')}' (FORMAT PARQUET);`);
   // melted concept store: its OWN axis — sorted (node_id, concept_id), NOT geo-chunked
   const cabs = join(OUT, 'concepts_aonach_full.parquet');
-  await conn.run(`COPY (SELECT * FROM cg ORDER BY node_id, concept_id) TO '${cabs}' (FORMAT PARQUET, ROW_GROUP_SIZE 8192);`);
+  await conn.run(`COPY (SELECT * FROM cg ORDER BY node_id, concept_id) TO '${cabs}' (FORMAT PARQUET, ROW_GROUP_SIZE 65536);`);
   const cbytes = statSync(cabs).size;
   const ccount = Number(Object.values((await conn.runAndReadAll(`SELECT count(*) FROM read_parquet('${cabs}')`)).getRowObjects()[0])[0]);
 

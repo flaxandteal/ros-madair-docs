@@ -147,7 +147,7 @@ function FilterTab({ set, manifest }: TabProps) {
       const parts: string[] = [], irp: string[] = [];
       // gem stays the tile's primary promoted concept_id (already node-scoped); secondary/
       // multi-valued facets are node-scoped semijoins against the melted concept store K.
-      if (f.mur) { parts.push(`SELECT DISTINCT x.resource_id FROM ${T} x JOIN ${C} c ON c.concept_id=x.concept_id WHERE x.nodegroup_id='profile' AND c.dfs_enter BETWEEN (SELECT dfs_enter FROM ${C} WHERE concept_id='MUR') AND (SELECT dfs_leave FROM ${C} WHERE concept_id='MUR')`); irp.push('Concept{ gem ⊑ "MUR" }'); }
+      if (f.mur) { parts.push(`SELECT DISTINCT k.resource_id FROM ${K} k JOIN ${C} c ON c.concept_id=k.concept_id WHERE k.node_id='gem' AND c.dfs_enter BETWEEN (SELECT dfs_enter FROM ${C} WHERE concept_id='MUR') AND (SELECT dfs_leave FROM ${C} WHERE concept_id='MUR')`); irp.push('Concept{ gem ⊑ "MUR" }'); }
       if (f.listed) { parts.push(`SELECT DISTINCT resource_id FROM ${K} WHERE node_id='heritage' AND concept_id='Listed'`); irp.push('Concept{ heritage is "Listed" }'); }
       if (f.pre) { parts.push(`SELECT DISTINCT resource_id FROM ${T} WHERE nodegroup_id='profile' AND q_ordered<=1970`); irp.push('Range{ year ≤ 1970 }'); }
       if (f.shelter) { parts.push(`SELECT DISTINCT resource_id FROM ${K} WHERE node_id='role' AND concept_id='Shelter'`); irp.push('Concept{ roles ∋ "Shelter" }'); }

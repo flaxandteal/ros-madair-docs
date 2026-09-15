@@ -174,7 +174,7 @@ function FilterTab({ set, manifest }: TabProps) {
       </div>
       <IR>{ir}</IR>
       <Count n={res ? res.n : null} of={res?.total} unit="assets match" />
-      {res && <Fetch t={res.t} cols={COLS.filter} conceptStore={(f.listed || f.shelter || f.hospital || zone) ? manifest?.concepts_bytes : undefined} />}
+      {res && <Fetch t={res.t} cols={COLS.filter} conceptStore={(f.mur || f.listed || f.shelter || f.hospital || zone) ? manifest?.concepts_bytes : undefined} />}
       {res && res.sample.length > 0 && (
         <table><thead><tr><th>Asset</th><th>GEM</th><th>Concepts</th><th>Built</th></tr></thead>
           <tbody>{res.sample.map((r, i) => <tr key={i}><td>{String(r.descriptor_name)}</td><td><code>{String(r.gem)}</code></td><td><code>{String(r.concepts ?? '')}</code></td><td>{String(r.year)}</td></tr>)}</tbody></table>

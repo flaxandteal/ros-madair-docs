@@ -19,7 +19,7 @@ const SETS = {
 } as const;
 type SetKey = keyof typeof SETS;
 type Chunk = { file: string; bytes: number; row_groups: number; buildings: number; geo: { w: number; e: number; s: number; n: number } | null; col_bytes?: Record<string, number> };
-type Manifest = { chunks: number; buildings: number; total_bytes: number; files: Chunk[] };
+type Manifest = { chunks: number; buildings: number; total_bytes: number; files: Chunk[]; concepts?: string; concepts_bytes?: number; concepts_rows?: number };
 
 // sample lives in a schematic 0–100 × 0–60 grid; full lives in real WGS84.
 const FLOOD: [number, number, number, number][] = [[12, 40, 12, 12], [32, 40, 12, 12]]; // sample cells x,y,w,h
@@ -121,11 +121,12 @@ function Count({ n, of, unit }: { n: number | null; of?: number; unit: string })
   if (n === null) return <div className="am-count am-muted">running…</div>;
   return <div className="am-count"><b>{n.toLocaleString()}</b>{of != null ? ` of ${of.toLocaleString()}` : ''} {unit}</div>;
 }
-function Fetch({ t, cols }: { t: TilesRef; cols?: string[] }) {
+function Fetch({ t, cols, conceptStore }: { t: TilesRef; cols?: string[]; conceptStore?: number }) {
   if (!t.total) return null;
   const bytes = cols ? projBytes(t.files, cols) : t.bytes;
   const colNote = cols ? <> — only the <b>{cols.length} projected columns</b>, not the full rows</> : null;
-  return <p className="am-note">Fetched <b>{t.chunks} of {t.nChunks}</b> chunks — {mb(bytes)} of {mb(t.total)} ({(100 * bytes / t.total).toFixed(bytes / t.total < 0.1 ? 1 : 0)}%){colNote}. Row groups are pruned within each chunk, and unread columns (the fat <code>data</code> JSON) are never fetched.</p>;
+  const cNote = conceptStore ? <> Facet predicates read the separate <b>concept store</b> ({mb(conceptStore)} total, its own <code>(node_id, concept_id)</code>-sorted axis) — range-fetched to the matching node/value block, a fraction of it, joined back by <code>resource_id</code>; never the whole store.</> : null;
+  return <p className="am-note">Fetched <b>{t.chunks} of {t.nChunks}</b> chunks — {mb(bytes)} of {mb(t.total)} ({(100 * bytes / t.total).toFixed(bytes / t.total < 0.1 ? 1 : 0)}%){colNote}. Row groups are pruned within each chunk, and unread columns (the fat <code>data</code> JSON) are never fetched.{cNote}</p>;
 }
 type TabProps = { set: SetKey; manifest: Manifest | null; basemap: Basemap | null };
 
@@ -173,7 +174,7 @@ function FilterTab({ set, manifest }: TabProps) {
       </div>
       <IR>{ir}</IR>
       <Count n={res ? res.n : null} of={res?.total} unit="assets match" />
-      {res && <Fetch t={res.t} cols={COLS.filter} />}
+      {res && <Fetch t={res.t} cols={COLS.filter} conceptStore={(f.listed || f.shelter || f.hospital || zone) ? manifest?.concepts_bytes : undefined} />}
       {res && res.sample.length > 0 && (
         <table><thead><tr><th>Asset</th><th>GEM</th><th>Concepts</th><th>Built</th></tr></thead>
           <tbody>{res.sample.map((r, i) => <tr key={i}><td>{String(r.descriptor_name)}</td><td><code>{String(r.gem)}</code></td><td><code>{String(r.concepts ?? '')}</code></td><td>{String(r.year)}</td></tr>)}</tbody></table>
@@ -267,7 +268,7 @@ function SpatialTab({ set, manifest, basemap }: TabProps) {
       {out && !out.refused && out.coarse && <div className="am-banner am-warn">Coarse: a superset — assets inside the extent’s bounding box but between the flood cells are wrongly included.</div>}
       {q && <IR>{q === 'flood' ? 'Bbox{ footprint ∩ flood_extent }' : 'All[ roles ∋ "Shelter", Not(Bbox{ ∩ flood_extent }) ]'}</IR>}
       {out && !out.refused && <Count n={out.n} unit={q === 'flood' ? 'facilities intersect the flood extent' : 'dry shelters'} />}
-      {out && <Fetch t={out.t} cols={COLS.spatial} />}
+      {out && <Fetch t={out.t} cols={COLS.spatial} conceptStore={q === 'dry' ? manifest?.concepts_bytes : undefined} />}
     </div>
   );
 }

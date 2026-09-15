@@ -28,8 +28,13 @@ chunks. That is the point — **a too-big-to-download corpus, searched where it 
 ## What each tab shows
 
 - **Concept · Range · List** — `gem ⊑ MUR` walks the GEM taxonomy as a single
-  DFS-interval range (all unreinforced masonry, no enumeration); Listed and the age
-  band are exact filters; roles are list membership. `All[…]` intersects them.
+  DFS-interval range (all unreinforced masonry, no enumeration) over the tile's primary
+  promoted `concept_id`. Heritage, roles and zone are **node-scoped** predicates against
+  a **melted concept store** (`concepts_<slug>`: one row per `(tile, node, concept)`,
+  sorted `(node_id, concept_id)`) — so `roles ∋ Shelter` matches *that* node exactly,
+  never conflating with heritage or zone the way one crammed `concept_ids` array would.
+  A single node can hold several values, so multi-valued facets are just rows. `All[…]`
+  intersects the parts by `resource_id`.
 - **OnTile vs All** — “built by Lanyon between 1990–2000” must mean *one* retrofit
   event carried all three facts. `OnTile` binds them to a single tile; `All` only
   needs each met *somewhere*, so it keeps the **paper retrofits** — a CR job that
@@ -44,11 +49,13 @@ chunks. That is the point — **a too-big-to-download corpus, searched where it 
   to move the query box: the lit chunks are the only files a spatial query fetches; the
   rest are pruned from the manifest, never requested. Within a fetched chunk, its own
   footer prunes row groups again — two tiers of pruning. The chunks are Morton-clustered,
-  so a spatial query hits a handful — a concept filter can't prune *geo* chunks and
-  scans the skinny `concept_id` column across them, which is why clustering is an
-  index-time choice (and why you rarely need a second sorted copy). Grow the corpus to
-  GBs and the query still fetches only the chunks it overlaps: **cost is O(query), not
-  O(corpus).**
+  so a *spatial* query hits a handful. A facet filter (heritage / role / zone) can't
+  prune geo chunks at all — it reads the **separate melted concept store**, its own
+  `(node_id, concept_id)`-sorted axis, range-fetched to the matching block and joined
+  back by `resource_id`. Each axis (geo, concept) is its own store with its own sort
+  order and zone-map, joined by `tile_id`/`resource_id` — which is why you rarely need a
+  second co-clustered copy. Grow the corpus to GBs and the query still fetches only the
+  block it needs: **cost is O(query), not O(corpus).**
 - **cited_by cascade** — the edge table read backwards: pick a substation, see every
   asset that depends on it.
 - **Base ⊕ overlay** — live damage arrives as a separate layer, composed at query

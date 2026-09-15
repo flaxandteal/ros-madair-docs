@@ -91,14 +91,25 @@ const DAMAGE = [
   { rid: 'bldg-009', report: 'cladding loss' },
 ];
 
+// Tile row: the 1:1 axis (single promoted concept_id = the primary node's value —
+// gem/method — plus geo, q_ordered, data). The multi-valued / secondary concepts
+// (heritage, roles, zone, surge) are NOT crammed here as a concept_ids blob; they
+// melt into the concepts_<slug> store (one row per (tile,node,concept)), so a facet
+// filter is node-scoped and exact instead of a conflating any-match.
 const TILE_COLS = ['resource_id', 'descriptor_name', 'graph_id', 'nodegroup_id', 'tileid', 'parenttile_id',
-  'sortorder', 'concept_id', 'concept_ids', 'q_ordered', 'acc', 'geo_min_lng', 'geo_min_lat', 'geo_max_lng', 'geo_max_lat', 'data', 'cluster_key'];
+  'sortorder', 'concept_id', 'q_ordered', 'acc', 'geo_min_lng', 'geo_min_lat', 'geo_max_lng', 'geo_max_lat', 'data', 'cluster_key'];
 
 function tileRow(o) {
   return `(${sql(o.resource_id)},${sql(o.descriptor_name)},${sql(GRAPH)},${sql(o.nodegroup_id)},${sql(o.tileid)},${sql(o.parenttile_id)},` +
-    `${num(o.sortorder ?? 0)},${sql(o.concept_id)},${sql(o.concept_ids)},${num(o.q_ordered)},${bool(o.acc)},` +
+    `${num(o.sortorder ?? 0)},${sql(o.concept_id)},${num(o.q_ordered)},${bool(o.acc)},` +
     `${num(o.geo?.[0])},${num(o.geo?.[1])},${num(o.geo?.[2])},${num(o.geo?.[3])},${sql(o.data)},${num(o.cluster_key)})`;
 }
+
+// melted concept store row: (resource_id, tile_id, nodegroup_id, node_id, concept_id)
+function conceptRow(o) {
+  return `(${sql(o.resource_id)},${sql(o.tile_id)},${sql(o.nodegroup_id)},${sql(o.node_id)},${sql(o.concept_id)})`;
+}
+const CONCEPT_COLS = 'resource_id VARCHAR, tile_id VARCHAR, nodegroup_id VARCHAR, node_id VARCHAR, concept_id VARCHAR';
 
 // Morton (Z-order) key over 6-bit-quantised geo cells — the RM locality thesis: a
 // row group of consecutive keys is a compact 2D region, so a spatial query's
@@ -109,7 +120,7 @@ const MORTON = `(${spread6('gx6')} | (${spread6('gy6')}<<1))`;
 async function createTiles(conn, table) {
   await conn.run(`CREATE OR REPLACE TABLE ${table} (
     resource_id VARCHAR, descriptor_name VARCHAR, graph_id VARCHAR, nodegroup_id VARCHAR,
-    tileid VARCHAR, parenttile_id VARCHAR, sortorder INTEGER, concept_id VARCHAR, concept_ids VARCHAR,
+    tileid VARCHAR, parenttile_id VARCHAR, sortorder INTEGER, concept_id VARCHAR,
     q_ordered BIGINT, acc BOOLEAN, geo_min_lng DOUBLE, geo_min_lat DOUBLE, geo_max_lng DOUBLE, geo_max_lat DOUBLE, data VARCHAR, cluster_key UBIGINT);`);
 }
 
@@ -120,26 +131,29 @@ async function main() {
   writeFileSync(join(OUT, 'aonach_basemap.json'), readFileSync(join(dirname(fileURLToPath(import.meta.url)), 'seed', 'basemap.json'), 'utf8'));
   const conn = await (await DuckDBInstance.create(':memory:')).connect();
 
-  // ---- tiles ----
+  // ---- tiles + melted concepts ----
   const rows = [];
   const edges = [];
+  const concepts = [];
   for (const b of B) {
     const profileTile = `${b.id}-profile`;
     const geo = [b.fp[0], b.fp[1], b.fp[0] + b.fp[2], b.fp[1] + b.fp[3]];
-    // profile tile: gem + heritage + roles promoted into concept_ids; year → q_ordered; footprint → bbox
+    // profile tile: primary concept (gem) promoted on the row; year → q_ordered; footprint → bbox
     rows.push({
       resource_id: b.id, descriptor_name: b.name, nodegroup_id: 'profile', tileid: profileTile, sortorder: 0,
-      concept_id: b.gem, concept_ids: JSON.stringify([b.gem, b.heritage, ...b.roles]),
-      q_ordered: b.year, geo,
+      concept_id: b.gem, q_ordered: b.year, geo,
       data: JSON.stringify({ gem: b.gem, heritage: b.heritage, roles: b.roles, year: b.year, footprint: b.fp, served_by: b.sub }),
     });
+    // secondary / multi-valued concepts melt into the concept store (node-scoped, exact)
+    concepts.push({ resource_id: b.id, tile_id: profileTile, nodegroup_id: 'profile', node_id: 'heritage', concept_id: b.heritage });
+    for (const r of b.roles) concepts.push({ resource_id: b.id, tile_id: profileTile, nodegroup_id: 'profile', node_id: 'role', concept_id: r });
     // served_by edge (building → substation)
     edges.push({ src_resource: b.id, src_node: 'served_by', src_nodegroup: 'profile', src_tile: profileTile, target_resource: b.sub });
-    // retrofit tiles (n-cardinality): method class + year + accredited, all on one tile
+    // retrofit tiles (n-cardinality): method class (primary concept) + year + accredited, all on one tile
     b.retro.forEach((e, i) => {
       rows.push({
         resource_id: b.id, descriptor_name: b.name, nodegroup_id: 'retrofit', tileid: `${b.id}-retro-${i}`,
-        parenttile_id: profileTile, sortorder: i, concept_id: e.method, concept_ids: JSON.stringify([e.method]),
+        parenttile_id: profileTile, sortorder: i, concept_id: e.method,
         q_ordered: e.year, acc: e.acc, data: JSON.stringify({ method: e.method, year: e.year, accredited: e.acc }),
       });
     });
@@ -148,7 +162,7 @@ async function main() {
   for (const s of SUBS) {
     rows.push({
       resource_id: s.id, descriptor_name: s.name, nodegroup_id: 'sub', tileid: `${s.id}-t`, sortorder: 0,
-      concept_id: s.operational ? 'operational' : 'down', concept_ids: JSON.stringify([s.operational ? 'operational' : 'down']),
+      concept_id: s.operational ? 'operational' : 'down',
       data: JSON.stringify({ name: s.name, operational: s.operational }),
     });
   }
@@ -158,6 +172,12 @@ async function main() {
   await conn.run(`COPY (SELECT ${TILE_COLS.join(', ')} FROM stage ORDER BY resource_id, nodegroup_id, sortorder)
     TO '${join(OUT, 'tiles_aonach.parquet')}' (FORMAT PARQUET);`);
   console.log(`tiles_aonach.parquet  ${rows.length} tiles`);
+
+  // ---- melted concept store (heritage + roles), sorted (node_id, concept_id) ----
+  await conn.run(`CREATE OR REPLACE TABLE concepts (${CONCEPT_COLS});`);
+  await conn.run(`INSERT INTO concepts VALUES\n${concepts.map(conceptRow).join(',\n')};`);
+  await conn.run(`COPY (SELECT * FROM concepts ORDER BY node_id, concept_id) TO '${join(OUT, 'concepts_aonach.parquet')}' (FORMAT PARQUET);`);
+  console.log(`concepts_aonach.parquet  ${concepts.length} concept rows`);
 
   // ---- edges ----
   await conn.run(`CREATE OR REPLACE TABLE edges (src_resource VARCHAR, src_node VARCHAR, src_nodegroup VARCHAR, src_tile VARCHAR, target_resource VARCHAR);`);
@@ -176,7 +196,7 @@ async function main() {
   const ovRows = DAMAGE.map((d) => {
     const b = B.find((x) => x.id === d.rid);
     return tileRow({ resource_id: d.rid, descriptor_name: b.name, nodegroup_id: 'damage', tileid: `${d.rid}-damage`, sortorder: 0,
-      concept_ids: JSON.stringify(['damaged']), data: JSON.stringify({ damage: d.report, reported: 'now' }) });
+      data: JSON.stringify({ damage: d.report, reported: 'now' }) });
   });
   await conn.run(`INSERT INTO ov VALUES\n${ovRows.join(',\n')};`);
   await conn.run(`COPY (SELECT ${TILE_COLS.join(', ')} FROM ov) TO '${join(OUT, 'overlay', 'tiles_aonach.parquet')}' (FORMAT PARQUET);`);
@@ -222,14 +242,15 @@ async function genFull(conn) {
   const hstr = (s) => { let x = 0; for (let i = 0; i < s.length; i++) x = (Math.imul(x, 31) + s.charCodeAt(i)) | 0; return x >>> 0; };
 
   // stream NDJSON to disk so a large REPLICAS never accumulates rows in memory
-  const tf = join(OUT, '_tiles.ndjson'), ef = join(OUT, '_edges.ndjson'), df = join(OUT, '_dmg.ndjson');
-  writeFileSync(tf, ''); writeFileSync(ef, ''); writeFileSync(df, '');
-  const bufT = [], bufE = [], bufD = [];
+  const tf = join(OUT, '_tiles.ndjson'), ef = join(OUT, '_edges.ndjson'), df = join(OUT, '_dmg.ndjson'), cf = join(OUT, '_concepts.ndjson');
+  writeFileSync(tf, ''); writeFileSync(ef, ''); writeFileSync(df, ''); writeFileSync(cf, '');
+  const bufT = [], bufE = [], bufD = [], bufC = [];
   const flush = (buf, file) => { if (buf.length) { appendFileSync(file, buf.join('\n') + '\n'); buf.length = 0; } };
   const emitT = (o) => { bufT.push(JSON.stringify(o)); if (bufT.length >= 20000) flush(bufT, tf); };
   const emitE = (o) => { bufE.push(JSON.stringify(o)); if (bufE.length >= 20000) flush(bufE, ef); };
   const emitD = (o) => { bufD.push(JSON.stringify(o)); if (bufD.length >= 5000) flush(bufD, df); };
-  const retro = (rid, ev, method, year, acc, ck, chunk) => ({ resource_id: rid, descriptor_name: null, graph_id: GRAPH, nodegroup_id: 'retrofit', tileid: `${rid}-r${ev}`, parenttile_id: `${rid}-p`, sortorder: ev, concept_id: method, concept_ids: `["${method}"]`, q_ordered: year, acc, geo_min_lng: null, geo_min_lat: null, geo_max_lng: null, geo_max_lat: null, data: '{}', cluster_key: null, chunk });
+  const emitC = (o) => { bufC.push(JSON.stringify(o)); if (bufC.length >= 20000) flush(bufC, cf); };
+  const retro = (rid, ev, method, year, acc, ck, chunk) => ({ resource_id: rid, descriptor_name: null, graph_id: GRAPH, nodegroup_id: 'retrofit', tileid: `${rid}-r${ev}`, parenttile_id: `${rid}-p`, sortorder: ev, concept_id: method, q_ordered: year, acc, geo_min_lng: null, geo_min_lat: null, geo_max_lng: null, geo_max_lat: null, data: '{}', cluster_key: null, chunk });
   let idx = 0;
   for (const b of foot) {
     for (let rep = 0; rep < REPLICAS; rep++) {
@@ -250,7 +271,6 @@ async function genFull(conn) {
       const surge = z.surge_exposure;
       const storeys = z.storeys[0] + Math.floor(r() * (z.storeys[1] - z.storeys[0] + 1));
       const ck = morton(jl, jt), chunk = ck >> SHIFT;
-      const concept_ids = JSON.stringify([gem, heritage, ...roles, `zone:${b.zone}`, `surge:${surge}`]);
       const d = 8e-5;
       const data = JSON.stringify({
         identity: { resource_id: rid, ward: b.ward, zone: b.zone, zone_label: z.label },
@@ -262,25 +282,32 @@ async function genFull(conn) {
         provenance: { source: 'real footprint + zone-conditioned synthesis', confidence: 'demonstration' },
         descriptors: { en: `${z.label} building in ${b.ward}`, ga: `Foirgneamh i ${b.ward}` },
       });
-      emitT({ resource_id: rid, descriptor_name: `${b.ward} · ${skel.gem_labels[gem] || gem}`, graph_id: GRAPH, nodegroup_id: 'profile', tileid: `${rid}-p`, parenttile_id: null, sortorder: 0, concept_id: gem, concept_ids, q_ordered: year, acc: null, geo_min_lng: +(jl - d).toFixed(6), geo_min_lat: +(jt - d).toFixed(6), geo_max_lng: +(jl + d).toFixed(6), geo_max_lat: +(jt + d).toFixed(6), data, cluster_key: ck, chunk });
+      emitT({ resource_id: rid, descriptor_name: `${b.ward} · ${skel.gem_labels[gem] || gem}`, graph_id: GRAPH, nodegroup_id: 'profile', tileid: `${rid}-p`, parenttile_id: null, sortorder: 0, concept_id: gem, q_ordered: year, acc: null, geo_min_lng: +(jl - d).toFixed(6), geo_min_lat: +(jt - d).toFixed(6), geo_max_lng: +(jl + d).toFixed(6), geo_max_lat: +(jt + d).toFixed(6), data, cluster_key: ck, chunk });
+      // secondary / multi-valued concepts → melted store (gem stays the tile's primary concept_id)
+      const tp = `${rid}-p`;
+      emitC({ resource_id: rid, tile_id: tp, nodegroup_id: 'profile', node_id: 'heritage', concept_id: heritage });
+      for (const rl of roles) emitC({ resource_id: rid, tile_id: tp, nodegroup_id: 'profile', node_id: 'role', concept_id: rl });
+      emitC({ resource_id: rid, tile_id: tp, nodegroup_id: 'profile', node_id: 'zone', concept_id: b.zone });
+      emitC({ resource_id: rid, tile_id: tp, nodegroup_id: 'profile', node_id: 'surge', concept_id: surge });
       emitE({ src_resource: rid, src_node: 'served_by', src_nodegroup: 'profile', src_tile: `${rid}-p`, target_resource: `sub-${hstr(b.ward) % 80}` });
       if (r() < z.retrofit_rate) {
         if (r() < 0.35) { emitT(retro(rid, 0, 'CR', 1994, false, ck, chunk)); emitT(retro(rid, 1, 'MUR', 1996, true, ck, chunk)); }
         else { const my = 1990 + Math.floor(r() * 20); emitT(retro(rid, 0, r() < 0.6 ? 'CR' : 'MUR', my, r() < 0.7, ck, chunk)); }
       }
-      if (roles.includes('Hospital') && r() < 0.25) emitD({ resource_id: rid, descriptor_name: `${b.ward} hospital`, graph_id: GRAPH, nodegroup_id: 'damage', tileid: `${rid}-dmg`, parenttile_id: null, sortorder: 0, concept_id: null, concept_ids: '["damaged"]', q_ordered: null, acc: null, geo_min_lng: null, geo_min_lat: null, geo_max_lng: null, geo_max_lat: null, data: '{"damage":"structural — reported","reported":"now"}', cluster_key: null, chunk });
+      if (roles.includes('Hospital') && r() < 0.25) emitD({ resource_id: rid, descriptor_name: `${b.ward} hospital`, graph_id: GRAPH, nodegroup_id: 'damage', tileid: `${rid}-dmg`, parenttile_id: null, sortorder: 0, concept_id: null, q_ordered: null, acc: null, geo_min_lng: null, geo_min_lat: null, geo_max_lng: null, geo_max_lat: null, data: '{"damage":"structural — reported","reported":"now"}', cluster_key: null, chunk });
     }
   }
 
-  flush(bufT, tf); flush(bufE, ef); flush(bufD, df);
+  flush(bufT, tf); flush(bufE, ef); flush(bufD, df); flush(bufC, cf);
 
   rmSync(chunkDir, { recursive: true, force: true }); mkdirSync(chunkDir, { recursive: true });
   await conn.run(`SET memory_limit='2GB'; SET preserve_insertion_order=false; SET temp_directory='${join(OUT, '_tmp')}';`);
-  const cols = "{resource_id:'VARCHAR',descriptor_name:'VARCHAR',graph_id:'VARCHAR',nodegroup_id:'VARCHAR',tileid:'VARCHAR',parenttile_id:'VARCHAR',sortorder:'INTEGER',concept_id:'VARCHAR',concept_ids:'VARCHAR',q_ordered:'BIGINT',acc:'BOOLEAN',geo_min_lng:'DOUBLE',geo_min_lat:'DOUBLE',geo_max_lng:'DOUBLE',geo_max_lat:'DOUBLE',data:'VARCHAR',cluster_key:'UBIGINT',chunk:'INTEGER'}";
+  const cols = "{resource_id:'VARCHAR',descriptor_name:'VARCHAR',graph_id:'VARCHAR',nodegroup_id:'VARCHAR',tileid:'VARCHAR',parenttile_id:'VARCHAR',sortorder:'INTEGER',concept_id:'VARCHAR',q_ordered:'BIGINT',acc:'BOOLEAN',geo_min_lng:'DOUBLE',geo_min_lat:'DOUBLE',geo_max_lng:'DOUBLE',geo_max_lat:'DOUBLE',data:'VARCHAR',cluster_key:'UBIGINT',chunk:'INTEGER'}";
   const loadFile = async (name, file, colspec) => { await conn.run(`CREATE OR REPLACE TABLE ${name} AS SELECT * FROM read_json('${file}', columns=${colspec}, format='newline_delimited');`); rmSync(file, { force: true }); };
   await loadFile('all_tiles', tf, cols);
   await loadFile('ov', df, cols);
   await loadFile('eg', ef, "{src_resource:'VARCHAR',src_node:'VARCHAR',src_nodegroup:'VARCHAR',src_tile:'VARCHAR',target_resource:'VARCHAR'}");
+  await loadFile('cg', cf, "{resource_id:'VARCHAR',tile_id:'VARCHAR',nodegroup_id:'VARCHAR',node_id:'VARCHAR',concept_id:'VARCHAR'}");
 
   const files = [];
   for (let c = 0; c < CHUNKS; c++) {
@@ -288,7 +315,7 @@ async function genFull(conn) {
     await conn.run(`COPY (SELECT ${TILE_COLS.join(', ')} FROM all_tiles WHERE chunk=${c} ORDER BY (geo_min_lng IS NULL), cluster_key) TO '${abs}' (FORMAT PARQUET, ROW_GROUP_SIZE 4096);`);
     const z = (await conn.runAndReadAll(`SELECT min(CASE WHEN path_in_schema='geo_min_lng' THEN stats_min::DOUBLE END) w, max(CASE WHEN path_in_schema='geo_max_lng' THEN stats_max::DOUBLE END) e, min(CASE WHEN path_in_schema='geo_min_lat' THEN stats_min::DOUBLE END) s, max(CASE WHEN path_in_schema='geo_max_lat' THEN stats_max::DOUBLE END) n, (max(row_group_id)+1) rgs FROM parquet_metadata('${abs}') WHERE path_in_schema LIKE 'geo_%'`)).getRowObjects()[0];
     const bcount = Number(Object.values((await conn.runAndReadAll(`SELECT count(*) FROM read_parquet('${abs}') WHERE nodegroup_id='profile'`)).getRowObjects()[0])[0]);
-    const zmix = (await conn.runAndReadAll(`SELECT regexp_extract(concept_ids, 'zone:([a-z_]+)', 1) z, count(*) n FROM read_parquet('${abs}') WHERE nodegroup_id='profile' GROUP BY 1 ORDER BY n DESC LIMIT 1`)).getRowObjects()[0];
+    const zmix = (await conn.runAndReadAll(`SELECT regexp_extract(data, '"zone":"([a-z_]+)"', 1) z, count(*) n FROM read_parquet('${abs}') WHERE nodegroup_id='profile' GROUP BY 1 ORDER BY n DESC LIMIT 1`)).getRowObjects()[0];
     // per-column compressed bytes (summed over row groups) — lets the reader account
     // projected-column fetch, not whole-file: a concept scan pulls concept_id, not `data`.
     const cb = (await conn.runAndReadAll(`SELECT path_in_schema col, sum(total_compressed_size)::BIGINT b FROM parquet_metadata('${abs}') GROUP BY 1`)).getRowObjects();
@@ -297,10 +324,15 @@ async function genFull(conn) {
   }
   await conn.run(`COPY (SELECT * FROM eg ORDER BY src_node, target_resource) TO '${join(OUT, 'edges_aonach_full.parquet')}' (FORMAT PARQUET, ROW_GROUP_SIZE 8192);`);
   await conn.run(`COPY (SELECT ${TILE_COLS.join(', ')} FROM ov) TO '${join(OUT, 'overlay', 'tiles_aonach_full.parquet')}' (FORMAT PARQUET);`);
+  // melted concept store: its OWN axis — sorted (node_id, concept_id), NOT geo-chunked
+  const cabs = join(OUT, 'concepts_aonach_full.parquet');
+  await conn.run(`COPY (SELECT * FROM cg ORDER BY node_id, concept_id) TO '${cabs}' (FORMAT PARQUET, ROW_GROUP_SIZE 8192);`);
+  const cbytes = statSync(cabs).size;
+  const ccount = Number(Object.values((await conn.runAndReadAll(`SELECT count(*) FROM read_parquet('${cabs}')`)).getRowObjects()[0])[0]);
 
   const total = files.reduce((a, f) => a + f.bytes, 0);
   const buildings = files.reduce((a, f) => a + f.buildings, 0);
-  const manifest = { graph: GRAPH, partition: 'geo (Morton cell)', chunks: files.length, buildings, total_bytes: total, row_group_size: 4096, edges: 'edges_aonach_full.parquet', overlay: 'overlay/tiles_aonach_full.parquet', files };
+  const manifest = { graph: GRAPH, partition: 'geo (Morton cell)', chunks: files.length, buildings, total_bytes: total, row_group_size: 4096, edges: 'edges_aonach_full.parquet', overlay: 'overlay/tiles_aonach_full.parquet', concepts: 'concepts_aonach_full.parquet', concepts_bytes: cbytes, concepts_rows: ccount, files };
   writeFileSync(manifestPath, JSON.stringify(manifest));
   console.log(`aonach_full_manifest.json  ${files.length} chunks / ${buildings} buildings / ${(total / 1e6).toFixed(1)} MB · zones: ${files.map((f) => f.zone).join(',')}`);
   return { buildings, chunks: files.length, total_bytes: total };

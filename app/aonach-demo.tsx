@@ -10,8 +10,8 @@ import { getDuck, dataUrl } from '@/lib/duckdb';
 // corpus size is unbounded while each file stays small. edges/overlay are single.
 const CAT = 'concept_catalog_aonach.parquet';
 const FILES = {
-  sample: { single: 'tiles_aonach.parquet', edges: 'edges_aonach.parquet', ov: 'ov_aonach.parquet', ovUrl: 'overlay/tiles_aonach.parquet' },
-  full: { edges: 'edges_aonach_full.parquet', ov: 'ov_aonach_full.parquet', ovUrl: 'overlay/tiles_aonach_full.parquet' },
+  sample: { single: 'tiles_aonach.parquet', edges: 'edges_aonach.parquet', ov: 'ov_aonach.parquet', ovUrl: 'overlay/tiles_aonach.parquet', concepts: 'concepts_aonach.parquet' },
+  full: { edges: 'edges_aonach_full.parquet', ov: 'ov_aonach_full.parquet', ovUrl: 'overlay/tiles_aonach_full.parquet', concepts: 'concepts_aonach_full.parquet' },
 } as const;
 const SETS = {
   sample: { label: 'sample — 10 assets', note: 'A small, readable slice — named assets, the traps spelled out.' },
@@ -93,6 +93,8 @@ async function registerTiles(set: SetKey, t: TilesRef) {
 }
 const edgesRef = async (set: SetKey) => { await reg(FILES[set].edges, FILES[set].edges); return `read_parquet('${FILES[set].edges}')`; };
 const ovRef = async (set: SetKey) => { await reg(FILES[set].ov, FILES[set].ovUrl); return `read_parquet('${FILES[set].ov}')`; };
+// melted concept store (heritage/role/zone/surge), sorted (node_id, concept_id) — its own axis, joined by resource_id
+const conceptsRef = async (set: SetKey) => { await reg(FILES[set].concepts, FILES[set].concepts); return `read_parquet('${FILES[set].concepts}')`; };
 const mb = (b: number) => (b >= 1e6 ? `${(b / 1e6).toFixed(1)} MB` : `${(b / 1e3).toFixed(0)} KB`);
 
 // Projected-column fetch: a query reads only the columns it references (plus each
@@ -100,8 +102,8 @@ const mb = (b: number) => (b >= 1e6 ? `${(b / 1e6).toFixed(1)} MB` : `${(b / 1e3
 // hydration JSON) dominates a chunk, so a concept/geo scan that never touches it
 // moves a fraction of the bytes. Column sets below match each tab's SQL.
 const COLS = {
-  filter: ['resource_id', 'nodegroup_id', 'descriptor_name', 'concept_id', 'concept_ids', 'q_ordered'],
-  spatial: ['resource_id', 'nodegroup_id', 'concept_ids', 'geo_min_lng', 'geo_min_lat', 'geo_max_lng', 'geo_max_lat'],
+  filter: ['resource_id', 'nodegroup_id', 'descriptor_name', 'concept_id', 'q_ordered'],
+  spatial: ['resource_id', 'nodegroup_id', 'geo_min_lng', 'geo_min_lat', 'geo_max_lng', 'geo_max_lat'],
 };
 function projBytes(files: Chunk[], cols: string[]): number {
   return files.reduce((a, f) => {
@@ -139,21 +141,24 @@ function FilterTab({ set, manifest }: TabProps) {
       setRes(null);
       const t = tilesRef(set, manifest);
       await registerTiles(set, t);
+      const K = await conceptsRef(set); // melted concept store — node-scoped, exact
       const T = t.sql, C = `read_parquet('${CAT}')`;
       const parts: string[] = [], irp: string[] = [];
+      // gem stays the tile's primary promoted concept_id (already node-scoped); secondary/
+      // multi-valued facets are node-scoped semijoins against the melted concept store K.
       if (f.mur) { parts.push(`SELECT DISTINCT x.resource_id FROM ${T} x JOIN ${C} c ON c.concept_id=x.concept_id WHERE x.nodegroup_id='profile' AND c.dfs_enter BETWEEN (SELECT dfs_enter FROM ${C} WHERE concept_id='MUR') AND (SELECT dfs_leave FROM ${C} WHERE concept_id='MUR')`); irp.push('Concept{ gem ⊑ "MUR" }'); }
-      if (f.listed) { parts.push(`SELECT DISTINCT resource_id FROM ${T} WHERE nodegroup_id='profile' AND concept_ids LIKE '%"Listed"%'`); irp.push('Concept{ heritage is "Listed" }'); }
+      if (f.listed) { parts.push(`SELECT DISTINCT resource_id FROM ${K} WHERE node_id='heritage' AND concept_id='Listed'`); irp.push('Concept{ heritage is "Listed" }'); }
       if (f.pre) { parts.push(`SELECT DISTINCT resource_id FROM ${T} WHERE nodegroup_id='profile' AND q_ordered<=1970`); irp.push('Range{ year ≤ 1970 }'); }
-      if (f.shelter) { parts.push(`SELECT DISTINCT resource_id FROM ${T} WHERE nodegroup_id='profile' AND concept_ids LIKE '%"Shelter"%'`); irp.push('Concept{ roles ∋ "Shelter" }'); }
-      if (f.hospital) { parts.push(`SELECT DISTINCT resource_id FROM ${T} WHERE nodegroup_id='profile' AND concept_ids LIKE '%"Hospital"%'`); irp.push('Concept{ roles ∋ "Hospital" }'); }
+      if (f.shelter) { parts.push(`SELECT DISTINCT resource_id FROM ${K} WHERE node_id='role' AND concept_id='Shelter'`); irp.push('Concept{ roles ∋ "Shelter" }'); }
+      if (f.hospital) { parts.push(`SELECT DISTINCT resource_id FROM ${K} WHERE node_id='role' AND concept_id='Hospital'`); irp.push('Concept{ roles ∋ "Hospital" }'); }
       if (f.noretrofit) { parts.push(`SELECT DISTINCT resource_id FROM ${T} WHERE nodegroup_id='profile' EXCEPT SELECT DISTINCT resource_id FROM ${T} WHERE nodegroup_id='retrofit'`); irp.push('Not( has a retrofit )'); }
-      if (zone) { parts.push(`SELECT DISTINCT resource_id FROM ${T} WHERE nodegroup_id='profile' AND concept_ids LIKE '%"zone:${zone}"%'`); irp.push(`Concept{ zone is "${zone}" }`); }
+      if (zone) { parts.push(`SELECT DISTINCT resource_id FROM ${K} WHERE node_id='zone' AND concept_id='${zone}'`); irp.push(`Concept{ zone is "${zone}" }`); }
       if (live) setIr(parts.length ? `All[ ${irp.join(',\n     ')} ]` : '# select one or more conditions');
       const total = await one(`SELECT count(*) FROM ${T} WHERE nodegroup_id='profile'`);
       if (!parts.length) { if (live) setRes({ n: 0, total, sample: [], t }); return; }
       const inner = parts.join('\nINTERSECT\n');
       const n = await one(`SELECT count(*) FROM (${inner})`);
-      const sample = await rows(`SELECT y.descriptor_name, y.concept_id AS gem, y.concept_ids, y.q_ordered AS year FROM ${T} y JOIN (${inner}) m ON m.resource_id=y.resource_id WHERE y.nodegroup_id='profile' ORDER BY y.descriptor_name LIMIT 8`);
+      const sample = await rows(`SELECT y.descriptor_name, y.concept_id AS gem, y.q_ordered AS year, (SELECT string_agg(k.node_id || ':' || k.concept_id, ', ' ORDER BY k.node_id) FROM ${K} k WHERE k.resource_id=y.resource_id) AS concepts FROM ${T} y JOIN (${inner}) m ON m.resource_id=y.resource_id WHERE y.nodegroup_id='profile' ORDER BY y.descriptor_name LIMIT 8`);
       if (live) setRes({ n, total, sample, t });
     })();
     return () => { live = false; };
@@ -171,7 +176,7 @@ function FilterTab({ set, manifest }: TabProps) {
       {res && <Fetch t={res.t} cols={COLS.filter} />}
       {res && res.sample.length > 0 && (
         <table><thead><tr><th>Asset</th><th>GEM</th><th>Concepts</th><th>Built</th></tr></thead>
-          <tbody>{res.sample.map((r, i) => <tr key={i}><td>{String(r.descriptor_name)}</td><td><code>{String(r.gem)}</code></td><td><code>{String(r.concept_ids)}</code></td><td>{String(r.year)}</td></tr>)}</tbody></table>
+          <tbody>{res.sample.map((r, i) => <tr key={i}><td>{String(r.descriptor_name)}</td><td><code>{String(r.gem)}</code></td><td><code>{String(r.concepts ?? '')}</code></td><td>{String(r.year)}</td></tr>)}</tbody></table>
       )}
     </div>
   );
@@ -237,7 +242,9 @@ function SpatialTab({ set, manifest, basemap }: TabProps) {
         if (live) setOut({ n, refused: false, coarse: !eff, t });
       } else {
         if (!spatial) { if (live) setOut({ n: 0, refused: true, coarse: false, t }); return; }
-        const n = await one(`SELECT count(*) FROM ${T} WHERE nodegroup_id='profile' AND concept_ids LIKE '%"Shelter"%' AND NOT (${exactHit})`);
+        // cross-axis: geo pruned on the tile store, roles ∋ Shelter node-scoped on the concept store, joined by resource_id
+        const K = await conceptsRef(set);
+        const n = await one(`SELECT count(*) FROM ${T} WHERE nodegroup_id='profile' AND NOT (${exactHit}) AND resource_id IN (SELECT resource_id FROM ${K} WHERE node_id='role' AND concept_id='Shelter')`);
         if (live) setOut({ n, refused: false, coarse: false, t });
       }
     })();
@@ -278,7 +285,7 @@ function ZonesTab({ set, manifest, basemap }: TabProps) {
   React.useEffect(() => {
     let live = true;
     (async () => {
-      if (set === 'sample') { const t = tilesRef(set, manifest); await registerTiles(set, t); const r = await rows(`SELECT descriptor_name, concept_ids, geo_min_lng AS w, geo_min_lat AS s, geo_max_lng AS e, geo_max_lat AS n FROM ${t.sql} WHERE nodegroup_id='profile'`); if (live) setPts(r); }
+      if (set === 'sample') { const t = tilesRef(set, manifest); await registerTiles(set, t); const r = await rows(`SELECT descriptor_name, concept_id AS gem, geo_min_lng AS w, geo_min_lat AS s, geo_max_lng AS e, geo_max_lat AS n FROM ${t.sql} WHERE nodegroup_id='profile'`); if (live) setPts(r); }
       else if (live) setPts([]);
     })();
     return () => { live = false; };
@@ -357,9 +364,10 @@ function CascadeTab({ set, manifest }: TabProps) {
       if (!sub) { setDeps(null); return; }
       const E = await edgesRef(set);
       const t = tilesRef(set, manifest); await registerTiles(set, t); const T = t.sql;
+      const K = await conceptsRef(set);
       const inner = `SELECT DISTINCT src_resource AS resource_id FROM ${E} WHERE src_node='served_by' AND target_resource='${sub}'`;
       const n = await one(`SELECT count(*) FROM (${inner})`);
-      const sample = await rows(`SELECT y.descriptor_name, y.concept_ids FROM ${T} y JOIN (${inner}) d ON d.resource_id=y.resource_id WHERE y.nodegroup_id='profile' LIMIT 8`);
+      const sample = await rows(`SELECT y.descriptor_name, y.concept_id AS gem, (SELECT string_agg(k.node_id || ':' || k.concept_id, ', ' ORDER BY k.node_id) FROM ${K} k WHERE k.resource_id=y.resource_id) AS concepts FROM ${T} y JOIN (${inner}) d ON d.resource_id=y.resource_id WHERE y.nodegroup_id='profile' LIMIT 8`);
       if (live) setDeps({ n, sample });
     })();
     return () => { live = false; };
@@ -374,7 +382,7 @@ function CascadeTab({ set, manifest }: TabProps) {
       {deps && <Count n={deps.n} unit={`assets lose power if ${sub} fails`} />}
       {deps && deps.sample.length > 0 && (
         <table><thead><tr><th>Dependent asset</th><th>Roles / concepts</th></tr></thead>
-          <tbody>{deps.sample.map((r, i) => <tr key={i}><td>{String(r.descriptor_name)}</td><td><code>{String(r.concept_ids)}</code></td></tr>)}</tbody></table>
+          <tbody>{deps.sample.map((r, i) => <tr key={i}><td>{String(r.descriptor_name)}</td><td><code>{String(r.gem)}{r.concepts ? ' · ' + String(r.concepts) : ''}</code></td></tr>)}</tbody></table>
       )}
     </div>
   );
@@ -388,12 +396,13 @@ function OverlayTab({ set, manifest }: TabProps) {
     let live = true;
     (async () => {
       setOut(null);
-      const t = tilesRef(set, manifest); await registerTiles(set, t); const T = t.sql; const OV = await ovRef(set);
-      const total = await one(`SELECT count(*) FROM ${T} WHERE nodegroup_id='profile' AND concept_ids LIKE '%"Hospital"%'`);
+      const t = tilesRef(set, manifest); await registerTiles(set, t); const T = t.sql; const OV = await ovRef(set); const K = await conceptsRef(set);
+      const hosp = `SELECT resource_id FROM ${K} WHERE node_id='role' AND concept_id='Hospital'`; // node-scoped role, from the melted store
+      const total = await one(`SELECT count(DISTINCT resource_id) FROM (${hosp})`);
       let damaged = 0; let sample: Record<string, unknown>[] = [];
       if (storm) {
-        damaged = await one(`SELECT count(DISTINCT d.resource_id) FROM ${OV} d JOIN ${T} y ON y.resource_id=d.resource_id AND y.nodegroup_id='profile' AND y.concept_ids LIKE '%"Hospital"%' WHERE d.nodegroup_id='damage'`);
-        sample = await rows(`SELECT y.descriptor_name, d.data FROM ${OV} d JOIN ${T} y ON y.resource_id=d.resource_id AND y.nodegroup_id='profile' AND y.concept_ids LIKE '%"Hospital"%' WHERE d.nodegroup_id='damage' LIMIT 8`);
+        damaged = await one(`SELECT count(DISTINCT d.resource_id) FROM ${OV} d WHERE d.nodegroup_id='damage' AND d.resource_id IN (${hosp})`);
+        sample = await rows(`SELECT y.descriptor_name, d.data FROM ${OV} d JOIN ${T} y ON y.resource_id=d.resource_id AND y.nodegroup_id='profile' WHERE d.nodegroup_id='damage' AND d.resource_id IN (${hosp}) LIMIT 8`);
       }
       if (live) setOut({ total, damaged, sample });
     })();

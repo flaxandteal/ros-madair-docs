@@ -10,8 +10,8 @@ import { getDuck, dataUrl } from '@/lib/duckdb';
 // corpus size is unbounded while each file stays small. edges/overlay are single.
 const CAT = 'concept_catalog_aonach.parquet';
 const FILES = {
-  sample: { single: 'tiles_aonach.parquet', edges: 'edges_aonach.parquet', ov: 'ov_aonach.parquet', ovUrl: 'overlay/tiles_aonach.parquet', concepts: 'concepts_aonach.parquet', retro: 'tiles_retrofit_aonach.parquet' },
-  full: { edges: 'edges_aonach_full.parquet', ov: 'ov_aonach_full.parquet', ovUrl: 'overlay/tiles_aonach_full.parquet', concepts: 'concepts_aonach_full.parquet', retro: 'tiles_retrofit_aonach_full.parquet' },
+  sample: { single: 'tiles_aonach.parquet', edges: 'edges_aonach.parquet', ov: 'ov_aonach.parquet', ovUrl: 'overlay/tiles_aonach.parquet', concepts: 'concepts_aonach.parquet', retro: 'tiles_retrofit_aonach.parquet', ordered: 'ordered_aonach.parquet' },
+  full: { edges: 'edges_aonach_full.parquet', ov: 'ov_aonach_full.parquet', ovUrl: 'overlay/tiles_aonach_full.parquet', concepts: 'concepts_aonach_full.parquet', retro: 'tiles_retrofit_aonach_full.parquet', ordered: 'ordered_aonach_full.parquet' },
 } as const;
 const SETS = {
   sample: { label: 'sample — 10 assets', note: 'A small, readable slice — named assets, the traps spelled out.' },
@@ -97,6 +97,8 @@ const ovRef = async (set: SetKey) => { await reg(FILES[set].ov, FILES[set].ovUrl
 const conceptsRef = async (set: SetKey) => { await reg(FILES[set].concepts, FILES[set].concepts); return `read_parquet('${FILES[set].concepts}')`; };
 // retrofit nodegroup partition — its own file (resource_id-sorted), not geo-chunked
 const retroRef = async (set: SetKey) => { await reg(FILES[set].retro, FILES[set].retro); return `read_parquet('${FILES[set].retro}')`; };
+// ordered (date) store — sorted by q_ordered so a year RANGE prunes, joined by resource_id
+const orderedRef = async (set: SetKey) => { await reg(FILES[set].ordered, FILES[set].ordered); return `read_parquet('${FILES[set].ordered}')`; };
 const mb = (b: number) => (b >= 1e6 ? `${(b / 1e6).toFixed(1)} MB` : `${(b / 1e3).toFixed(0)} KB`);
 
 // Projected-column fetch: a query reads only the columns it references (plus each
@@ -134,7 +136,7 @@ type TabProps = { set: SetKey; manifest: Manifest | null; basemap: Basemap | nul
 
 // ── tab: concept / range / list filter ───────────────────────────────────────
 function FilterTab({ set, manifest }: TabProps) {
-  const [f, setF] = React.useState({ mur: true, listed: false, pre: false, shelter: false, hospital: false, noretrofit: false });
+  const [f, setF] = React.useState({ mur: true, listed: false, pre: false, tall: false, shelter: false, hospital: false, noretrofit: false });
   const [zone, setZone] = React.useState('');
   const [res, setRes] = React.useState<{ n: number; total: number; sample: Record<string, unknown>[]; t: TilesRef } | null>(null);
   const [ir, setIr] = React.useState('');
@@ -146,13 +148,15 @@ function FilterTab({ set, manifest }: TabProps) {
       await registerTiles(set, t);
       const K = await conceptsRef(set); // melted concept store — node-scoped, exact
       const R = await retroRef(set);    // retrofit partition (for the "no retrofit" predicate)
+      const O = await orderedRef(set);  // ordered/date store (for the year range)
       const T = t.sql, C = `read_parquet('${CAT}')`;
       const parts: string[] = [], irp: string[] = [];
       // gem stays the tile's primary promoted concept_id (already node-scoped); secondary/
       // multi-valued facets are node-scoped semijoins against the melted concept store K.
       if (f.mur) { parts.push(`SELECT DISTINCT k.resource_id FROM ${K} k JOIN ${C} c ON c.concept_id=k.concept_id WHERE k.node_id='gem' AND c.dfs_enter BETWEEN (SELECT dfs_enter FROM ${C} WHERE concept_id='MUR') AND (SELECT dfs_leave FROM ${C} WHERE concept_id='MUR')`); irp.push('Concept{ gem ⊑ "MUR" }'); }
       if (f.listed) { parts.push(`SELECT DISTINCT resource_id FROM ${K} WHERE node_id='heritage' AND concept_id='Listed'`); irp.push('Concept{ heritage is "Listed" }'); }
-      if (f.pre) { parts.push(`SELECT DISTINCT resource_id FROM ${T} WHERE nodegroup_id='profile' AND q_ordered<=1970`); irp.push('Range{ year ≤ 1970 }'); }
+      if (f.pre) { parts.push(`SELECT DISTINCT resource_id FROM ${O} WHERE node_id='year_built' AND q_ordered<=1970`); irp.push('Range{ year ≤ 1970 }'); }
+      if (f.tall) { parts.push(`SELECT DISTINCT resource_id FROM ${O} WHERE node_id='storeys' AND q_ordered>=8`); irp.push('Range{ storeys ≥ 8 }'); }
       if (f.shelter) { parts.push(`SELECT DISTINCT resource_id FROM ${K} WHERE node_id='role' AND concept_id='Shelter'`); irp.push('Concept{ roles ∋ "Shelter" }'); }
       if (f.hospital) { parts.push(`SELECT DISTINCT resource_id FROM ${K} WHERE node_id='role' AND concept_id='Hospital'`); irp.push('Concept{ roles ∋ "Hospital" }'); }
       if (f.noretrofit) { parts.push(`SELECT DISTINCT resource_id FROM ${K} WHERE node_id='gem' EXCEPT SELECT DISTINCT resource_id FROM ${R}`); irp.push('Not( has a retrofit )'); }
@@ -179,12 +183,12 @@ function FilterTab({ set, manifest }: TabProps) {
     })();
     return () => { live = false; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [set, manifest, f.mur, f.listed, f.pre, f.shelter, f.hospital, f.noretrofit, zone]);
+  }, [set, manifest, f.mur, f.listed, f.pre, f.tall, f.shelter, f.hospital, f.noretrofit, zone]);
   const chk = (k: keyof typeof f, label: string) => (<label className="am-chk"><input type="checkbox" checked={f[k]} onChange={(e) => setF({ ...f, [k]: e.target.checked })} /> {label}</label>);
   return (
     <div>
       <p>Tick conditions to build an <code>All[…]</code> query — GEM walks the concept hierarchy (one DFS range), roles test list membership, year is an ordered range, zone tests land-use. Try <em>masonry + no retrofit + a low-income or coastal zone</em> — the vulnerability hotspot.</p>
-      <div className="am-controls">{chk('mur', 'unreinforced masonry (gem ⊑ MUR)')}{chk('listed', 'Listed')}{chk('pre', 'built ≤ 1970')}{chk('shelter', 'role ∋ Shelter')}{chk('hospital', 'role ∋ Hospital')}{chk('noretrofit', 'no retrofit')}
+      <div className="am-controls">{chk('mur', 'unreinforced masonry (gem ⊑ MUR)')}{chk('listed', 'Listed')}{chk('pre', 'built ≤ 1970')}{chk('tall', 'storeys ≥ 8')}{chk('shelter', 'role ∋ Shelter')}{chk('hospital', 'role ∋ Hospital')}{chk('noretrofit', 'no retrofit')}
         <select className="am-sel" value={zone} onChange={(e) => setZone(e.target.value)}><option value="">any zone</option>{Object.keys(ZONE_LABEL).map((z) => <option key={z} value={z}>{ZONE_LABEL[z]}</option>)}</select>
       </div>
       <IR>{ir}</IR>

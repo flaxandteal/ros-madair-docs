@@ -142,7 +142,7 @@ async function main() {
     rows.push({
       resource_id: b.id, descriptor_name: b.name, nodegroup_id: 'profile', tileid: profileTile, sortorder: 0,
       concept_id: b.gem, q_ordered: b.year, geo,
-      data: JSON.stringify({ gem: b.gem, heritage: b.heritage, roles: b.roles, year: b.year, footprint: b.fp, served_by: b.sub }),
+      data: JSON.stringify({ gem: b.gem, heritage: b.heritage, roles: b.roles, year: b.year, storeys: b.gem.startsWith('CR') ? 9 : b.gem.startsWith('S') ? 5 : 2, footprint: b.fp, served_by: b.sub }),
     });
     // Melt every profile concept node into the store (its own node/concept-sorted axis,
     // so gem ⊑ MUR prunes to the gem block instead of scanning geo-clustered tiles). The
@@ -185,6 +185,13 @@ async function main() {
   await conn.run(`INSERT INTO concepts VALUES\n${concepts.map(conceptRow).join(',\n')};`);
   await conn.run(`COPY (SELECT * FROM concepts ORDER BY node_id, concept_id) TO '${join(OUT, 'concepts_aonach.parquet')}' (FORMAT PARQUET);`);
   console.log(`concepts_aonach.parquet  ${concepts.length} concept rows`);
+
+  // ---- ordered store: year_built (date) + storeys (number), sorted (node_id, q_ordered) ----
+  await conn.run(`COPY (
+    SELECT resource_id, tileid AS tile_id, 'year_built' AS node_id, q_ordered FROM stage WHERE nodegroup_id='profile'
+    UNION ALL
+    SELECT resource_id, tileid AS tile_id, 'storeys' AS node_id, TRY_CAST(json_extract(data, '$.storeys') AS BIGINT) FROM stage WHERE nodegroup_id='profile'
+    ORDER BY node_id, q_ordered) TO '${join(OUT, 'ordered_aonach.parquet')}' (FORMAT PARQUET);`);
 
   // ---- edges ----
   await conn.run(`CREATE OR REPLACE TABLE edges (src_resource VARCHAR, src_node VARCHAR, src_nodegroup VARCHAR, src_tile VARCHAR, target_resource VARCHAR);`);
@@ -341,10 +348,21 @@ async function genFull(conn) {
   await conn.run(`COPY (SELECT ${TILE_COLS.join(', ')} FROM all_tiles WHERE nodegroup_id='retrofit' ORDER BY resource_id, sortorder) TO '${rabs}' (FORMAT PARQUET, ROW_GROUP_SIZE 262144);`);
   const rbytes = statSync(rabs).size;
   const rcount = Number(Object.values((await conn.runAndReadAll(`SELECT count(*) FROM read_parquet('${rabs}')`)).getRowObjects()[0])[0]);
+  // ordered store: its OWN axis — sorted (node_id, q_ordered) so a RANGE prunes, instead of
+  // scanning the geo-clustered tile store. Holds ALL ordered scalars — date AND number
+  // (year_built + storeys) — each a node_id; adding an ordered node is just more rows.
+  const oabs = join(OUT, 'ordered_aonach_full.parquet');
+  await conn.run(`COPY (
+    SELECT resource_id, tileid AS tile_id, 'year_built' AS node_id, q_ordered FROM all_tiles WHERE nodegroup_id='profile'
+    UNION ALL
+    SELECT resource_id, tileid AS tile_id, 'storeys' AS node_id, TRY_CAST(json_extract(data, '$.structure.storeys') AS BIGINT) FROM all_tiles WHERE nodegroup_id='profile'
+    ORDER BY node_id, q_ordered) TO '${oabs}' (FORMAT PARQUET, ROW_GROUP_SIZE 262144);`);
+  const obytes = statSync(oabs).size;
+  const ocount = Number(Object.values((await conn.runAndReadAll(`SELECT count(*) FROM read_parquet('${oabs}')`)).getRowObjects()[0])[0]);
 
   const total = files.reduce((a, f) => a + f.bytes, 0);
   const buildings = files.reduce((a, f) => a + f.buildings, 0);
-  const manifest = { graph: GRAPH, partition: 'geo (Morton cell)', chunks: files.length, buildings, total_bytes: total, row_group_size: 16384, edges: 'edges_aonach_full.parquet', overlay: 'overlay/tiles_aonach_full.parquet', concepts: 'concepts_aonach_full.parquet', concepts_bytes: cbytes, concepts_rows: ccount, retrofit: 'tiles_retrofit_aonach_full.parquet', retrofit_bytes: rbytes, retrofit_rows: rcount, files };
+  const manifest = { graph: GRAPH, partition: 'geo (Morton cell)', chunks: files.length, buildings, total_bytes: total, row_group_size: 16384, edges: 'edges_aonach_full.parquet', overlay: 'overlay/tiles_aonach_full.parquet', concepts: 'concepts_aonach_full.parquet', concepts_bytes: cbytes, concepts_rows: ccount, retrofit: 'tiles_retrofit_aonach_full.parquet', retrofit_bytes: rbytes, retrofit_rows: rcount, ordered: 'ordered_aonach_full.parquet', ordered_bytes: obytes, ordered_rows: ocount, files };
   writeFileSync(manifestPath, JSON.stringify(manifest));
   console.log(`aonach_full_manifest.json  ${files.length} chunks / ${buildings} buildings / ${(total / 1e6).toFixed(1)} MB · zones: ${files.map((f) => f.zone).join(',')}`);
   return { buildings, chunks: files.length, total_bytes: total };

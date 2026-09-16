@@ -155,11 +155,23 @@ function FilterTab({ set, manifest }: TabProps) {
       if (f.noretrofit) { parts.push(`SELECT DISTINCT resource_id FROM ${T} WHERE nodegroup_id='profile' EXCEPT SELECT DISTINCT resource_id FROM ${T} WHERE nodegroup_id='retrofit'`); irp.push('Not( has a retrofit )'); }
       if (zone) { parts.push(`SELECT DISTINCT resource_id FROM ${K} WHERE node_id='zone' AND concept_id='${zone}'`); irp.push(`Concept{ zone is "${zone}" }`); }
       if (live) setIr(parts.length ? `All[ ${irp.join(',\n     ')} ]` : '# select one or more conditions');
-      const total = await one(`SELECT count(*) FROM ${T} WHERE nodegroup_id='profile'`);
+      // total = a whole-corpus count; on full it's a manifest constant (0 requests), not a scan
+      const total = set === 'full' ? (manifest?.buildings ?? 0) : await one(`SELECT count(*) FROM ${T} WHERE nodegroup_id='profile'`);
       if (!parts.length) { if (live) setRes({ n: 0, total, sample: [], t }); return; }
       const inner = parts.join('\nINTERSECT\n');
-      const n = await one(`SELECT count(*) FROM (${inner})`);
-      const sample = await rows(`SELECT y.descriptor_name, y.concept_id AS gem, y.q_ordered AS year, (SELECT string_agg(k.node_id || ':' || k.concept_id, ', ' ORDER BY k.node_id) FROM ${K} k WHERE k.resource_id=y.resource_id) AS concepts FROM ${T} y JOIN (${inner}) m ON m.resource_id=y.resource_id WHERE y.nodegroup_id='profile' ORDER BY y.descriptor_name LIMIT 8`);
+      let n: number, sample: Record<string, unknown>[];
+      if (set === 'full') {
+        // ONE pruned scan yields both the count and 8 example ids (window count + LIMIT) —
+        // no re-scan, and no gather-by-resource_id (fetching asset NAMES on the full corpus
+        // is the scattered, unprunable hydration cost, so full shows ids; the small sample
+        // corpus hydrates the rich display below, where it's cheap).
+        const r = await rows(`SELECT resource_id, count(*) OVER () AS n FROM (${inner}) LIMIT 8`);
+        n = r.length ? Number(r[0].n) : 0;
+        sample = r;
+      } else {
+        n = await one(`SELECT count(*) FROM (${inner})`);
+        sample = await rows(`SELECT y.descriptor_name, y.concept_id AS gem, y.q_ordered AS year, (SELECT string_agg(k.node_id || ':' || k.concept_id, ', ' ORDER BY k.node_id) FROM ${K} k WHERE k.resource_id=y.resource_id) AS concepts FROM ${T} y JOIN (${inner}) m ON m.resource_id=y.resource_id WHERE y.nodegroup_id='profile' ORDER BY y.descriptor_name LIMIT 8`);
+      }
       if (live) setRes({ n, total, sample, t });
     })();
     return () => { live = false; };
@@ -177,7 +189,7 @@ function FilterTab({ set, manifest }: TabProps) {
       {res && <Fetch t={res.t} cols={COLS.filter} conceptStore={(f.mur || f.listed || f.shelter || f.hospital || zone) ? manifest?.concepts_bytes : undefined} />}
       {res && res.sample.length > 0 && (
         <table><thead><tr><th>Asset</th><th>GEM</th><th>Concepts</th><th>Built</th></tr></thead>
-          <tbody>{res.sample.map((r, i) => <tr key={i}><td>{String(r.descriptor_name)}</td><td><code>{String(r.gem)}</code></td><td><code>{String(r.concepts ?? '')}</code></td><td>{String(r.year)}</td></tr>)}</tbody></table>
+          <tbody>{res.sample.map((r, i) => <tr key={i}><td>{String(r.descriptor_name ?? r.resource_id)}</td><td><code>{String(r.gem)}</code></td><td><code>{String(r.concepts ?? '')}</code></td><td>{String(r.year ?? '')}</td></tr>)}</tbody></table>
       )}
     </div>
   );

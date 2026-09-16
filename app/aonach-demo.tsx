@@ -10,8 +10,8 @@ import { getDuck, dataUrl } from '@/lib/duckdb';
 // corpus size is unbounded while each file stays small. edges/overlay are single.
 const CAT = 'concept_catalog_aonach.parquet';
 const FILES = {
-  sample: { single: 'tiles_aonach.parquet', edges: 'edges_aonach.parquet', ov: 'ov_aonach.parquet', ovUrl: 'overlay/tiles_aonach.parquet', concepts: 'concepts_aonach.parquet' },
-  full: { edges: 'edges_aonach_full.parquet', ov: 'ov_aonach_full.parquet', ovUrl: 'overlay/tiles_aonach_full.parquet', concepts: 'concepts_aonach_full.parquet' },
+  sample: { single: 'tiles_aonach.parquet', edges: 'edges_aonach.parquet', ov: 'ov_aonach.parquet', ovUrl: 'overlay/tiles_aonach.parquet', concepts: 'concepts_aonach.parquet', retro: 'tiles_retrofit_aonach.parquet' },
+  full: { edges: 'edges_aonach_full.parquet', ov: 'ov_aonach_full.parquet', ovUrl: 'overlay/tiles_aonach_full.parquet', concepts: 'concepts_aonach_full.parquet', retro: 'tiles_retrofit_aonach_full.parquet' },
 } as const;
 const SETS = {
   sample: { label: 'sample — 10 assets', note: 'A small, readable slice — named assets, the traps spelled out.' },
@@ -95,6 +95,8 @@ const edgesRef = async (set: SetKey) => { await reg(FILES[set].edges, FILES[set]
 const ovRef = async (set: SetKey) => { await reg(FILES[set].ov, FILES[set].ovUrl); return `read_parquet('${FILES[set].ov}')`; };
 // melted concept store (heritage/role/zone/surge), sorted (node_id, concept_id) — its own axis, joined by resource_id
 const conceptsRef = async (set: SetKey) => { await reg(FILES[set].concepts, FILES[set].concepts); return `read_parquet('${FILES[set].concepts}')`; };
+// retrofit nodegroup partition — its own file (resource_id-sorted), not geo-chunked
+const retroRef = async (set: SetKey) => { await reg(FILES[set].retro, FILES[set].retro); return `read_parquet('${FILES[set].retro}')`; };
 const mb = (b: number) => (b >= 1e6 ? `${(b / 1e6).toFixed(1)} MB` : `${(b / 1e3).toFixed(0)} KB`);
 
 // Projected-column fetch: a query reads only the columns it references (plus each
@@ -143,6 +145,7 @@ function FilterTab({ set, manifest }: TabProps) {
       const t = tilesRef(set, manifest);
       await registerTiles(set, t);
       const K = await conceptsRef(set); // melted concept store — node-scoped, exact
+      const R = await retroRef(set);    // retrofit partition (for the "no retrofit" predicate)
       const T = t.sql, C = `read_parquet('${CAT}')`;
       const parts: string[] = [], irp: string[] = [];
       // gem stays the tile's primary promoted concept_id (already node-scoped); secondary/
@@ -152,7 +155,7 @@ function FilterTab({ set, manifest }: TabProps) {
       if (f.pre) { parts.push(`SELECT DISTINCT resource_id FROM ${T} WHERE nodegroup_id='profile' AND q_ordered<=1970`); irp.push('Range{ year ≤ 1970 }'); }
       if (f.shelter) { parts.push(`SELECT DISTINCT resource_id FROM ${K} WHERE node_id='role' AND concept_id='Shelter'`); irp.push('Concept{ roles ∋ "Shelter" }'); }
       if (f.hospital) { parts.push(`SELECT DISTINCT resource_id FROM ${K} WHERE node_id='role' AND concept_id='Hospital'`); irp.push('Concept{ roles ∋ "Hospital" }'); }
-      if (f.noretrofit) { parts.push(`SELECT DISTINCT resource_id FROM ${T} WHERE nodegroup_id='profile' EXCEPT SELECT DISTINCT resource_id FROM ${T} WHERE nodegroup_id='retrofit'`); irp.push('Not( has a retrofit )'); }
+      if (f.noretrofit) { parts.push(`SELECT DISTINCT resource_id FROM ${K} WHERE node_id='gem' EXCEPT SELECT DISTINCT resource_id FROM ${R}`); irp.push('Not( has a retrofit )'); }
       if (zone) { parts.push(`SELECT DISTINCT resource_id FROM ${K} WHERE node_id='zone' AND concept_id='${zone}'`); irp.push(`Concept{ zone is "${zone}" }`); }
       if (live) setIr(parts.length ? `All[ ${irp.join(',\n     ')} ]` : '# select one or more conditions');
       // total = a whole-corpus count; on full it's a manifest constant (0 requests), not a scan
@@ -204,12 +207,14 @@ function OnTileTab({ set, manifest }: TabProps) {
     let live = true;
     (async () => {
       setN(null);
-      const t = tilesRef(set, manifest); await registerTiles(set, t); const T = t.sql;
+      // retrofit is its own nodegroup partition (one resource_id-sorted file, not geo-chunked),
+      // so OnTile reads only it — no scanning the geo tile store for the retrofit tail.
+      const R = await retroRef(set);
       const q = mode === 'ontile'
-        ? `SELECT count(DISTINCT resource_id) FROM ${T} WHERE nodegroup_id='retrofit' AND concept_id='CR' AND q_ordered BETWEEN 1990 AND 2000 AND acc=TRUE`
-        : `SELECT count(*) FROM (SELECT DISTINCT resource_id FROM ${T} WHERE nodegroup_id='retrofit' AND concept_id='CR' INTERSECT SELECT DISTINCT resource_id FROM ${T} WHERE nodegroup_id='retrofit' AND q_ordered BETWEEN 1990 AND 2000 INTERSECT SELECT DISTINCT resource_id FROM ${T} WHERE nodegroup_id='retrofit' AND acc=TRUE)`;
+        ? `SELECT count(DISTINCT resource_id) FROM ${R} WHERE concept_id='CR' AND q_ordered BETWEEN 1990 AND 2000 AND acc=TRUE`
+        : `SELECT count(*) FROM (SELECT DISTINCT resource_id FROM ${R} WHERE concept_id='CR' INTERSECT SELECT DISTINCT resource_id FROM ${R} WHERE q_ordered BETWEEN 1990 AND 2000 INTERSECT SELECT DISTINCT resource_id FROM ${R} WHERE acc=TRUE)`;
       const c = await one(q);
-      const e = await rows(`SELECT descriptor_name, concept_id AS method, q_ordered AS year, acc FROM ${T} WHERE nodegroup_id='retrofit' ORDER BY resource_id, q_ordered LIMIT ${set === 'sample' ? 12 : 8}`);
+      const e = await rows(`SELECT resource_id, descriptor_name, concept_id AS method, q_ordered AS year, acc FROM ${R} ORDER BY resource_id, q_ordered LIMIT ${set === 'sample' ? 12 : 8}`);
       if (live) { setN(c); setEvs(e); }
     })();
     return () => { live = false; };
@@ -226,7 +231,7 @@ function OnTileTab({ set, manifest }: TabProps) {
       <Count n={n} unit={mode === 'ontile' ? 'assets — one real retrofit event' : 'assets — conditions met somewhere'} />
       <p className="am-note">A “paper retrofit” — a CR job that wasn’t accredited plus an accredited job that wasn’t CR — passes <code>All</code> but not <code>OnTile</code>. {set === 'full' ? 'On the full corpus that gap is thousands of assets.' : 'Here it is Áras Cuain.'}</p>
       <table><thead><tr><th>Asset</th><th>Method</th><th>Year</th><th>Accredited</th></tr></thead>
-        <tbody>{evs.map((r, i) => <tr key={i}><td>{String(r.descriptor_name)}</td><td><code>{String(r.method)}</code></td><td>{String(r.year)}</td><td>{r.acc ? '✓' : '✗'}</td></tr>)}</tbody></table>
+        <tbody>{evs.map((r, i) => <tr key={i}><td>{String(r.descriptor_name ?? r.resource_id)}</td><td><code>{String(r.method)}</code></td><td>{String(r.year)}</td><td>{r.acc ? '✓' : '✗'}</td></tr>)}</tbody></table>
     </div>
   );
 }

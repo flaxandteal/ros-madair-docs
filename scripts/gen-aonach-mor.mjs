@@ -172,9 +172,13 @@ async function main() {
 
   await createTiles(conn, 'stage');
   await conn.run(`INSERT INTO stage VALUES\n${rows.map(tileRow).join(',\n')};`);
-  await conn.run(`COPY (SELECT ${TILE_COLS.join(', ')} FROM stage ORDER BY resource_id, nodegroup_id, sortorder)
+  // profile (+ sub) tiles — the geo-clustered store. Retrofit is a SEPARATE nodegroup
+  // partition (its own file), because it's queried by method/year/accredited, not geo.
+  await conn.run(`COPY (SELECT ${TILE_COLS.join(', ')} FROM stage WHERE nodegroup_id<>'retrofit' ORDER BY resource_id, nodegroup_id, sortorder)
     TO '${join(OUT, 'tiles_aonach.parquet')}' (FORMAT PARQUET);`);
-  console.log(`tiles_aonach.parquet  ${rows.length} tiles`);
+  await conn.run(`COPY (SELECT ${TILE_COLS.join(', ')} FROM stage WHERE nodegroup_id='retrofit' ORDER BY resource_id, sortorder)
+    TO '${join(OUT, 'tiles_retrofit_aonach.parquet')}' (FORMAT PARQUET);`);
+  console.log(`tiles_aonach.parquet  ${rows.filter((r) => r.nodegroup_id !== 'retrofit').length} tiles · tiles_retrofit_aonach.parquet ${rows.filter((r) => r.nodegroup_id === 'retrofit').length} retrofit tiles`);
 
   // ---- melted concept store (heritage + roles), sorted (node_id, concept_id) ----
   await conn.run(`CREATE OR REPLACE TABLE concepts (${CONCEPT_COLS});`);
@@ -314,7 +318,7 @@ async function genFull(conn) {
   const files = [];
   for (let c = 0; c < CHUNKS; c++) {
     const rel = `tiles_aonach_full/chunk-${c}.parquet`, abs = join(OUT, rel);
-    await conn.run(`COPY (SELECT ${TILE_COLS.join(', ')} FROM all_tiles WHERE chunk=${c} ORDER BY (geo_min_lng IS NULL), cluster_key) TO '${abs}' (FORMAT PARQUET, ROW_GROUP_SIZE 16384);`);
+    await conn.run(`COPY (SELECT ${TILE_COLS.join(', ')} FROM all_tiles WHERE nodegroup_id='profile' AND chunk=${c} ORDER BY cluster_key) TO '${abs}' (FORMAT PARQUET, ROW_GROUP_SIZE 16384);`);
     const z = (await conn.runAndReadAll(`SELECT min(CASE WHEN path_in_schema='geo_min_lng' THEN stats_min::DOUBLE END) w, max(CASE WHEN path_in_schema='geo_max_lng' THEN stats_max::DOUBLE END) e, min(CASE WHEN path_in_schema='geo_min_lat' THEN stats_min::DOUBLE END) s, max(CASE WHEN path_in_schema='geo_max_lat' THEN stats_max::DOUBLE END) n, (max(row_group_id)+1) rgs FROM parquet_metadata('${abs}') WHERE path_in_schema LIKE 'geo_%'`)).getRowObjects()[0];
     const bcount = Number(Object.values((await conn.runAndReadAll(`SELECT count(*) FROM read_parquet('${abs}') WHERE nodegroup_id='profile'`)).getRowObjects()[0])[0]);
     const zmix = (await conn.runAndReadAll(`SELECT regexp_extract(data, '"zone":"([a-z_]+)"', 1) z, count(*) n FROM read_parquet('${abs}') WHERE nodegroup_id='profile' GROUP BY 1 ORDER BY n DESC LIMIT 1`)).getRowObjects()[0];
@@ -328,13 +332,19 @@ async function genFull(conn) {
   await conn.run(`COPY (SELECT ${TILE_COLS.join(', ')} FROM ov) TO '${join(OUT, 'overlay', 'tiles_aonach_full.parquet')}' (FORMAT PARQUET);`);
   // melted concept store: its OWN axis — sorted (node_id, concept_id), NOT geo-chunked
   const cabs = join(OUT, 'concepts_aonach_full.parquet');
-  await conn.run(`COPY (SELECT * FROM cg ORDER BY node_id, concept_id) TO '${cabs}' (FORMAT PARQUET, ROW_GROUP_SIZE 65536);`);
+  await conn.run(`COPY (SELECT * FROM cg ORDER BY node_id, concept_id) TO '${cabs}' (FORMAT PARQUET, ROW_GROUP_SIZE 262144);`);
   const cbytes = statSync(cabs).size;
   const ccount = Number(Object.values((await conn.runAndReadAll(`SELECT count(*) FROM read_parquet('${cabs}')`)).getRowObjects()[0])[0]);
+  // retrofit nodegroup partition: its OWN file, sorted by resource_id (events contiguous),
+  // NOT geo-chunked — queried by method/year/accredited, so OnTile reads one small file
+  const rabs = join(OUT, 'tiles_retrofit_aonach_full.parquet');
+  await conn.run(`COPY (SELECT ${TILE_COLS.join(', ')} FROM all_tiles WHERE nodegroup_id='retrofit' ORDER BY resource_id, sortorder) TO '${rabs}' (FORMAT PARQUET, ROW_GROUP_SIZE 262144);`);
+  const rbytes = statSync(rabs).size;
+  const rcount = Number(Object.values((await conn.runAndReadAll(`SELECT count(*) FROM read_parquet('${rabs}')`)).getRowObjects()[0])[0]);
 
   const total = files.reduce((a, f) => a + f.bytes, 0);
   const buildings = files.reduce((a, f) => a + f.buildings, 0);
-  const manifest = { graph: GRAPH, partition: 'geo (Morton cell)', chunks: files.length, buildings, total_bytes: total, row_group_size: 4096, edges: 'edges_aonach_full.parquet', overlay: 'overlay/tiles_aonach_full.parquet', concepts: 'concepts_aonach_full.parquet', concepts_bytes: cbytes, concepts_rows: ccount, files };
+  const manifest = { graph: GRAPH, partition: 'geo (Morton cell)', chunks: files.length, buildings, total_bytes: total, row_group_size: 16384, edges: 'edges_aonach_full.parquet', overlay: 'overlay/tiles_aonach_full.parquet', concepts: 'concepts_aonach_full.parquet', concepts_bytes: cbytes, concepts_rows: ccount, retrofit: 'tiles_retrofit_aonach_full.parquet', retrofit_bytes: rbytes, retrofit_rows: rcount, files };
   writeFileSync(manifestPath, JSON.stringify(manifest));
   console.log(`aonach_full_manifest.json  ${files.length} chunks / ${buildings} buildings / ${(total / 1e6).toFixed(1)} MB · zones: ${files.map((f) => f.zone).join(',')}`);
   return { buildings, chunks: files.length, total_bytes: total };

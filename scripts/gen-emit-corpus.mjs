@@ -16,7 +16,7 @@
 
 import { execSync } from 'node:child_process';
 import {
-  mkdirSync, rmSync, readdirSync, readFileSync, writeFileSync, copyFileSync, existsSync, chmodSync,
+  mkdirSync, rmSync, readdirSync, readFileSync, writeFileSync, copyFileSync, renameSync, existsSync, chmodSync,
 } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -92,8 +92,21 @@ function writeResourceGraph() {
 const bin = emitBinary();
 const dd = assembleDataDir();
 mkdirSync(OUT, { recursive: true });
-console.log(`emit → ${OUT}`);
-execSync(`'${bin}' '${dd}' '${OUT}'`, { stdio: 'inherit' });
+
+// Emit into a temp dir, then move artifacts into public/data. This keeps emit's
+// `concept_catalog.parquet` from clobbering gen-sample-data's (query-tiles' own
+// Settlement hierarchy) — the example models' catalog lands as a distinct
+// `concept_catalog_models.parquet` for the concept demos to register.
+const tmp = join(HERE, '.emit-out');
+rmSync(tmp, { recursive: true, force: true });
+mkdirSync(tmp, { recursive: true });
+console.log(`emit → ${tmp} → ${OUT}`);
+execSync(`'${bin}' '${dd}' '${tmp}'`, { stdio: 'inherit' });
+for (const f of readdirSync(tmp)) {
+  const dest = f === 'concept_catalog.parquet' ? 'concept_catalog_models.parquet' : f;
+  renameSync(join(tmp, f), join(OUT, dest));
+}
+rmSync(tmp, { recursive: true, force: true });
 rmSync(dd, { recursive: true, force: true });
 writeResourceGraph();
 console.log('✓ emit corpus generated');

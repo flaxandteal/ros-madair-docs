@@ -1,6 +1,10 @@
 import * as React from 'react';
 import { ensureAlizarin, queryResourceIds, hydrate } from '@/lib/rm-arches-client';
+import { registerModel } from '@/lib/ros-madair';
 import { DEFAULT_SQL } from './site-references.default';
+
+// Site model (graph id); its melt stores are keyed by it.
+const SITE = '64368e71-abbc-53ba-9bd8-87e2500f8e65';
 
 async function attr(model: unknown, alias: string): Promise<string> {
   try {
@@ -26,6 +30,10 @@ async function linkName(model: unknown, alias: string): Promise<string> {
 // inverse of the id we queried on.
 async function run(sql: string = DEFAULT_SQL): Promise<React.ReactNode> {
   await ensureAlizarin();
+  // Register the Site model's melt stores under the view names the compiler's SQL
+  // targets (`concept_index` over concepts_<graphid>.parquet, `tiles` over the tile
+  // rows). Hydration still reads tiles_<graphid>.parquet via the alizarin client.
+  await registerModel({ tiles: `tiles_${SITE}.parquet`, concepts: `concepts_${SITE}.parquet` });
   const ids = await queryResourceIds(sql);
   if (!ids.length) return <div>0 resources.</div>;
 

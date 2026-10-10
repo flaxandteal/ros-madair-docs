@@ -1,10 +1,14 @@
-// Selecting by a CLM reference. The promoted `concept_id` column carries each
-// tile's reference key — the controlled-list item id (`list_item_id`) — so this
-// filters Sites whose `heritage_designation` reference is "Scheduled Monument",
-// by that item's id (not its label). This is exactly a
-// `Concept { path: "heritage_designation", op: Is, value: <list_item_id> }`
-// predicate, compiled to SQL over the zone-mapped column.
+// Selecting Sites by a CLM `reference`. This is the SQL the ros-madair compiler
+// emits for the typed predicate
+//   Concept { path: "heritage_designation", op: Is, value: <list_item_id> }
+// against a model whose references are melted into the per-node concept store
+// (`concepts_<graphid>.parquet`, registered as the `concept_index` view). It keys
+// on the node (heritage_designation) AND the controlled-list item id ("Scheduled
+// Monument"), node-scoped and exact — not a scan of a per-tile column.
+//
+// This is engine output, not hand-written SQL: the same `compile_query` that
+// `ros-madair-duck` runs natively produced it (via ros-madair wasm in the browser).
 export const DEFAULT_SQL = `SELECT DISTINCT resource_id
-FROM read_parquet('tiles_64368e71-abbc-53ba-9bd8-87e2500f8e65.parquet')  -- Site
-WHERE concept_id = 'a7d38e93-1442-590e-b976-70a321a45421'   -- heritage_designation = "Scheduled Monument"
-ORDER BY resource_id;`;
+FROM concept_index
+WHERE node_id = '15bc97aa-9bf2-5610-9d4f-fcbcffa8524b'   -- heritage_designation
+  AND concept_id = 'a7d38e93-1442-590e-b976-70a321a45421';  -- "Scheduled Monument"`;

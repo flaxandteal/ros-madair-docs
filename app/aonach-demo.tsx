@@ -138,8 +138,12 @@ type TabProps = { set: SetKey; manifest: Manifest | null; basemap: Basemap | nul
 function FilterTab({ set, manifest }: TabProps) {
   const [f, setF] = React.useState({ mur: true, listed: false, pre: false, tall: false, shelter: false, hospital: false, noretrofit: false });
   const [zone, setZone] = React.useState('');
-  const [res, setRes] = React.useState<{ n: number; total: number; sample: Record<string, unknown>[]; t: TilesRef } | null>(null);
+  const [res, setRes] = React.useState<{ n: number; total: number; sample: Record<string, unknown>[]; t: TilesRef; ms: number; hydrated: boolean } | null>(null);
   const [ir, setIr] = React.useState('');
+  // On the full corpus: ids-only (the cheap pruned scan) vs. gathering each matched
+  // asset's name/GEM/year + concepts (the scattered, per-resource_id hydration). The
+  // toggle lets you watch the range-read cost — and the wall-clock — jump.
+  const [hydrate, setHydrate] = React.useState(false);
   React.useEffect(() => {
     let live = true;
     (async () => {
@@ -164,38 +168,50 @@ function FilterTab({ set, manifest }: TabProps) {
       if (live) setIr(parts.length ? `All[ ${irp.join(',\n     ')} ]` : '# select one or more conditions');
       // total = a whole-corpus count; on full it's a manifest constant (0 requests), not a scan
       const total = set === 'full' ? (manifest?.buildings ?? 0) : await one(`SELECT count(*) FROM ${T} WHERE nodegroup_id='profile'`);
-      if (!parts.length) { if (live) setRes({ n: 0, total, sample: [], t }); return; }
+      if (!parts.length) { if (live) setRes({ n: 0, total, sample: [], t, ms: 0, hydrated: false }); return; }
       // Parenthesize every operand: DuckDB ranks INTERSECT above EXCEPT, so the
       // "no retrofit" term (… EXCEPT …) would otherwise bind the following clause to
       // its right side and the match count would GROW when you add the constraint.
       const inner = parts.map((p) => `(${p})`).join('\nINTERSECT\n');
+      // Gather each matched asset's name/GEM/year + its melted concept list — the
+      // per-resource_id hydration. Cheap on the 10-asset sample; on the full corpus
+      // it is the scattered, unprunable read the ids-only path avoids.
+      const gather = `SELECT y.descriptor_name, y.concept_id AS gem, y.q_ordered AS year, (SELECT string_agg(k.node_id || ':' || k.concept_id, ', ' ORDER BY k.node_id) FROM ${K} k WHERE k.resource_id=y.resource_id) AS concepts FROM ${T} y JOIN (${inner}) m ON m.resource_id=y.resource_id WHERE y.nodegroup_id='profile' ORDER BY y.descriptor_name LIMIT 8`;
+      // The sample corpus always hydrates (it's tiny); the full corpus only when toggled.
+      const doHydrate = set !== 'full' || hydrate;
       let n: number, sample: Record<string, unknown>[];
-      if (set === 'full') {
-        // ONE pruned scan yields both the count and 8 example ids (window count + LIMIT) —
-        // no re-scan, and no gather-by-resource_id (fetching asset NAMES on the full corpus
-        // is the scattered, unprunable hydration cost, so full shows ids; the small sample
-        // corpus hydrates the rich display below, where it's cheap).
+      const t0 = performance.now();
+      if (!doHydrate) {
+        // ids only: ONE pruned scan yields both the count (window) and 8 example ids.
         const r = await rows(`SELECT resource_id, count(*) OVER () AS n FROM (${inner}) LIMIT 8`);
         n = r.length ? Number(r[0].n) : 0;
         sample = r;
       } else {
         n = await one(`SELECT count(*) FROM (${inner})`);
-        sample = await rows(`SELECT y.descriptor_name, y.concept_id AS gem, y.q_ordered AS year, (SELECT string_agg(k.node_id || ':' || k.concept_id, ', ' ORDER BY k.node_id) FROM ${K} k WHERE k.resource_id=y.resource_id) AS concepts FROM ${T} y JOIN (${inner}) m ON m.resource_id=y.resource_id WHERE y.nodegroup_id='profile' ORDER BY y.descriptor_name LIMIT 8`);
+        sample = await rows(gather);
       }
-      if (live) setRes({ n, total, sample, t });
+      const ms = Math.round(performance.now() - t0);
+      if (live) setRes({ n, total, sample, t, ms, hydrated: doHydrate });
     })();
     return () => { live = false; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [set, manifest, f.mur, f.listed, f.pre, f.tall, f.shelter, f.hospital, f.noretrofit, zone]);
+  }, [set, manifest, f.mur, f.listed, f.pre, f.tall, f.shelter, f.hospital, f.noretrofit, zone, hydrate]);
   const chk = (k: keyof typeof f, label: string) => (<label className="am-chk"><input type="checkbox" checked={f[k]} onChange={(e) => setF({ ...f, [k]: e.target.checked })} /> {label}</label>);
   return (
     <div>
       <p>Tick conditions to build an <code>All[…]</code> query — GEM walks the concept hierarchy (one DFS range), roles test list membership, year is an ordered range, zone tests land-use. Try <em>masonry + no retrofit + a low-income or coastal zone</em> — the vulnerability hotspot.</p>
       <div className="am-controls">{chk('mur', 'unreinforced masonry (gem ⊑ MUR)')}{chk('listed', 'Listed')}{chk('pre', 'built ≤ 1970')}{chk('tall', 'storeys ≥ 8')}{chk('shelter', 'role ∋ Shelter')}{chk('hospital', 'role ∋ Hospital')}{chk('noretrofit', 'no retrofit')}
         <select className="am-sel" value={zone} onChange={(e) => setZone(e.target.value)}><option value="">any zone</option>{Object.keys(ZONE_LABEL).map((z) => <option key={z} value={z}>{ZONE_LABEL[z]}</option>)}</select>
+        {set === 'full' && (<label className="am-chk" title="Gather each matched asset's name, GEM and concepts (the scattered per-resource_id read) instead of just ids — watch the range-read cost."><input type="checkbox" checked={hydrate} onChange={(e) => setHydrate(e.target.checked)} /> gather asset details</label>)}
       </div>
       <IR>{ir}</IR>
       <Count n={res ? res.n : null} of={res?.total} unit="assets match" />
+      {res && res.n > 0 && (
+        <p className="am-note">
+          {res.hydrated ? <>Gathered <b>name · GEM · year · concepts</b> for the matched assets — the scattered, per-<code>resource_id</code> read.</> : <>Matched <b>ids only</b> — one pruned scan, no per-asset gather.</>}
+          {' '}Query ran in <b>{res.ms} ms</b>{set === 'full' ? ' over the full corpus (range-read from HTTP)' : ''}.{set === 'full' ? ' Toggle “gather asset details” to see the difference.' : ''}
+        </p>
+      )}
       {res && <Fetch t={res.t} cols={COLS.filter} conceptStore={(f.mur || f.listed || f.shelter || f.hospital || zone) ? manifest?.concepts_bytes : undefined} />}
       {res && res.sample.length > 0 && (
         <table><thead><tr><th>Asset</th><th>GEM</th><th>Concepts</th><th>Built</th></tr></thead>

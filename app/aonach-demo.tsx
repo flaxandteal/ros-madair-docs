@@ -199,7 +199,7 @@ function FilterTab({ set, manifest }: TabProps) {
       {res && <Fetch t={res.t} cols={COLS.filter} conceptStore={(f.mur || f.listed || f.shelter || f.hospital || zone) ? manifest?.concepts_bytes : undefined} />}
       {res && res.sample.length > 0 && (
         <table><thead><tr><th>Asset</th><th>GEM</th><th>Concepts</th><th>Built</th></tr></thead>
-          <tbody>{res.sample.map((r, i) => <tr key={i}><td>{String(r.descriptor_name ?? r.resource_id)}</td><td><code>{String(r.gem)}</code></td><td><code>{String(r.concepts ?? '')}</code></td><td>{String(r.year ?? '')}</td></tr>)}</tbody></table>
+          <tbody>{res.sample.map((r, i) => <tr key={i}><td>{String(r.descriptor_name ?? r.resource_id)}</td><td><code>{String(r.gem ?? '')}</code></td><td><code>{String(r.concepts ?? '')}</code></td><td>{String(r.year ?? '')}</td></tr>)}</tbody></table>
       )}
     </div>
   );

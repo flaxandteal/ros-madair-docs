@@ -4,12 +4,13 @@
   "private": true,
   "scripts": {
     "copy-duckdb": "mkdir -p public/duckdb && cp node_modules/@duckdb/duckdb-wasm/dist/duckdb-mvp.wasm node_modules/@duckdb/duckdb-wasm/dist/duckdb-eh.wasm node_modules/@duckdb/duckdb-wasm/dist/duckdb-browser-mvp.worker.js node_modules/@duckdb/duckdb-wasm/dist/duckdb-browser-eh.worker.js public/duckdb/",
+    "copy-ros-madair": "mkdir -p public/ros-madair && cp node_modules/ros-madair/ros_madair_wasm_bg.wasm public/ros-madair/",
     "gen-sample-data": "node scripts/gen-sample-data.mjs",
     "gen-example-parquet": "node scripts/gen-example-parquet.mjs",
     "gen-data": "npm run gen-sample-data && npm run gen-example-parquet && npm run gen-aonach",
-    "prebuild": "npm run copy-duckdb && npm run gen-data",
+    "prebuild": "npm run copy-duckdb && npm run copy-ros-madair && npm run gen-data",
     "build": "next build",
-    "predev": "npm run copy-duckdb && npm run gen-data",
+    "predev": "npm run copy-duckdb && npm run copy-ros-madair && npm run gen-data",
     "dev": "next dev",
     "start": "next start",
     "postinstall": "fumadocs-mdx",
@@ -26,7 +27,8 @@
     "fumadocs-ui": "15.2.13",
     "next": "15.3.1",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "ros-madair": "0.1.0-alpha.19"
   },
   "devDependencies": {
     "@duckdb/node-api": "^1.5.5-r.4",

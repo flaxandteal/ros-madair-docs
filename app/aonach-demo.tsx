@@ -165,7 +165,10 @@ function FilterTab({ set, manifest }: TabProps) {
       // total = a whole-corpus count; on full it's a manifest constant (0 requests), not a scan
       const total = set === 'full' ? (manifest?.buildings ?? 0) : await one(`SELECT count(*) FROM ${T} WHERE nodegroup_id='profile'`);
       if (!parts.length) { if (live) setRes({ n: 0, total, sample: [], t }); return; }
-      const inner = parts.join('\nINTERSECT\n');
+      // Parenthesize every operand: DuckDB ranks INTERSECT above EXCEPT, so the
+      // "no retrofit" term (… EXCEPT …) would otherwise bind the following clause to
+      // its right side and the match count would GROW when you add the constraint.
+      const inner = parts.map((p) => `(${p})`).join('\nINTERSECT\n');
       let n: number, sample: Record<string, unknown>[];
       if (set === 'full') {
         // ONE pruned scan yields both the count and 8 example ids (window count + LIMIT) —

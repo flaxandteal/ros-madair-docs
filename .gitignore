@@ -7,6 +7,8 @@
 .source
 # self-hosted duckdb-wasm bundles (npm run copy-duckdb)
 /public/duckdb
+# self-hosted ros-madair compiler wasm (npm run copy-ros-madair)
+/public/ros-madair
 # live-demo Parquet corpus (npm run gen-sample-data)
 /public/data
 

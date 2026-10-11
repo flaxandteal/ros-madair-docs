@@ -28,9 +28,10 @@ chunks. That is the point — **a too-big-to-download corpus, searched where it 
 ## What each tab shows
 
 - **Concept · Range · List** — `gem ⊑ MUR` walks the GEM taxonomy as a single
-  DFS-interval range (all unreinforced masonry, no enumeration) over the tile's primary
-  promoted `concept_id`. Heritage, roles and zone are **node-scoped** predicates against
-  a **melted concept store** (`concepts_<slug>`: one row per `(tile, node, concept)`,
+  DFS-interval range (all unreinforced masonry, no enumeration) — routed, like every
+  other concept, through the **melted concept store**, not any promoted `concept_id` on
+  the tile. Heritage, roles and zone are **node-scoped** predicates against that store
+  (`concepts_<graphid>`: one row per `(tile, node, concept)`,
   sorted `(node_id, concept_id)`) — so `roles ∋ Shelter` matches *that* node exactly,
   never conflating with heritage or zone the way one crammed `concept_ids` array would.
   A single node can hold several values, so multi-valued facets are just rows. `All[…]`

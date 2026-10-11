@@ -59,9 +59,10 @@ JSON fetch.
 ## Selecting by a reference
 
 The query above just enumerates footprints. Now **select by an alizarin property** —
-a CLM `reference`. RM's reference handler promotes a reference node's key (its
-controlled-list `list_item_id`) into a typed `concept_id` column, so filtering on it
-is a plain column predicate whose row-group stats are the zone-map. This query picks
+a CLM `reference`. RM's reference handler makes a reference node first-class but
+**melts** it into the concept store — emit normalizes the Arches `to_json` object
+down to its controlled-list `list_item_id` — so filtering on it is a node-scoped
+`concept_index` semijoin, not a predicate on any promoted tile column. This query picks
 Sites whose `heritage_designation` is *"Scheduled Monument"* — **by that list item's
 id, not its label** — then hydrates each Site:
 

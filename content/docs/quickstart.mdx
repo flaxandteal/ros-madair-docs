@@ -34,10 +34,12 @@ The output directory contains the Parquet substrate:
 
 ```
 <out_dir>/
-  tiles_<slug>.parquet    tile = row; promoted zone-mapped columns + a `data` JSON blob
-  edges_<slug>.parquet    one row per link target
-  concept_catalog.parquet  concept DFS intervals
-  manifest.json           layout + FORMAT_VERSION contract; signed snapshot_id
+  tiles_<graphid>.parquet     tile = row; geo_* zone-mapped column + a `data` JSON blob
+  concepts_<graphid>.parquet  melted node-keyed concept store
+  ordered_<graphid>.parquet   melted node-keyed ordered-scalar store
+  edges_<graphid>.parquet     one row per link target
+  concept_catalog.parquet     concept DFS intervals
+  manifest.json               layout + FORMAT_VERSION contract; signed snapshot_id
 ```
 
 ### Sign and verify
@@ -67,6 +69,8 @@ browser** on the [Live Query](/docs/live-query), [Layers](/docs/layers), and
 
 ## Where this is heading
 
-The one remaining slice is the browser runtime: run the same SQL `ros-madair-duck`
-compiles as DuckDB-WASM. See the
+The browser runtime has landed: `ros-madair-compile` builds for `wasm32` and
+`ros-madair-wasm` (published to npm as `ros-madair`) wraps it, so a browser page
+compiles the same SQL `ros-madair-duck` runs natively and hands it to DuckDB-WASM.
+The remaining work is repointing the last docs demos. See the
 [README's Direction section](https://github.com/flaxandteal/ros-madair#direction-duckdb--parquet-substrate).

@@ -12,10 +12,12 @@ a server: the browser loads [duckdb-wasm](https://github.com/duckdb/duckdb-wasm)
 consumer would, and runs the query below against it.
 
 The Parquet is exactly what `ros-madair-emit`'s `parquet` module writes: one **row
-per tile**, promoted typed columns (`concept_id`, `geo_*`, `q_ordered`) whose
-per-row-group min/max stats *are* the zone-map, and a `data` column holding the
-tile detail for hydration. Sample corpus: 6,000 fictional heritage places on
-Chennai geography, in 3 row groups.
+per tile**, with `geo_*` the only promoted typed columns — their per-row-group
+min/max stats *are* the spatial zone-map — and a `data` column holding the tile
+detail for hydration. Concepts and ordered scalars are **melted** into node-keyed
+stores (`concepts_<graphid>`/`ordered_<graphid>`), not promoted on the tile row.
+Sample corpus: 6,000 fictional heritage places on Chennai geography, in 3 row
+groups.
 
 <DuckExample module='/examples/query-tiles.tsx' defaultSql={DEFAULT_SQL} />
 
@@ -30,9 +32,9 @@ each clause is one of the RM predicates:
 
 | RM predicate | In the SQL |
 |---|---|
-| `Concept(DescendantOrSelfOf, 'Settlement')` | join the concept catalog on its DFS interval — `cat.dfs_enter BETWEEN anc.dfs_enter AND anc.dfs_leave`. One contiguous range because the catalog is DFS-ordered. |
+| `Concept(DescendantOrSelfOf, 'Settlement')` | a node-scoped semijoin over the `concept_index` view (the melted concept store), range-joined to the concept catalog on its DFS interval — `cat.dfs_enter BETWEEN anc.dfs_enter AND anc.dfs_leave`. One contiguous range because the catalog is DFS-ordered. An exact `Concept(is, …)` is the same semijoin without the catalog range-join. |
 | `Bbox(...)` | `geo_min_lng`/`geo_max_lng` bounds — the promoted geo columns, pruned by row-group zone-maps. |
-| `Range(established ≥ 1900)` | `q_ordered` (days-from-epoch), the promoted ordered column. |
+| `Range(established ≥ 1900)` | a node-scoped read over the melted `ordered_<graphid>` store (`q_ordered` days-from-epoch, keyed by node) — not a promoted tile column. |
 
 The `data` column is then parsed back into fields — Arches tile-graph hydration in
 miniature. Concept resolution (value → canonical concept id, DFS intervals) and

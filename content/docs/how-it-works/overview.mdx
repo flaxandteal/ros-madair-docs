@@ -17,9 +17,11 @@ exactly, and hydrates the matches into a schema-shaped tree.
 alizarin graphs + resources + vocabularies (a data_dir)
         │  ros-madair-emit   (CLI)
         ▼
-  tiles_<slug>.parquet     tile = row; promoted columns (concept_ids / q_ordered / geo_*)
-                           whose row-group min/max stats ARE the zone-map; `data` = hydration JSON
-  edges_<slug>.parquet     one row per link target — HasLink / OnLink / cited_by semijoin this
+  tiles_<graphid>.parquet  tile = row; only geo_* promoted, its row-group min/max stats
+                           ARE the spatial zone-map; `data` = hydration JSON
+  concepts_<graphid>.parquet  melted node-keyed concept store (Concept = a node-scoped semijoin)
+  ordered_<graphid>.parquet   melted node-keyed ordered-scalar store (Range = a node-scoped read)
+  edges_<graphid>.parquet  one row per link target — HasLink / OnLink / cited_by semijoin this
   concept_catalog.parquet  concept DFS intervals (hierarchy = a range join)
   manifest.json            layout + FORMAT_VERSION contract; signed snapshot_id
         │  ros-madair-duck (native) / DuckDB-WASM (browser)
@@ -31,13 +33,19 @@ alizarin graphs + resources + vocabularies (a data_dir)
 
 ## The artifacts
 
-- **`tiles_<slug>.parquet`** — one row per tile. A field's storage class is a
-  pure function of its datatype (`ros-madair-handlers`): concept → the
-  `concept_ids` JSON-array column, ordered scalar (date) → `q_ordered`, geometry
-  → `geo_*`, everything else → the `data` JSON blob for hydration. The promoted
-  columns' per-row-group min/max stats in the Parquet footer **are** the
-  zone-map — no separate index.
-- **`edges_<slug>.parquet`** — one row per link target; `HasLink`, the `OnLink`
+- **`tiles_<graphid>.parquet`** — one row per tile. A field's storage class is a
+  pure function of its datatype (`ros-madair-handlers`): concepts and ordered
+  scalars (dates/numbers) are **melted** into their own node-keyed stores
+  (below), geometry → `geo_*` promoted onto the row, everything else → the
+  `data` JSON blob for hydration. Only `geo_*` is promoted, and its per-row-group
+  min/max stats in the Parquet footer **are** the spatial zone-map — no separate
+  index.
+- **`concepts_<graphid>.parquet`** and **`ordered_<graphid>.parquet`** — the
+  melted node-keyed stores (one row per resource/tile/nodegroup/node/value). A
+  `Concept` filter compiles to a node-scoped semijoin over the concept store; a
+  `Range` is a node-scoped read over the ordered store — so concepts and dates
+  live off the tile row, not as promoted columns on it.
+- **`edges_<graphid>.parquet`** — one row per link target; `HasLink`, the `OnLink`
   path predicate, and `cited_by` all semijoin this columnar edge table.
 - **`concept_catalog.parquet`** — concept DFS intervals, so a hierarchy query
   (`DescendantOrSelfOf`) is a range join.
@@ -49,12 +57,15 @@ alizarin graphs + resources + vocabularies (a data_dir)
 
 `ros-madair-query` defines the typed IR (`Concept`, `Range`, `Bbox`, `HasLink`,
 `OnLink`, `OnTile`) — plus `ModelCatalog` (a discovery surface for NL→IR
-authoring) and `explain` (IR → English). It is backend-agnostic.
-`ros-madair-duck` is the compiler and reader:
+authoring) and `explain` (IR → English). It is backend-agnostic. `ros-madair-compile`
+is the one pure IR → DuckDB SQL compiler (`compile_expr`/`compile_query`, no
+libduckdb, builds for `wasm32`); it has two consumers — `ros-madair-duck`
+executes the SQL natively, and `ros-madair-wasm` (npm `ros-madair`) runs the same
+lowering in the browser over duckdb-wasm. `ros-madair-duck`:
 
-- **compiles** the IR to DuckDB SQL over Parquet and **resolves** it to resource
-  ids (row-group prune, then exact filter — including exact `ST_Intersects` where
-  the spatial extension is available);
+- **compiles** the IR to DuckDB SQL over Parquet (via `ros-madair-compile`) and
+  **resolves** it to resource ids (row-group prune, then exact filter — including
+  exact `ST_Intersects` where the spatial extension is available);
 - **hydrates** matching tiles into a schema-shaped tree;
 - composes **layered overlays** (a base plus on-device overlays, precedence per
   resource + nodegroup), across which an `OnLink` hop can traverse;
@@ -73,5 +84,7 @@ and snapshot signing. Full-text search stays with a separate inverted index
 See the
 [README's Direction section](https://github.com/flaxandteal/ros-madair#direction-duckdb--parquet-substrate)
 for the findings, the tile-row Parquet layout, nodegroup partitioning and
-hierarchical ordering, egress governance, and the roadmap (the remaining slice is
-the DuckDB-WASM browser runtime).
+hierarchical ordering, egress governance, and the roadmap. The DuckDB-WASM
+browser runtime has since landed — `ros-madair-compile` builds for `wasm32` and
+`ros-madair-wasm` (npm `ros-madair`) wraps it, so a browser page compiles the same
+SQL the native reader runs; the remaining work is repointing the last docs demos.

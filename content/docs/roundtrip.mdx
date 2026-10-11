@@ -13,8 +13,9 @@ query, and alizarin receives the result.** Rós Madair is only the middle.
    parents and their narrower terms, indented.
 2. **Picking a concept builds a query.** Selecting one expands it to *itself and all
    its descendants* (again from alizarin's hierarchy) and emits a
-   `DescendantOrSelfOf` predicate — the exact RM `Concept` query, as SQL over the
-   promoted `concept_id` column.
+   `DescendantOrSelfOf` predicate — the exact RM `Concept` query, a node-scoped
+   semijoin over `concept_index` (the melted concept store) range-joined to the DFS
+   `concept_catalog`, not a predicate on any promoted `concept_id` tile column.
 3. **Rós Madair executes it** against the tile-row Parquet (duckdb-wasm).
 4. **alizarin hydrates the matches** back into typed `Organisation` resources — the
    `sector` you see is a concept resolved by the same RDM cache that populated the

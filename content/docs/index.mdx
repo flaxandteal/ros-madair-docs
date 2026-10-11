@@ -27,13 +27,17 @@ surveys — that is overkill.
 The `ros-madair-emit` CLI compiles a data directory of graphs, resources, and
 vocabularies into a **DuckDB + Parquet substrate**:
 
-1. **`tiles_<slug>.parquet`** — one row per tile, with promoted typed columns
-   (concept / date / geo) whose per-row-group min/max stats *are* the zone-map,
-   and a `data` JSON blob for hydration.
-2. **`edges_<slug>.parquet`** — one row per link target (the columnar edge table
-   links and reverse traversal semijoin), plus a **`concept_catalog.parquet`**
+1. **`tiles_<graphid>.parquet`** — one row per tile. Only `geo_*` is promoted
+   onto the row, its per-row-group min/max stats *are* the spatial zone-map;
+   a `data` JSON blob carries the rest for hydration.
+2. **`concepts_<graphid>.parquet`** and **`ordered_<graphid>.parquet`** — the
+   melted node-keyed stores (one row per resource/tile/nodegroup/node/value); a
+   `Concept` filter semijoins the concept store, a `Range` reads the ordered
+   store.
+3. **`edges_<graphid>.parquet`** — one row per link target (the columnar edge
+   table links and reverse traversal semijoin), plus a **`concept_catalog.parquet`**
    for concept-hierarchy range joins.
-3. **`manifest.json`** — the layout + format-version contract, carrying a signed
+4. **`manifest.json`** — the layout + format-version contract, carrying a signed
    `snapshot_id`.
 
 A reader (`ros-madair-duck` natively; DuckDB-WASM in the browser) compiles the
@@ -44,8 +48,10 @@ reverse-traversal-aware — verifying the manifest signature first.
 <Callout title="Direction: DuckDB + Parquet">
   This substrate **replaced** the v1 coarse/fine head+chunk read engine; the
   layered overlay model, reverse traversal (`cited_by`), tile-graph hydration,
-  and snapshot signing are kept. The one remaining slice is the DuckDB-WASM
-  browser runtime. See the
+  and snapshot signing are kept. The DuckDB-WASM browser runtime has landed —
+  `ros-madair-compile` builds for `wasm32` and `ros-madair-wasm` (published to
+  npm as `ros-madair`) wraps it, so a browser page compiles the same SQL the
+  native reader runs; the remaining work is repointing the last docs demos. See the
   [README's Direction section](https://github.com/flaxandteal/ros-madair#direction-duckdb--parquet-substrate)
   for the rationale and roadmap.
 </Callout>

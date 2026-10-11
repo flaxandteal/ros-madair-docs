@@ -125,11 +125,17 @@ function Count({ n, of, unit }: { n: number | null; of?: number; unit: string })
   if (n === null) return <div className="am-count am-muted">running…</div>;
   return <div className="am-count"><b>{n.toLocaleString()}</b>{of != null ? ` of ${of.toLocaleString()}` : ''} {unit}</div>;
 }
-function Fetch({ t, cols, conceptStore }: { t: TilesRef; cols?: string[]; conceptStore?: number }) {
+function Fetch({ t, cols, conceptStore, hydrated }: { t: TilesRef; cols?: string[]; conceptStore?: number; hydrated?: boolean }) {
   if (!t.total) return null;
+  const cNote = conceptStore ? <> The <b>concept store</b> ({mb(conceptStore)} total, its own <code>(node_id, concept_id)</code>-sorted axis) is range-fetched to the matching node/value block — a fraction of it, joined back by <code>resource_id</code>; never the whole store.</> : null;
+  // ids-only: the predicates read ONLY the sorted melt/ordered axes; the big tile
+  // chunks are never opened (the result is just resource_ids). The tile-chunk read
+  // below is incurred solely by the hydration gather.
+  if (hydrated === false) {
+    return <p className="am-note"><b>ids only</b> — the <b>tile chunks are never opened</b> ({mb(t.total)} across {t.nChunks} chunks, untouched); the match comes from the sorted melt/ordered axes alone.{cNote} Tick “gather asset details” to pull the tile chunks for the display columns.</p>;
+  }
   const bytes = cols ? projBytes(t.files, cols) : t.bytes;
   const colNote = cols ? <> — only the <b>{cols.length} projected columns</b>, not the full rows</> : null;
-  const cNote = conceptStore ? <> Facet predicates read the separate <b>concept store</b> ({mb(conceptStore)} total, its own <code>(node_id, concept_id)</code>-sorted axis) — range-fetched to the matching node/value block, a fraction of it, joined back by <code>resource_id</code>; never the whole store.</> : null;
   return <p className="am-note">Fetched <b>{t.chunks} of {t.nChunks}</b> chunks — {mb(bytes)} of {mb(t.total)} ({(100 * bytes / t.total).toFixed(bytes / t.total < 0.1 ? 1 : 0)}%){colNote}. Row groups are pruned within each chunk, and unread columns (the fat <code>data</code> JSON) are never fetched.{cNote}</p>;
 }
 type TabProps = { set: SetKey; manifest: Manifest | null; basemap: Basemap | null };
@@ -212,7 +218,7 @@ function FilterTab({ set, manifest }: TabProps) {
           {' '}Query ran in <b>{res.ms} ms</b>{set === 'full' ? ' over the full corpus (range-read from HTTP)' : ''}.{set === 'full' ? ' Toggle “gather asset details” to see the difference.' : ''}
         </p>
       )}
-      {res && <Fetch t={res.t} cols={COLS.filter} conceptStore={(f.mur || f.listed || f.shelter || f.hospital || zone) ? manifest?.concepts_bytes : undefined} />}
+      {res && <Fetch t={res.t} cols={COLS.filter} hydrated={res.hydrated} conceptStore={(res.hydrated || f.mur || f.listed || f.shelter || f.hospital || zone) ? manifest?.concepts_bytes : undefined} />}
       {res && res.sample.length > 0 && (
         <table><thead><tr><th>Asset</th><th>GEM</th><th>Concepts</th><th>Built</th></tr></thead>
           <tbody>{res.sample.map((r, i) => <tr key={i}><td>{String(r.descriptor_name ?? r.resource_id)}</td><td><code>{String(r.gem ?? '')}</code></td><td><code>{String(r.concepts ?? '')}</code></td><td>{String(r.year ?? '')}</td></tr>)}</tbody></table>

@@ -18,6 +18,13 @@
 set -euo pipefail
 : "${R2_ENDPOINT:?set R2_ENDPOINT=https://<account-id>.r2.cloudflarestorage.com}"
 : "${R2_BUCKET:?set R2_BUCKET=<bucket-name>}"
+# aws-cli >= 2.23 defaults request_checksum_calculation to "when_supported", which
+# adds CRC32 trailers R2's SigV4 verification rejects on larger/multipart PUTs →
+# "SignatureDoesNotMatch" on a subset of files. Revert to the pre-2.23 behaviour.
+export AWS_REQUEST_CHECKSUM_CALCULATION="${AWS_REQUEST_CHECKSUM_CALCULATION:-when_required}"
+export AWS_RESPONSE_CHECKSUM_VALIDATION="${AWS_RESPONSE_CHECKSUM_VALIDATION:-when_required}"
+# R2 ignores the region but the CLI insists one be set.
+export AWS_REGION="${AWS_REGION:-auto}"
 HERE="$(cd "$(dirname "$0")/.." && pwd)"
 SRC="$HERE/public/data/aonach763k"
 [ -d "$SRC" ] || { echo "missing $SRC — generate/emit the 763k substrate first"; exit 1; }
@@ -31,6 +38,32 @@ aws s3api put-bucket-cors --bucket "$R2_BUCKET" \
   --endpoint-url "$R2_ENDPOINT" \
   --cors-configuration "file://$HERE/scripts/r2-cors.json"
 
-echo "done. Now set NEXT_PUBLIC_DATA_HOST to the bucket's PUBLIC base URL"
-echo "(e.g. https://<hash>.r2.dev  or  https://data.aonachmor.example) — the demo's"
-echo "aonach763k/* fetches route there; everything else stays on Pages."
+# Prove the PUBLIC path actually serves range + CORS before we trust the demo to it.
+# duckdb-wasm needs a 206 on a ranged GET and the CORS headers for the Pages origin;
+# r2.dev or a custom-domain URL must pass this or the demo stalls exactly like before.
+if [ -n "${PUBLIC_URL:-}" ]; then
+  PROBE="${PUBLIC_URL%/}/aonach763k/manifest.json"
+  ORIGIN="https://flaxandteal.github.io"
+  echo ""
+  echo "verifying range + CORS at $PROBE …"
+  # NB: grep returns 1 on no-match, which would trip set -e inside $( ) — guard each.
+  code=$(curl -s -o /dev/null -w '%{http_code}' -r 0-99 -H "Origin: $ORIGIN" "$PROBE" || echo 000)
+  hdrs=$(curl -s -D - -o /dev/null -r 0-99 -H "Origin: $ORIGIN" "$PROBE" || true)
+  acao=$(printf '%s' "$hdrs" | grep -i '^access-control-allow-origin' | tr -d '\r' || true)
+  cr=$(printf '%s' "$hdrs" | grep -i '^content-range' | tr -d '\r' || true)
+  echo "  ranged GET status : $code   (want 206)"
+  echo "  Content-Range     : ${cr:-<none>}"
+  echo "  CORS allow-origin : ${acao:-<none>}   (want * or $ORIGIN)"
+  if [ "$code" = "206" ] && [ -n "$acao" ]; then
+    echo "  ✓ range + CORS OK — safe to set NEXT_PUBLIC_DATA_HOST=$PUBLIC_URL"
+  else
+    echo "  ✗ NOT ready: range or CORS missing. Do NOT wire the demo yet — a custom"
+    echo "    domain or a Worker proxy is the fix (see docs/consumer-handoff notes)."
+    exit 2
+  fi
+else
+  echo ""
+  echo "done. Re-run with PUBLIC_URL=<public base url> set to auto-verify range+CORS,"
+  echo "then set NEXT_PUBLIC_DATA_HOST to that URL (the demo's aonach763k/* fetches route"
+  echo "there; everything else stays on Pages)."
+fi

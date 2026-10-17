@@ -25,6 +25,10 @@ jobs:
     # at build time so asset URLs resolve.
     env:
       NEXT_PUBLIC_BASE_PATH: /ros-madair-docs
+      # The 763k substrate (~1 GB) lives on Cloudflare R2 (custom domain, $0 egress,
+      # verified 206 range + CORS for this origin) — too big for the 1 GB Pages site
+      # limit. Only aonach763k/* fetches route here; everything else stays on Pages.
+      NEXT_PUBLIC_DATA_HOST: https://r2.f-a-t.link
     steps:
       - name: Checkout
         uses: actions/checkout@v4

@@ -32,7 +32,10 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          # node 24 to match the lockfile's npm (npm 11) and the release workflow's
+          # jobs — npm 20/npm10 reads the optional napi deps differently and `npm ci`
+          # fails "Missing @emnapi/core from lock file".
+          node-version: "24"
           cache: npm
 
       - name: Setup Pages

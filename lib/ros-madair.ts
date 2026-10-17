@@ -76,6 +76,10 @@ export type Capabilities = {
   has_ordered: boolean;
   has_grid: boolean;
   spatial: boolean;
+  // store-name → inline `read_parquet(name)` expression (registerPartitionedModel only).
+  // Queries splice these in instead of referencing a SELECT * view, so duckdb-wasm
+  // projects + prunes (range reads) rather than fully downloading each store.
+  ref?: Record<string, string>;
 };
 
 // Views live in the duckdb catalog (global across connections), so registering a
@@ -263,35 +267,38 @@ export async function registerPartitionedModel(
 
   const db = await getDuck();
   const duckdb = await import('@duckdb/duckdb-wasm');
-  const conn = await db.connect();
-  try {
-    const regUrl = async (art: string) => {
-      const u = `${prefix}/${art}`;
-      await db.registerFileURL(u, dataUrl(u), duckdb.DuckDBDataProtocol.HTTP, false);
-      return dataUrl(u);
-    };
-    // tiles: UNION the partition files (list form, not a glob).
-    if (tilePartitions.length) {
-      const urls = await Promise.all(tilePartitions.map(regUrl));
-      const list = urls.map((u) => `'${u}'`).join(', ');
-      await conn.query(`CREATE OR REPLACE VIEW tiles AS SELECT * FROM read_parquet([${list}])`);
-    }
-    // single-file stores, named by graph id.
-    const store = async (name: string, art: string) => {
-      if (!has(art)) return false;
-      const u = await regUrl(art);
-      await conn.query(`CREATE OR REPLACE VIEW ${name} AS SELECT * FROM read_parquet('${u}')`);
-      return true;
-    };
-    const has_concept_index = await store('concept_index', `concepts_${graphId}.parquet`);
-    const has_ordered = await store('ordered_index', `ordered_${graphId}.parquet`);
-    const has_edges = await store('edges', `edges_${graphId}.parquet`);
-    await store('edges_rev', `redges_${graphId}.parquet`);
-    const has_grid = await store('grid', `grid_${graphId}.parquet`);
-    await store('resources', `resources_${graphId}.parquet`);
-    const has_catalog = await store('concepts', 'concept_catalog.parquet');
-    return { has_catalog, has_edges, has_concept_index, has_ordered, has_grid, spatial: false };
-  } finally {
-    await conn.close();
+  // Register file URLs only — do NOT create `SELECT *` views. A view makes
+  // duckdb-wasm fully download each file at bind time (schema inference reads the
+  // whole object, not the footer): registering all 7 stores as views pulled ~470 MB
+  // up front, including stores no query touches. Instead hand back an inline
+  // `read_parquet(name)` expression per store; a query that uses it inline gets
+  // column projection + row-group pruning (range reads) — the same 1–2 MB path the
+  // aonach-mor demo already takes. registerFileURL is a pure name→URL mapping, so
+  // registering every present store is free; only an inline read in an actual query
+  // fetches bytes.
+  const ref: Record<string, string> = {};
+  const regUrl = async (art: string) => {
+    const u = `${prefix}/${art}`;
+    await db.registerFileURL(u, dataUrl(u), duckdb.DuckDBDataProtocol.HTTP, false);
+    return u; // the registered virtual-file name; read_parquet('<name>') resolves it
+  };
+  // tiles: a list read over the partition files.
+  if (tilePartitions.length) {
+    const names = await Promise.all(tilePartitions.map(regUrl));
+    ref['tiles'] = `read_parquet([${names.map((u) => `'${u}'`).join(', ')}])`;
   }
+  const store = async (name: string, art: string) => {
+    if (!has(art)) return false;
+    const u = await regUrl(art);
+    ref[name] = `read_parquet('${u}')`;
+    return true;
+  };
+  const has_concept_index = await store('concept_index', `concepts_${graphId}.parquet`);
+  const has_ordered = await store('ordered_index', `ordered_${graphId}.parquet`);
+  const has_edges = await store('edges', `edges_${graphId}.parquet`);
+  await store('edges_rev', `redges_${graphId}.parquet`);
+  const has_grid = await store('grid', `grid_${graphId}.parquet`);
+  await store('resources', `resources_${graphId}.parquet`);
+  const has_catalog = await store('concepts', 'concept_catalog.parquet');
+  return { has_catalog, has_edges, has_concept_index, has_ordered, has_grid, spatial: false, ref };
 }

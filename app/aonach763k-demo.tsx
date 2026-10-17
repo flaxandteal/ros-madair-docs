@@ -98,8 +98,13 @@ export default function Aonach763kDemo() {
         const c = await registerPartitionedModel(PREFIX, BUILDING);
         if (!c.has_grid) throw new Error('this substrate has no grid edge — re-emit at FORMAT_VERSION 3');
         setCaps(c);
-        // DISTINCT: a footprint spanning >1 cell has >1 grid row (the superset).
-        const n = Number((await queryRows('SELECT count(DISTINCT resource_id) AS n FROM grid'))[0]?.n ?? 0);
+        // The total rides the entry table's row-group metadata: count(*) over the
+        // one-row-per-building `resources` store is answered from the Parquet footer
+        // (num_rows), not a data scan — ~0 substrate bytes. (Counting DISTINCT over the
+        // grid would be correct too, but the grid's multi-cell replicas force a full
+        // resource_id scan for the same number.)
+        const totalExpr = c.ref!.resources ?? c.ref!.grid;
+        const n = Number((await queryRows(`SELECT count(*) AS n FROM ${totalExpr}`))[0]?.n ?? 0);
         setTotal(n);
       } catch (e) {
         console.error('[763k] init error', e);
@@ -120,15 +125,25 @@ export default function Aonach763kDemo() {
       // 1) The box's grid cells — the shared wasm contract, 0 substrate bytes.
       const cells = await cellsInBox(minLng, minLat, maxLng, maxLat);
 
+      // Inline read_parquet per store (not SELECT * views) — projection + row-group
+      // pruning, so each step moves 1–2 MB, not the whole store.
+      const GRID = caps.ref!.grid, CONC = caps.ref!.concept_index;
+      // Splice the same inline reads into the compiler's output, which emits bare
+      // `FROM grid` / `FROM concept_index` (the native engine's view names).
+      const spliceRefs = (sql: string) =>
+        sql
+          .replace(/\b(FROM|JOIN)\s+grid\b/g, `$1 ${GRID} grid`)
+          .replace(/\b(FROM|JOIN)\s+concept_index\b/g, `$1 ${CONC} concept_index`);
+
       // 2) Buildings near ground zero — a cell-pruned COUNT over the grid edge.
       const inBox = Number(
-        (await queryRows(`SELECT count(DISTINCT resource_id) AS n FROM grid WHERE cell IN (${cells})`))[0]?.n ?? 0,
+        (await queryRows(`SELECT count(DISTINCT resource_id) AS n FROM ${GRID} WHERE cell IN (${cells})`))[0]?.n ?? 0,
       );
 
       // 3) Corpus count of this role — node-scoped read of the melted concept store.
       const corpus = Number(
         (await queryRows(
-          `SELECT count(*) AS n FROM concept_index \
+          `SELECT count(*) AS n FROM ${CONC} \
            WHERE node_id = '${SERVICE_ROLES}' AND concept_id = '${role}'`,
         ))[0]?.n ?? 0,
       );
@@ -147,13 +162,13 @@ export default function Aonach763kDemo() {
         },
         caps,
       );
-      const near = Number((await queryRows(`SELECT count(*) AS n FROM (${nearSql})`))[0]?.n ?? 0);
+      const near = Number((await queryRows(`SELECT count(*) AS n FROM (${spliceRefs(nearSql)})`))[0]?.n ?? 0);
 
       // 5) The sample, WITH name + ward — a single cell-pruned grid⨝concept scan.
       //    The render columns ride the same cell prune: no scattered second fetch.
       const rows = await queryRows(
         `SELECT DISTINCT g.resource_id AS id, g.descriptor AS name, g.render_summary AS summary \
-         FROM grid g JOIN concept_index c ON c.resource_id = g.resource_id \
+         FROM ${GRID} g JOIN ${CONC} c ON c.resource_id = g.resource_id \
          WHERE g.cell IN (${cells}) \
            AND c.node_id = '${SERVICE_ROLES}' AND c.concept_id = '${role}' \
          LIMIT ${SHOW}`,

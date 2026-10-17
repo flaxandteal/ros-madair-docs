@@ -1,24 +1,28 @@
 import './global.css';
 import { RootProvider } from 'fumadocs-ui/provider';
 import ChunkReload from './chunk-reload.tsx';
-import { League_Spartan, Caveat } from 'next/font/google';
 import localFont from 'next/font/local';
 import type { CSSProperties, ReactNode } from 'react';
 
-// Display / UI face — replaces Inter. Lowercase wordmark + headings.
-const leagueSpartan = League_Spartan({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '900'],
+// Fonts are SELF-HOSTED (next/font/local), not next/font/google: the Pages CI runner
+// cannot fetch Google Fonts at build time (the google loader crashes with "Cannot read
+// properties of null"), and an offline-first project should not depend on a build-time
+// font fetch anyway. The variable TTFs live in ./fonts.
+
+// Display / UI face — lowercase wordmark + headings. Variable (100–900).
+const leagueSpartan = localFont({
+  src: './fonts/LeagueSpartan-Variable.ttf',
   variable: '--font-display',
   display: 'swap',
+  weight: '100 900',
 });
 
-// Handwriting — used only for the two hero annotations.
-const caveat = Caveat({
-  subsets: ['latin'],
-  weight: ['400'],
+// Handwriting — used only for the two hero annotations. Variable (400–700).
+const caveat = localFont({
+  src: './fonts/Caveat-Variable.ttf',
   variable: '--font-hand',
   display: 'swap',
+  weight: '400 700',
 });
 
 // Body — Kumbh Sans (variable). YOPQ axis is pinned in global.css.

@@ -5,9 +5,21 @@ import type { AsyncDuckDB } from '@duckdb/duckdb-wasm';
 // bundles and the demo Parquet) are addressed with the same basePath.
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
 
+// Large substrates (the 763k city, ~2.4 GB) blow the 1 GB GitHub Pages site limit, so
+// they live on an object-store CDN (Cloudflare R2) addressed by NEXT_PUBLIC_DATA_HOST —
+// which MUST serve HTTP range requests with CORS (Access-Control-Allow-Origin for the
+// Pages origin, and Range in Access-Control-Allow-Headers). The small, CI-generated
+// corpora stay local under /data. When NEXT_PUBLIC_DATA_HOST is unset (local dev), the
+// big substrate is served locally too.
+const DATA_HOST = (process.env.NEXT_PUBLIC_DATA_HOST ?? '').replace(/\/$/, '');
+const REMOTE_PREFIXES = ['aonach763k/'];
+
 // Absolute URL to a file under public/data — duckdb-wasm registers it as an HTTP
 // source and range-reads it (footer + only the row groups/columns a query needs).
 export function dataUrl(name: string): string {
+  if (DATA_HOST && REMOTE_PREFIXES.some((p) => name.startsWith(p))) {
+    return `${DATA_HOST}/${name}`; // e.g. the R2 public bucket URL
+  }
   const origin = typeof window !== 'undefined' ? window.location.origin : '';
   return `${origin}${BASE_PATH}/data/${name}`;
 }

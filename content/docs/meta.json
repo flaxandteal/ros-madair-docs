@@ -2,14 +2,18 @@
   "title": "Documentation",
   "pages": [
     "index",
-    "installation",
-    "quickstart",
+    "---How it works---",
     "how-it-works",
     "live-query",
     "tile-store",
     "roundtrip",
     "layers",
+    "verification",
+    "---See it live---",
     "aonach-mor",
-    "verification"
+    "aonach-763k",
+    "---Reference---",
+    "quickstart",
+    "installation"
   ]
 }

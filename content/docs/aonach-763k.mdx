@@ -1,0 +1,39 @@
+---
+title: Seven million tiles in the browser
+description: Query a 763k-resource Aonach Mór substrate — 6.98M tiles, 1.3 GB — statically, with no backend, touching only the fraction a question needs.
+---
+
+import Aonach763kDemo from '@/app/aonach763k-demo.tsx';
+
+This is the whole Rós Madair bet, at scale: **763,064 buildings, 30,000 people, 42 wards —
+~6.98 million tiles, 1.3 GB of Parquet — emitted through the real engine and served as static
+files.** No database, no backend. The page below queries it in your browser.
+
+The corpus is believable, not filler: every building sits on a **real OSM footprint**, its
+typology sampled from that footprint's land-use zone; names are addresses or Irish place-names, not
+`Building 0001`; and the critical services stay a realistic handful — **8 hospitals, 2 emergency
+centres**, city-wide — not scaled with the replica count.
+
+## Hospitals near a point
+
+<Aonach763kDemo />
+
+How the question stays cheap over 7M tiles — every step prunes on **sort order**, the only thing
+Parquet gives without bloom filters:
+
+- **Spatial prunes in the substrate.** Each building is bucketed into a whole-world **Z-order grid
+  cell**, written once to a cell-sorted edge (`grid_<graph>.parquet`). The box → its overlapping
+  cells is pure arithmetic (`cellsInBox`, the *same* wasm contract emit wrote the cells with), and
+  `cell IN (…)` reads only those cells' row groups. No R-tree download, no tile scan.
+- **The concept filter prunes.** `Concept(service_roles Is "Hospital")` is the *same* IR→SQL the
+  native engine runs, lowered by the `ros-madair` wasm compiler and executed by duckdb-wasm over
+  the melted concept store — a node-scoped, exact semijoin that touches the role's rows, not the
+  2.4M-row store, and certainly not the 6.98M tiles. `All[GridBox, Concept]` is one compiled
+  `INTERSECT`: both sides prune.
+- **Rendering rides the same scan.** Each result's name and ward come back **in the cell-pruned
+  grid read itself** (`render_summary`, the compact related-title blob emit carried on the grid
+  edge). The render lands on the exact rows the spatial query already touched — no scattered second
+  fetch, no fat tile partition.
+
+Spatial prunes, the graph query prunes, the render rides along: the answer touches a sliver of the
+1.3 GB, which is why it returns in the browser at all.

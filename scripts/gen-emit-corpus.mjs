@@ -30,7 +30,7 @@ const SRC_COLLECTIONS = join(ROOT, 'public', 'rm-example', 'collections');
 
 // The emit release the docs are pinned to. Kept in lockstep with the ros-madair
 // release the demos were authored against; bump when adopting a newer engine.
-const EMIT_VERSION = 'v0.1.0-alpha.20';
+const EMIT_VERSION = 'v0.1.0-alpha.25';
 const EMIT_ASSET = 'ros-madair-emit-linux-amd64';
 const EMIT_URL = `https://github.com/flaxandteal/ros-madair/releases/download/${EMIT_VERSION}/${EMIT_ASSET}`;
 

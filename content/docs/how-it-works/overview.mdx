@@ -11,6 +11,19 @@ backend database. A reader compiles the typed query IR to DuckDB SQL, prunes row
 groups on the Parquet zone-map, fetches only those via HTTP Range, filters
 exactly, and hydrates the matches into a schema-shaped tree.
 
+## See it, piece by piece
+
+Each capability below has a live, in-browser demo — running the **same compiled SQL
+the native reader runs**, over duckdb-wasm:
+
+- **[Querying](/docs/live-query)** — a `Concept` + `Range` + `Bbox` IR lowered to SQL, pruned on the zone-map.
+- **[Hydration](/docs/tile-store)** — query results rehydrated into rich, typed alizarin resources, link resolution and all.
+- **[The round trip](/docs/roundtrip)** — alizarin builds a concept-hierarchy query and receives typed resources back; Rós Madair is only the middle.
+- **[Layers](/docs/layers)** — a base snapshot plus a sparse overlay, composed at query time.
+- **[Verification](/docs/verification)** — a signed snapshot, verified (or refused) at open.
+
+Then **[see it on Aonach Mór](/docs/aonach-mor)** — the whole thing end to end on a resilience corpus.
+
 ## The pipeline
 
 ```
@@ -46,7 +59,11 @@ alizarin graphs + resources + vocabularies (a data_dir)
   `Range` is a node-scoped read over the ordered store — so concepts and dates
   live off the tile row, not as promoted columns on it.
 - **`edges_<graphid>.parquet`** — one row per link target; `HasLink`, the `OnLink`
-  path predicate, and `cited_by` all semijoin this columnar edge table.
+  **multi-hop path predicate**, and `cited_by` reverse traversal all semijoin this
+  columnar edge table. Chained `OnLink`s walk the graph hop by hop — *person →
+  employer → occupied building → exposure → hazard footprint* — the deep multi-hop
+  queries that distinguish Rós Madair from a flat table scan, each hop a node-scoped
+  semijoin that prunes as it goes.
 - **`concept_catalog.parquet`** — concept DFS intervals, so a hierarchy query
   (`DescendantOrSelfOf`) is a range join.
 - **`manifest.json`** — the layout + `FORMAT_VERSION` contract, carrying a signed

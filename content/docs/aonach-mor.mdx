@@ -1,6 +1,6 @@
 ---
 title: Aonach Mór — worked examples
-description: Run the query IR live over a coastal-city resilience corpus — concept hierarchy, same-tile correlation, exact spatial with a sound negation guard, reverse-traversal cascades and a live overlay — on a 10-asset slice or the full 60,000-asset city, range-fetched from the CDN.
+description: Run the query IR live over a coastal-city resilience corpus — concept hierarchy, same-tile correlation, exact spatial with a sound negation guard, reverse-traversal cascades and a live overlay — on a readable 10-asset slice or the chunked full-city corpus, range-fetched from the CDN.
 ---
 
 import AonachDemo from '@/app/aonach-demo.tsx';
@@ -11,6 +11,11 @@ the city, to **harden** it, and, when the surge comes, to **save** it. Every que
 below runs the **real query IR** in your browser (as DuckDB SQL over the tile-row
 Parquet, the same IR the Rust backend compiles), and every result is computed live,
 not canned.
+
+This is the running illustration from the [Introduction](/docs): the resilience
+questions a city's responders, planners and insurers actually ask — each lowered
+through the real query IR, answered with no backend. For the **same engine at
+real-city scale**, see [763,000 buildings queried in the browser](/docs/aonach-763k).
 
 <Callout title="Two corpora, one schema">
 Use the **corpus** toggle. *Sample* is a hand-built 10-asset slice — small enough to

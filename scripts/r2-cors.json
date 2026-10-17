@@ -1,0 +1,14 @@
+{
+  "CORSRules": [
+    {
+      "AllowedOrigins": [
+        "https://flaxandteal.github.io",
+        "http://localhost:3000"
+      ],
+      "AllowedMethods": ["GET", "HEAD"],
+      "AllowedHeaders": ["Range", "*"],
+      "ExposeHeaders": ["Content-Range", "Content-Length", "Accept-Ranges", "ETag"],
+      "MaxAgeSeconds": 3600
+    }
+  ]
+}

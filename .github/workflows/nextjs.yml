@@ -54,7 +54,7 @@ jobs:
       # corpus into public/ (npm run build's prebuild does this too, but keep it
       # explicit in CI).
       - name: Prepare live-demo assets
-        run: npm run copy-duckdb && npm run gen-data
+        run: npm run copy-duckdb && npm run copy-ros-madair && npm run gen-data
 
       - name: Build with Next.js
         run: npx --no-install next build

@@ -1,68 +1,65 @@
 ---
 title: Introduction
-description: A static-file query engine for Arches heritage graph data.
+description: Query a rich, interconnected graph from static files — multi-hop, filtered, spatial — with no backend, offline, and cryptographically signed.
 ---
 
-**Rós Madair** (Irish: *rose madder*) is a companion to
-[Alizarin](https://github.com/flaxandteal/alizarin) — an ORM for
-[Arches](https://www.archesproject.org/) heritage data management systems.
-Where Alizarin provides a TypeScript/Rust SDK for working with Arches graphs
-live, Rós Madair provides static, pre-built artifacts that can answer queries
-without a running server.
+**Rós Madair turns a rich, interconnected graph into static files you can query.**
+Multi-hop relationships, concept hierarchies, numeric and spatial filters — the
+questions that normally need a triplestore or a database-and-API answered instead
+over plain files on a CDN, or carried offline on a laptop, with **no server
+running** and the data **cryptographically signed** so a reader can trust it.
 
-The name follows the pigment theme: alizarin crimson and rose madder are
-closely related red pigments, both derived from the madder root. Rós Madair is
-the static, pre-ground pigment to Alizarin's live colour mixing.
+## The opportunity
 
-## The problem
+A serious graph — hundreds of thousands of richly-typed, interlinked records — is
+usually trapped behind infrastructure: a backend to stand up, to secure, to pay
+for, to keep online. That rules the data out of exactly the places it is most
+needed — a field tablet with no signal, a sovereign deployment that can't send
+data to a cloud, a public dataset that should outlive any one server.
 
-Heritage datasets often contain tens or hundreds of thousands of records.
-Standing up a full query backend (a triplestore, a database + API) requires
-server infrastructure, ongoing maintenance, and non-trivial cost. For read-only
-public datasets — museum collections, monument registries, archaeological
-surveys — that is overkill.
+Rós Madair removes the backend from the read path. A reader compiles a typed query,
+fetches only the fraction of the files that question needs (HTTP range reads over a
+zone-map), and composes the answer **in the browser** — or offline, from a copy you
+hold. Because every snapshot is signed, "no backend" does not mean "no trust": a
+reader re-derives the snapshot's id from the bytes on disk and refuses a tampered
+one before it answers anything.
 
-## The approach
+That makes a new class of thing cheap: **query a half-million-asset city graph,
+instantly, from a USB stick.**
 
-The `ros-madair-emit` CLI compiles a data directory of graphs, resources, and
-vocabularies into a **DuckDB + Parquet substrate**:
+## See it — Aonach Mór
 
-1. **`tiles_<graphid>.parquet`** — one row per tile. Only `geo_*` is promoted
-   onto the row, its per-row-group min/max stats *are* the spatial zone-map;
-   a `data` JSON blob carries the rest for hydration.
-2. **`concepts_<graphid>.parquet`** and **`ordered_<graphid>.parquet`** — the
-   melted node-keyed stores (one row per resource/tile/nodegroup/node/value); a
-   `Concept` filter semijoins the concept store, a `Range` reads the ordered
-   store.
-3. **`edges_<graphid>.parquet`** — one row per link target (the columnar edge
-   table links and reverse traversal semijoin), plus a **`concept_catalog.parquet`**
-   for concept-hierarchy range joins.
-4. **`manifest.json`** — the layout + format-version contract, carrying a signed
-   `snapshot_id`.
+[**Aonach Mór**](/docs/aonach-mor) is the running illustration: a believable
+coastal-city resilience corpus — buildings, people, organisations, hazard
+footprints, exposure and insurance, woven into one navigable graph. On it, a
+responder's question like —
 
-A reader (`ros-madair-duck` natively; DuckDB-WASM in the browser) compiles the
-typed query IR to SQL, prunes row groups on the zone-map, fetches only those
-(over HTTP Range), filters exactly, and hydrates the matches — overlay- and
-reverse-traversal-aware — verifying the manifest signature first.
+> *which hazard footprints threaten a building run by an organisation that employs a
+> keyholder* —
 
-<Callout title="Direction: DuckDB + Parquet">
-  This substrate **replaced** the v1 coarse/fine head+chunk read engine; the
-  layered overlay model, reverse traversal (`cited_by`), tile-graph hydration,
-  and snapshot signing are kept. The DuckDB-WASM browser runtime has landed —
-  `ros-madair-compile` builds for `wasm32` and `ros-madair-wasm` (published to
-  npm as `ros-madair`) wraps it, so a browser page compiles the same SQL the
-  native reader runs; the remaining work is repointing the last docs demos. See the
-  [README's Direction section](https://github.com/flaxandteal/ros-madair#direction-duckdb--parquet-substrate)
-  for the rationale and roadmap.
-</Callout>
+is a genuine **five-hop graph traversal**, resolved over Rós Madair's edge table
+(the multi-hop `OnLink` semijoin you can watch step through in
+[How it works](/docs/how-it-works/overview)). The **live** demos run the resilience
+queries — critical facilities in a flood extent, concept-hierarchy vulnerability,
+dependency cascades, a damage overlay composed at query time — on the city corpus;
+and the [**763,000-building** build](/docs/aonach-763k) shows the same engine at
+real-city scale, each query touching only a sliver of the ~1.3 GB, with nothing
+behind it.
 
-## Next steps
+## Lineage
 
-- **[Installation](/docs/installation)** — build the workspace, set up the
-  alizarin sibling checkout, and run the tests.
-- **[Quick Start](/docs/quickstart)** — emit the Parquet substrate from Arches
-  data with the `ros-madair-emit` CLI.
-- **[How It Works](/docs/how-it-works/overview)** — the tile-row Parquet
-  substrate and the zone-map read path.
-- **[Verification](/docs/verification)** — how a reader verifies a snapshot's
-  signature (with a live demo), and **[Layers](/docs/layers)** for base + overlay.
+Rós Madair is the static companion to
+[Alizarin](https://github.com/flaxandteal/alizarin), an ORM for
+[Arches](https://www.archesproject.org/) graph data (alizarin crimson and rose
+madder are kin pigments from the madder root — live mixing vs. the pre-ground
+colour). Arches heritage graphs are its proving ground and the shape it reads, but
+the substrate is general: any sufficiently rich, interlinked semantic graph can be
+emitted and queried this way. Heritage is the testcase, not the limit.
+
+## Where to go next
+
+- **[How it works](/docs/how-it-works/overview)** — the Parquet substrate, the
+  zone-map read path, multi-hop edges, layering, and signing — each with a live demo.
+- **[See it live — Aonach Mór](/docs/aonach-mor)** — the resilience corpus and the
+  763k-building city, queried in your browser.
+- **[Quick start](/docs/quickstart)** — emit the substrate from your own data.

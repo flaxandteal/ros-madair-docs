@@ -32,3 +32,7 @@ yarn-error.log*
 .env*.local
 .vercel
 next-env.d.ts
+# Large emitted 763k demo substrate (~GB) — not committed; hosting TBD
+public/data/aonach763k/
+scripts/.cache/
+/public/rm-example

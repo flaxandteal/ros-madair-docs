@@ -55,6 +55,14 @@ export function getDuck(): Promise<AsyncDuckDB> {
   return dbPromise;
 }
 
+// Kick off duckdb-wasm instantiation ahead of the first query (the ~8 MB gzipped
+// module download + compile is the bulk of a cold run). Fire-and-forget on mount so
+// the engine is warm by the time a reader clicks ▶. Shares the getDuck() singleton —
+// calling it early just moves the one-time cost off the interaction's critical path.
+export function warmDuck(): Promise<unknown> {
+  return getDuck();
+}
+
 // Runnable examples live at content/docs/examples/<name>.tsx, each a default-
 // exported `{ run }` whose marked body is the code block shown on the page. The
 // template-literal import code-splits each into its own lazy chunk, fetched only

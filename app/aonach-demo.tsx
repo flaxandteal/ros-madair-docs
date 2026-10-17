@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import * as duckdb from '@duckdb/duckdb-wasm';
-import { getDuck, dataUrl } from '@/lib/duckdb';
+import { getDuck, dataUrl, warmDuck } from '@/lib/duckdb';
 
 // Sample = single small files. Full = a CHUNKED corpus: geo-partitioned Parquet
 // files + a manifest (the file-level zone-map). A query prunes chunks from the
@@ -485,8 +485,14 @@ export default function AonachDemo() {
   const [tab, setTab] = React.useState<(typeof TABS)[number]['k']>('filter');
   const [manifest, setManifest] = React.useState<Manifest | null>(null);
   const [basemap, setBasemap] = React.useState<Basemap | null>(null);
+  // duckdb-wasm is a ~8 MB (gzipped) download that must compile before the first
+  // query can run — a cold ~20 s with no feedback reads as "hung". Warm it eagerly
+  // on mount (in the background, while the reader is still on the prose) so the first
+  // ▶ lands on an already-instantiated engine, and show a one-time hint until it's up.
+  const [engineReady, setEngineReady] = React.useState(false);
   React.useEffect(() => {
     let live = true;
+    warmDuck().then(() => { if (live) setEngineReady(true); }).catch(() => { if (live) setEngineReady(true); });
     fetch(dataUrl('aonach_full_manifest.json')).then((r) => r.json()).then((m: Manifest) => { if (live) setManifest(m); }).catch(() => {});
     fetch(dataUrl('aonach_basemap.json')).then((r) => r.json()).then((b: Basemap) => { if (live) setBasemap(b); }).catch(() => {});
     return () => { live = false; };
@@ -506,6 +512,7 @@ export default function AonachDemo() {
         </div>
         <span className="am-corpus-note">{corpusNote}</span>
       </div>
+      {!engineReady && <div className="am-engine"><span className="am-spin" aria-hidden />Starting the in-browser query engine — a one-time ~8&nbsp;MB download (cached after). Queries run instantly once it&rsquo;s up.</div>}
       <div className="am-tabs">{TABS.map((t) => <button key={t.k} aria-current={tab === t.k} onClick={() => setTab(t.k)}>{t.label}</button>)}</div>
       <div className="am-body"><Active set={set} manifest={manifest} basemap={basemap} /></div>
     </div>
@@ -523,6 +530,11 @@ const AM_CSS = `
 .am-corpus{padding-bottom:.7rem;border-bottom:1px solid var(--color-fd-border,#0001);}
 .am-lab{font-family:var(--font-mono,monospace);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;opacity:.6;}
 .am-corpus-note{font-size:.8rem;opacity:.65;}
+.am-engine{display:flex;align-items:center;gap:.5rem;font-size:.8rem;opacity:.8;margin:-.2rem 0 .7rem;
+  padding:.35rem .6rem;border-radius:6px;background:color-mix(in srgb,var(--am-accent) 10%,transparent);}
+.am-spin{flex:none;width:.8rem;height:.8rem;border:2px solid var(--am-accent);border-right-color:transparent;
+  border-radius:50%;animation:am-spin .7s linear infinite;}
+@keyframes am-spin{to{transform:rotate(360deg);}}
 .am-tabs{display:flex;flex-wrap:wrap;gap:.35rem;margin:.8rem 0;}
 .am-tabs button{font-size:.78rem;padding:.35rem .6rem;border-radius:5px;border:1px solid var(--color-fd-border,#0002);background:transparent;cursor:pointer;color:inherit;}
 .am-tabs button[aria-current="true"]{background:var(--am-accent);color:#fff;border-color:var(--am-accent);}

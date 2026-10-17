@@ -48,7 +48,11 @@ export function getDuck(): Promise<AsyncDuckDB> {
     };
     const bundle = await duckdb.selectBundle(bundles);
     const worker = new Worker(bundle.mainWorker!);
-    const db = new duckdb.AsyncDuckDB(new duckdb.ConsoleLogger(), worker);
+    // VoidLogger, NOT ConsoleLogger: ConsoleLogger emits a structured log event for
+    // every internal duckdb operation. With a reader's devtools open, rendering that
+    // flood serialises the worker and a 2 s query reads as a 25 s "running…" hang.
+    // A published demo has no use for the debug spew.
+    const db = new duckdb.AsyncDuckDB(new duckdb.VoidLogger(), worker);
     await db.instantiate(bundle.mainModule, bundle.pthreadWorker);
     return db;
   })();

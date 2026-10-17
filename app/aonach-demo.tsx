@@ -49,29 +49,61 @@ function floodExtent(cells: [number, number, number, number][]): [number, number
 }
 
 // ── duckdb-wasm plumbing ──────────────────────────────────────────────────────
-const registered = new Set<string>();
-async function reg(name: string, url: string) {
-  if (registered.has(name)) return;
-  const db = await getDuck();
-  await db.registerFileURL(name, dataUrl(url), duckdb.DuckDBDataProtocol.HTTP, false);
-  registered.add(name);
+// Dedupe registration by in-flight PROMISE, not a Set checked after an await. Rapid
+// interactions (ticking several filters) fire overlapping query effects; with a
+// Set-checked-after-await, two concurrent effects both see "not registered" and call
+// registerFileURL for the same file twice, corrupting the handle — which surfaces on the
+// next read as "Failed to open file …". Keyed by name, every caller awaits the one
+// registration. A failed registration is evicted so a later query can retry.
+const registered = new Map<string, Promise<void>>();
+function reg(name: string, url: string): Promise<void> {
+  let pr = registered.get(name);
+  if (!pr) {
+    pr = (async () => {
+      const db = await getDuck();
+      await db.registerFileURL(name, dataUrl(url), duckdb.DuckDBDataProtocol.HTTP, false);
+    })();
+    registered.set(name, pr);
+    pr.catch(() => registered.delete(name));
+  }
+  return pr;
 }
 async function ensureBase() {
   await reg(CAT, CAT);
 }
+// Surface a query/registration failure to the demo UI (set by AonachDemo on mount)
+// instead of letting it reject unhandled and leave the tab stuck on "running…".
+let errSink: (m: string | null) => void = () => {};
+export function setQueryErrorSink(fn: (m: string | null) => void) { errSink = fn; }
+// Serialize ALL duckdb work. Overlapping queries race on the shared file registry and
+// multiply concurrent HTTP range reads — which flaky proxies/VPNs drop mid-read. One at
+// a time is correct (no registry race) and gentler on the network (a stalled read no
+// longer collides with the next). Latency cost is nil for the single-query interactions.
+let queue: Promise<unknown> = Promise.resolve();
+function serialize<T>(fn: () => Promise<T>): Promise<T> {
+  const run = queue.then(fn, fn);
+  queue = run.then(() => {}, () => {});
+  return run;
+}
 async function rows(sqlText: string): Promise<Record<string, unknown>[]> {
-  await ensureBase();
-  const c = await (await getDuck()).connect();
-  try {
-    const r = await c.query(sqlText);
-    return r.toArray().map((x) => {
-      const o = x.toJSON() as Record<string, unknown>;
-      for (const k of Object.keys(o)) if (typeof o[k] === 'bigint') o[k] = Number(o[k]);
-      return o;
-    });
-  } finally {
-    await c.close();
-  }
+  return serialize(async () => {
+    errSink(null); // a fresh attempt clears any prior error banner
+    await ensureBase();
+    const c = await (await getDuck()).connect();
+    try {
+      const r = await c.query(sqlText);
+      return r.toArray().map((x) => {
+        const o = x.toJSON() as Record<string, unknown>;
+        for (const k of Object.keys(o)) if (typeof o[k] === 'bigint') o[k] = Number(o[k]);
+        return o;
+      });
+    } catch (e) {
+      errSink(`Query failed: ${e instanceof Error ? e.message.split('\n')[0] : String(e)}. This is usually a dropped HTTP range request (a VPN/proxy, or a stale cache) — a hard refresh (Ctrl/Cmd-Shift-R) normally clears it.`);
+      throw e;
+    } finally {
+      await c.close();
+    }
+  });
 }
 const one = async (sqlText: string) => Number(Object.values((await rows(sqlText))[0] ?? { n: 0 })[0]);
 
@@ -490,6 +522,8 @@ export default function AonachDemo() {
   // on mount (in the background, while the reader is still on the prose) so the first
   // ▶ lands on an already-instantiated engine, and show a one-time hint until it's up.
   const [engineReady, setEngineReady] = React.useState(false);
+  const [qErr, setQErr] = React.useState<string | null>(null);
+  React.useEffect(() => { setQueryErrorSink(setQErr); return () => setQueryErrorSink(() => {}); }, []);
   React.useEffect(() => {
     let live = true;
     warmDuck().then(() => { if (live) setEngineReady(true); }).catch(() => { if (live) setEngineReady(true); });
@@ -513,6 +547,7 @@ export default function AonachDemo() {
         <span className="am-corpus-note">{corpusNote}</span>
       </div>
       {!engineReady && <div className="am-engine"><span className="am-spin" aria-hidden />Starting the in-browser query engine — a one-time ~8&nbsp;MB download (cached after). Queries run instantly once it&rsquo;s up.</div>}
+      {qErr && <div className="am-banner am-err" role="alert"><b>Query failed.</b> {qErr}</div>}
       <div className="am-tabs">{TABS.map((t) => <button key={t.k} aria-current={tab === t.k} onClick={() => setTab(t.k)}>{t.label}</button>)}</div>
       <div className="am-body"><Active set={set} manifest={manifest} basemap={basemap} /></div>
     </div>

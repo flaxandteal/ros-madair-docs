@@ -37,6 +37,11 @@ jobs:
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
+        with:
+          # Auto-enable Pages (Source = GitHub Actions) on first deploy; relies on the
+          # workflow's pages:write permission. If the token can't, enable it once in
+          # Settings → Pages → Source: GitHub Actions.
+          enablement: true
 
       - name: Restore cache
         uses: actions/cache@v4

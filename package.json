@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "copy-duckdb": "mkdir -p public/duckdb && cp node_modules/@duckdb/duckdb-wasm/dist/duckdb-mvp.wasm node_modules/@duckdb/duckdb-wasm/dist/duckdb-eh.wasm node_modules/@duckdb/duckdb-wasm/dist/duckdb-browser-mvp.worker.js node_modules/@duckdb/duckdb-wasm/dist/duckdb-browser-eh.worker.js public/duckdb/",
+    "copy-duckdb": "mkdir -p public/duckdb && cp node_modules/@duckdb/duckdb-wasm/dist/duckdb-mvp.wasm node_modules/@duckdb/duckdb-wasm/dist/duckdb-eh.wasm node_modules/@duckdb/duckdb-wasm/dist/duckdb-coi.wasm node_modules/@duckdb/duckdb-wasm/dist/duckdb-browser-mvp.worker.js node_modules/@duckdb/duckdb-wasm/dist/duckdb-browser-eh.worker.js node_modules/@duckdb/duckdb-wasm/dist/duckdb-browser-coi.worker.js node_modules/@duckdb/duckdb-wasm/dist/duckdb-browser-coi.pthread.worker.js public/duckdb/",
     "copy-ros-madair": "mkdir -p public/ros-madair && cp node_modules/ros-madair/ros_madair_wasm_bg.wasm public/ros-madair/",
     "gen-sample-data": "node scripts/gen-sample-data.mjs",
     "gen-emit-corpus": "node scripts/gen-emit-corpus.mjs",

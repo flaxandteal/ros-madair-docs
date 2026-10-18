@@ -1,6 +1,7 @@
 import './global.css';
 import { RootProvider } from 'fumadocs-ui/provider';
 import ChunkReload from './chunk-reload.tsx';
+import Script from 'next/script';
 import localFont from 'next/font/local';
 import type { CSSProperties, ReactNode } from 'react';
 
@@ -55,6 +56,24 @@ export default function Layout({ children }: { children: ReactNode }) {
       suppressHydrationWarning
     >
       <body className="flex flex-col min-h-screen">
+        {/* Register the COI service worker so the page is crossOriginIsolated
+            (SharedArrayBuffer → duckdb-wasm's threaded bundle range-reads Parquet
+            instead of downloading whole files). First visit reloads once, after the
+            SW takes control, so the injected COOP/COEP headers apply. */}
+        <Script id="coi-sw" strategy="beforeInteractive">{`
+          (function () {
+            if (typeof navigator === 'undefined' || !navigator.serviceWorker) return;
+            if (self.crossOriginIsolated || !self.isSecureContext) return;
+            navigator.serviceWorker.register('${basePath}/coi-serviceworker.js').then(function (reg) {
+              if (reg.active && !navigator.serviceWorker.controller) {
+                if (!sessionStorage.getItem('coiReloaded')) {
+                  sessionStorage.setItem('coiReloaded', '1');
+                  location.reload();
+                }
+              }
+            }).catch(function () {});
+          })();
+        `}</Script>
         <ChunkReload />
         <RootProvider
           search={{

@@ -1,41 +1,24 @@
-/*! coi-serviceworker — cross-origin isolation on a static host.
- * GitHub Pages can't send COOP/COEP response headers, which we need for
- * crossOriginIsolated === true → SharedArrayBuffer → duckdb-wasm's threaded COI
- * bundle, which range-reads HTTP Parquet instead of downloading whole files.
- * This SW re-serves every response with those headers injected.
+/*! coi-serviceworker — ROLLED BACK.
+ * Cross-origin isolation did make SharedArrayBuffer available, but duckdb-wasm's
+ * threaded (COI) bundle then failed to link the parquet extension
+ * (LinkError: mismatch in shared state of memory) — the autoloaded wasm_threads
+ * extension build is incompatible with the threaded engine in this duckdb-wasm
+ * version. So isolation is abandoned; the single-threaded `eh` bundle (which
+ * bundles parquet statically) is used again.
  *
- * COEP is `credentialless` (not require-corp): cross-origin subresources (the R2
- * data host, extensions.duckdb.org) then load without needing a per-resource
- * Cross-Origin-Resource-Policy header — they're fetched without credentials, which
- * is fine for public, unauthenticated assets.
- *
- * Registration is done by an inline script in the app layout (which knows the
- * basePath); this file is the service-worker body only.
- * Adapted from gzuidhof/coi-serviceworker (MIT).
+ * This file is now a SELF-UNREGISTERING service worker: any browser that cached the
+ * isolation-injecting version will, on its next update check, fetch this, unregister,
+ * and reload into a non-isolated (working) state. It injects no headers.
  */
 /* eslint-disable */
 self.addEventListener('install', () => self.skipWaiting());
-self.addEventListener('activate', (event) => event.waitUntil(self.clients.claim()));
-
-self.addEventListener('fetch', (event) => {
-  const r = event.request;
-  // Leave `only-if-cached` cross-origin requests alone — rewrapping would strip the
-  // 206/Content-Range that duckdb's range reads depend on.
-  if (r.cache === 'only-if-cached' && r.mode !== 'same-origin') return;
-
-  event.respondWith(
-    fetch(r)
-      .then((response) => {
-        if (response.status === 0) return response; // opaque — can't rewrap
-        const headers = new Headers(response.headers);
-        headers.set('Cross-Origin-Embedder-Policy', 'credentialless');
-        headers.set('Cross-Origin-Opener-Policy', 'same-origin');
-        return new Response(response.body, {
-          status: response.status,
-          statusText: response.statusText,
-          headers,
-        });
-      })
-      .catch((e) => console.error('coi-sw fetch:', e)),
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    self.registration
+      .unregister()
+      .then(() => self.clients.matchAll())
+      .then((clients) => clients.forEach((client) => client.navigate(client.url)))
+      .catch(() => {}),
   );
 });
+// No fetch handler → no COOP/COEP injection.

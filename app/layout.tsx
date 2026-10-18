@@ -56,21 +56,19 @@ export default function Layout({ children }: { children: ReactNode }) {
       suppressHydrationWarning
     >
       <body className="flex flex-col min-h-screen">
-        {/* Register the COI service worker so the page is crossOriginIsolated
-            (SharedArrayBuffer → duckdb-wasm's threaded bundle range-reads Parquet
-            instead of downloading whole files). First visit reloads once, after the
-            SW takes control, so the injected COOP/COEP headers apply. */}
-        <Script id="coi-sw" strategy="beforeInteractive">{`
+        {/* COI (cross-origin isolation) was tried to get duckdb-wasm's threaded bundle
+            to range-read Parquet, but that bundle can't link the parquet extension
+            (shared-memory LinkError) in this duckdb-wasm version. Rolled back. This
+            cleanup unregisters any COI service worker a browser cached while it was
+            live, so the page stops being isolated and the working `eh` bundle is used. */}
+        <Script id="coi-cleanup" strategy="beforeInteractive">{`
           (function () {
             if (typeof navigator === 'undefined' || !navigator.serviceWorker) return;
-            if (self.crossOriginIsolated || !self.isSecureContext) return;
-            navigator.serviceWorker.register('${basePath}/coi-serviceworker.js').then(function (reg) {
-              if (reg.active && !navigator.serviceWorker.controller) {
-                if (!sessionStorage.getItem('coiReloaded')) {
-                  sessionStorage.setItem('coiReloaded', '1');
-                  location.reload();
-                }
-              }
+            navigator.serviceWorker.getRegistrations().then(function (regs) {
+              regs.forEach(function (r) {
+                var s = (r.active && r.active.scriptURL) || '';
+                if (s.indexOf('coi-serviceworker') !== -1) r.unregister();
+              });
             }).catch(function () {});
           })();
         `}</Script>

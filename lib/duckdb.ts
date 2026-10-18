@@ -33,12 +33,11 @@ export function getDuck(): Promise<AsyncDuckDB> {
   if (dbPromise) return dbPromise;
   dbPromise = (async () => {
     const duckdb = await import('@duckdb/duckdb-wasm');
-    // coi = threaded (pthreads) bundle. selectBundle picks it ONLY when the page is
-    // crossOriginIsolated (SharedArrayBuffer available) — our coi-serviceworker injects
-    // the COOP/COEP headers that make that true on GitHub Pages. The threaded bundle
-    // range-reads HTTP Parquet (partial 206 fetches) instead of downloading whole files,
-    // which is what the 763k demo needs. eh/mvp are the single-threaded fallbacks when
-    // isolation isn't available (they pull whole files).
+    // eh = WebAssembly exception handling (the common fast path); mvp is the fallback
+    // for older engines. The threaded `coi` bundle is NOT offered: it would range-read
+    // HTTP Parquet (which the 763k demo wants), but it can't link the parquet extension
+    // in this duckdb-wasm version (shared-memory LinkError on the autoloaded wasm_threads
+    // build). eh bundles parquet statically and works, at the cost of whole-file reads.
     const bundles = {
       mvp: {
         mainModule: `${BASE_PATH}/duckdb/duckdb-mvp.wasm`,
@@ -47,11 +46,6 @@ export function getDuck(): Promise<AsyncDuckDB> {
       eh: {
         mainModule: `${BASE_PATH}/duckdb/duckdb-eh.wasm`,
         mainWorker: `${BASE_PATH}/duckdb/duckdb-browser-eh.worker.js`,
-      },
-      coi: {
-        mainModule: `${BASE_PATH}/duckdb/duckdb-coi.wasm`,
-        mainWorker: `${BASE_PATH}/duckdb/duckdb-browser-coi.worker.js`,
-        pthreadWorker: `${BASE_PATH}/duckdb/duckdb-browser-coi.pthread.worker.js`,
       },
     };
     const bundle = await duckdb.selectBundle(bundles);

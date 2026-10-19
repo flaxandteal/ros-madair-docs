@@ -29,9 +29,24 @@ HERE="$(cd "$(dirname "$0")/.." && pwd)"
 SRC="$HERE/public/data/aonach763k"
 [ -d "$SRC" ] || { echo "missing $SRC — generate/emit the 763k substrate first"; exit 1; }
 
-echo "syncing $(du -sh "$SRC" | cut -f1) → s3://$R2_BUCKET/aonach763k …"
-aws s3 sync "$SRC" "s3://$R2_BUCKET/aonach763k" \
-  --endpoint-url "$R2_ENDPOINT" --no-progress --only-show-errors
+# Snapshot-versioned layout for structural cache-busting (no purges):
+#   - the artifacts go under aonach763k/<snapshot_id>/… and are cached `immutable`
+#     (a re-emit changes snapshot_id → new URLs → automatically fresh), while
+#   - manifest.json sits at the stable aonach763k/ path, `no-cache`, and names the
+#     current snapshot. The demo reads the manifest, then the snapshot path.
+SNAP="$(python3 -c "import json;print(json.load(open('$SRC/manifest.json'))['snapshot_id'])")"
+[ -n "$SNAP" ] || { echo "no snapshot_id in $SRC/manifest.json"; exit 1; }
+
+echo "syncing $(du -sh "$SRC" | cut -f1) artifacts → s3://$R2_BUCKET/aonach763k/$SNAP (immutable) …"
+aws s3 sync "$SRC" "s3://$R2_BUCKET/aonach763k/$SNAP" \
+  --endpoint-url "$R2_ENDPOINT" --no-progress --only-show-errors \
+  --exclude "manifest.json" \
+  --cache-control "public, max-age=31536000, immutable"
+
+echo "placing manifest at the stable path (no-cache) …"
+aws s3 cp "$SRC/manifest.json" "s3://$R2_BUCKET/aonach763k/manifest.json" \
+  --endpoint-url "$R2_ENDPOINT" --only-show-errors \
+  --content-type "application/json" --cache-control "no-cache, max-age=0, must-revalidate"
 
 echo "applying CORS (range + the Pages origin) …"
 aws s3api put-bucket-cors --bucket "$R2_BUCKET" \

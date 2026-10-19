@@ -266,7 +266,7 @@ export async function registerLayers(layers: ModelFiles[]): Promise<Capabilities
 //        files — which the snapshot's `manifest.json` lists in `artifacts`. We
 //        register each partition URL and union them into the `tiles` view via a
 //        `read_parquet([...])` list; the melted stores stay single files. ---
-type Manifest = { artifacts?: Array<string | { path: string }> };
+type Manifest = { artifacts?: Array<string | { path: string }>; snapshot_id?: string };
 
 export async function registerPartitionedModel(
   prefix: string, // the subdir under /data, e.g. "aonach763k"
@@ -300,7 +300,12 @@ export async function registerPartitionedModel(
     await conn.close();
   }
   const ref: Record<string, string> = {};
-  const url = (art: string) => dataUrl(`${prefix}/${art}`); // full http(s) URL (R2 or Pages)
+  // Artifacts live under a snapshot-versioned path (aonach763k/<snapshot_id>/…) so each
+  // emit lands on fresh URLs and the files can be cached `immutable` — structural
+  // cache-busting, no purges. The manifest itself sits at the stable, no-cache path
+  // (fetched above) and names the current snapshot. Flat fallback if no snapshot_id.
+  const base = manifest.snapshot_id ? `${prefix}/${manifest.snapshot_id}` : prefix;
+  const url = (art: string) => dataUrl(`${base}/${art}`); // full http(s) URL (R2 or Pages)
   // tiles: a list read over the partition files.
   if (tilePartitions.length) {
     ref['tiles'] = `read_parquet([${tilePartitions.map((a) => `'${url(a)}'`).join(', ')}])`;

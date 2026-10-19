@@ -53,6 +53,21 @@ export function getCompiler(graphId: string): Promise<Compiler> {
   return c;
 }
 
+// Seed the compiler cache from an in-hand graph doc, so getCompiler() for that id skips
+// the network fetch. Used when the model graph isn't served under rm-example/ (e.g. the
+// 763k demo's building model, which bundles its graph rather than relying on the
+// example-corpus deploy). Pass the Arches `{graph:[…]}` object or its JSON string.
+export function seedCompiler(graphId: string, graphDoc: unknown): void {
+  if (compilers.has(graphId)) return;
+  compilers.set(
+    graphId,
+    (async () => {
+      const mod = await ensureWasm();
+      return new mod.Compiler(typeof graphDoc === 'string' ? graphDoc : JSON.stringify(graphDoc));
+    })(),
+  );
+}
+
 // --- 3. register a model's Parquet under the view names the compiler emits ---
 // The compiler's SQL is written against logical tables (`tiles`, `concept_index`,
 // `concepts`, `ordered_index`, `edges`) — exactly what native `duck` composes as

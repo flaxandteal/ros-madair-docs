@@ -17,7 +17,11 @@
 
 import * as React from 'react';
 import { getDuck } from '@/lib/duckdb';
-import { registerPartitionedModel, compileQuery, cellsInBox, type Capabilities } from '@/lib/ros-madair';
+import { registerPartitionedModel, compileQuery, cellsInBox, seedCompiler, type Capabilities } from '@/lib/ros-madair';
+// The building model graph, bundled (14 KB): the compiler needs it to lower
+// All[GridBox, Concept], and it is NOT in the example-corpus deploy under
+// rm-example/ (that only ships the example models), so seed it directly.
+import buildingModel from './aonach763k-model.json';
 
 const BUILDING = '0f366bdd-8e7f-519e-8ebc-ebff8a3e99a9';
 const SERVICE_ROLES = 'd0d0c3f3-415f-5d6d-aee0-1c58f669ee7d'; // the service_roles node
@@ -95,6 +99,7 @@ export default function Aonach763kDemo() {
   React.useEffect(() => {
     (async () => {
       try {
+        seedCompiler(BUILDING, buildingModel); // so compileQuery doesn't fetch the (undeployed) model graph
         const c = await registerPartitionedModel(PREFIX, BUILDING);
         if (!c.has_grid) throw new Error('this substrate has no grid edge — re-emit at FORMAT_VERSION 3');
         setCaps(c);

@@ -266,39 +266,41 @@ export async function registerPartitionedModel(
   const tilePartitions = arts.filter((a) => a.startsWith(`tiles_${graphId}/`));
 
   const db = await getDuck();
-  const duckdb = await import('@duckdb/duckdb-wasm');
-  // Register file URLs only — do NOT create `SELECT *` views. A view makes
-  // duckdb-wasm fully download each file at bind time (schema inference reads the
-  // whole object, not the footer): registering all 7 stores as views pulled ~470 MB
-  // up front, including stores no query touches. Instead hand back an inline
-  // `read_parquet(name)` expression per store; a query that uses it inline gets
-  // column projection + row-group pruning (range reads) — the same 1–2 MB path the
-  // aonach-mor demo already takes. registerFileURL is a pure name→URL mapping, so
-  // registering every present store is free; only an inline read in an actual query
-  // fetches bytes.
+  // Load httpfs + read each store by its FULL URL inline — this is what actually
+  // range-reads. `registerFileURL(…, HTTP)` (duckdb-wasm's built-in protocol) and
+  // `CREATE VIEW … SELECT *` both DOWNLOAD THE WHOLE FILE on first touch (no Range
+  // header at all — proven: a count(*) pulled the entire 34 MB grid). The **httpfs**
+  // extension with `read_parquet('https://…')` instead issues HTTP Range requests:
+  // footer + only the row groups/columns a query needs. Measured over R2 the 763k demo
+  // went from 246 MB to 0.47 MB. (The COI/threaded bundle is NOT the lever here and is
+  // upstream-broken anyway — see duckdb-wasm #1916.)
+  const conn = await db.connect();
+  try {
+    await conn.query('INSTALL httpfs');
+    await conn.query('LOAD httpfs');
+  } catch {
+    // If httpfs can't load (offline extension CDN), queries still work — they just fall
+    // back to whole-file reads via the built-in protocol on the same URLs.
+  } finally {
+    await conn.close();
+  }
   const ref: Record<string, string> = {};
-  const regUrl = async (art: string) => {
-    const u = `${prefix}/${art}`;
-    await db.registerFileURL(u, dataUrl(u), duckdb.DuckDBDataProtocol.HTTP, false);
-    return u; // the registered virtual-file name; read_parquet('<name>') resolves it
-  };
+  const url = (art: string) => dataUrl(`${prefix}/${art}`); // full http(s) URL (R2 or Pages)
   // tiles: a list read over the partition files.
   if (tilePartitions.length) {
-    const names = await Promise.all(tilePartitions.map(regUrl));
-    ref['tiles'] = `read_parquet([${names.map((u) => `'${u}'`).join(', ')}])`;
+    ref['tiles'] = `read_parquet([${tilePartitions.map((a) => `'${url(a)}'`).join(', ')}])`;
   }
-  const store = async (name: string, art: string) => {
+  const store = (name: string, art: string) => {
     if (!has(art)) return false;
-    const u = await regUrl(art);
-    ref[name] = `read_parquet('${u}')`;
+    ref[name] = `read_parquet('${url(art)}')`;
     return true;
   };
-  const has_concept_index = await store('concept_index', `concepts_${graphId}.parquet`);
-  const has_ordered = await store('ordered_index', `ordered_${graphId}.parquet`);
-  const has_edges = await store('edges', `edges_${graphId}.parquet`);
-  await store('edges_rev', `redges_${graphId}.parquet`);
-  const has_grid = await store('grid', `grid_${graphId}.parquet`);
-  await store('resources', `resources_${graphId}.parquet`);
-  const has_catalog = await store('concepts', 'concept_catalog.parquet');
+  const has_concept_index = store('concept_index', `concepts_${graphId}.parquet`);
+  const has_ordered = store('ordered_index', `ordered_${graphId}.parquet`);
+  const has_edges = store('edges', `edges_${graphId}.parquet`);
+  store('edges_rev', `redges_${graphId}.parquet`);
+  const has_grid = store('grid', `grid_${graphId}.parquet`);
+  store('resources', `resources_${graphId}.parquet`);
+  const has_catalog = store('concepts', 'concept_catalog.parquet');
   return { has_catalog, has_edges, has_concept_index, has_ordered, has_grid, spatial: false, ref };
 }
